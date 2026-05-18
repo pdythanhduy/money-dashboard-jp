@@ -2,14 +2,14 @@ import { NavigationContainer, DarkTheme, DefaultTheme } from '@react-navigation/
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import { useColorScheme } from 'react-native';
 import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-context';
 
 import '@/lib/i18n';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { RootNavigator } from '@/navigation/RootNavigator';
 import { useHistoryMigration } from '@/store/useHistoryMigration';
-import { ThemeProvider } from '@/theme';
+import { useLanguageSync } from '@/store/useLanguageSync';
+import { ThemeProvider, useTheme } from '@/theme';
 
 console.log('[App] module loaded');
 
@@ -20,9 +20,8 @@ console.log('[App] module loaded');
 SplashScreen.hideAsync().catch(() => {});
 
 export default function App() {
-  const scheme = useColorScheme();
-  const navTheme = scheme === 'dark' ? DarkTheme : DefaultTheme;
   useHistoryMigration();
+  useLanguageSync();
 
   useEffect(() => {
     console.log('[App] mounted');
@@ -33,12 +32,20 @@ export default function App() {
     <ErrorBoundary>
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
         <ThemeProvider>
-          <NavigationContainer theme={navTheme}>
-            <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
-            <RootNavigator />
-          </NavigationContainer>
+          <NavigationShell />
         </ThemeProvider>
       </SafeAreaProvider>
     </ErrorBoundary>
+  );
+}
+
+function NavigationShell() {
+  const { isDark } = useTheme();
+  const navTheme = isDark ? DarkTheme : DefaultTheme;
+  return (
+    <NavigationContainer theme={navTheme}>
+      <StatusBar style={isDark ? 'light' : 'dark'} />
+      <RootNavigator />
+    </NavigationContainer>
   );
 }
