@@ -41,9 +41,21 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
+const FALLBACK_THEME: Theme = {
+  colors: lightColors,
+  typography,
+  spacing,
+  radius,
+  isDark: false,
+};
+
 export function useTheme(): Theme {
   const t = useContext(ThemeContext);
-  if (!t) throw new Error('useTheme must be used inside <ThemeProvider>');
+  if (!t) {
+    // eslint-disable-next-line no-console
+    console.warn('[useTheme] called outside <ThemeProvider> — using fallback');
+    return FALLBACK_THEME;
+  }
   return t;
 }
 

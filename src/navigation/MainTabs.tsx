@@ -28,6 +28,8 @@ const TAB_ICONS: Record<TabName, keyof typeof Ionicons.glyphMap> = {
 export function MainTabs() {
   const { t } = useTranslation();
   const { colors, typography } = useTheme();
+  // eslint-disable-next-line no-console
+  console.log('[MainTabs] render');
 
   return (
     <Tab.Navigator

@@ -15,6 +15,8 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 const HAS_COMPLETED_ONBOARDING = true;
 
 export function RootNavigator() {
+  // eslint-disable-next-line no-console
+  console.log('[RootNavigator] render, onboarded=', HAS_COMPLETED_ONBOARDING);
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {HAS_COMPLETED_ONBOARDING ? (

@@ -12,6 +12,8 @@ interface PlaceholderScreenProps {
 
 export function PlaceholderScreen({ title, subtitle, icon }: PlaceholderScreenProps) {
   const { colors, typography, spacing } = useTheme();
+  // eslint-disable-next-line no-console
+  console.log('[PlaceholderScreen] render', title);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }} edges={['top']}>
       <View
