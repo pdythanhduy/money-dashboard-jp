@@ -26,6 +26,32 @@ export const WORKING_STUDENT_DEDUCTION_RESIDENT_TAX = 260_000;
 export const WORKING_STUDENT_INCOME_CEILING = 850_000;
 
 // ---------------------------------------------------------------------------
+// 住民税 amounts (different from 所得税)
+// ---------------------------------------------------------------------------
+
+/**
+ * 住民税 spouse deduction. Amounts are smaller than 所得税's table.
+ * Same eligibility rules (taxpayer income ≤ ¥10M, spouse income ≤ ¥580k).
+ */
+export const SPOUSE_DEDUCTION_RESIDENT_TAX: readonly SpouseDeductionRow[] = [
+  { taxpayerIncomeUpperBound:  9_000_000, generalDeduction: 330_000, elderlyDeduction: 380_000 },
+  { taxpayerIncomeUpperBound:  9_500_000, generalDeduction: 220_000, elderlyDeduction: 260_000 },
+  { taxpayerIncomeUpperBound: 10_000_000, generalDeduction: 110_000, elderlyDeduction: 130_000 },
+  { taxpayerIncomeUpperBound:   Infinity, generalDeduction:       0, elderlyDeduction:       0 },
+];
+
+/**
+ * 住民税 dependent deduction (smaller than 所得税 amounts). 16-under still
+ * receive no deduction (same as 所得税).
+ */
+export const DEPENDENT_DEDUCTION_RESIDENT_TAX = {
+  general:                    330_000,
+  specific_19_to_22:          450_000,
+  elderly_70_plus_coresident: 450_000,
+  elderly_70_plus_apart:      380_000,
+} as const;
+
+// ---------------------------------------------------------------------------
 // 配偶者控除 (spouse deduction)
 // ---------------------------------------------------------------------------
 

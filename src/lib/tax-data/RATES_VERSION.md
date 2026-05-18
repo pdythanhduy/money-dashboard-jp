@@ -49,6 +49,15 @@ file is wrong. When updating, replace the file value AND bump the row below.
 | 国保 大阪市 (4 components)    | kokuho-rates.ts              | 2026  | 医療 9.50 / 支援 3.06 / 介護 2.60 / 子 0.28 % | https://www.city.osaka.lg.jp/fukushi/cmsfiles/contents/0000007/7173/R7-2-4-3_houkoku2.pdf | ✅ verified |
 | 国保 東京23区 (3 components, unified) | kokuho-rates.ts      | 2026  | 基礎 7.51 / 支援 2.80 / 介護 2.43 %       | https://www.city.nerima.tokyo.jp/kurashi/nenkinhoken/kokuminkenkohoken/hoken_hokenryo/keisan_hoho.html | ✅ verified |
 
+## Pending official guidance
+
+- **協会けんぽ 子ども・子育て支援金率 0.23 %** (FY2026 new) — collected
+  alongside 健康保険料 but the published guidance on whether the
+  employee-portion is itemized separately on the payslip or absorbed into
+  the existing 健康保険料 column is still landing. Re-check 協会けんぽ
+  notices in Q3 2026 and update `kenpo-rates.ts` accordingly.
+  - Source watch: https://www.kyoukaikenpo.or.jp/lp/2026hokenryou/
+
 ## Skipped in Phase 1 (revisit later)
 
 - **協会けんぽ 子ども・子育て支援金率** 0.23 % (FY2026) — collected via the

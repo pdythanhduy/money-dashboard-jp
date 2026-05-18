@@ -71,6 +71,13 @@ export interface SalaryInput {
   spouseAge?: number;
   /** Dependent family members claimed under 扶養控除. */
   dependents?: Dependent[];
+  /**
+   * 青色申告特別控除 amount (yen) — applied to 事業所得 before tax. Ignored
+   * for `salary`. Standard values: 0 (none / 白色), 100_000 (青色 simple),
+   * 550_000 (青色 e-tax with 複式簿記), 650_000 (青色 with electronic record
+   * keeping + e-tax). Defaults to 0 if undefined.
+   */
+  blueReturnDeduction?: 0 | 100_000 | 550_000 | 650_000;
 }
 
 export interface Dependent {

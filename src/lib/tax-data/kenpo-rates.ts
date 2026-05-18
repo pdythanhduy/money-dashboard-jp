@@ -7,9 +7,11 @@
  * 介護保険料率 is NATIONWIDE UNIFORM at 1.62% (FY2026), applied only to
  * insured persons aged 40–64.
  *
- * 子ども・子育て支援金率 0.23% (FY2026) is NOT yet included here — collected
- * separately starting FY2026 but billed through the same 協会けんぽ structure.
- * Skipped in Phase 1; revisit when official guidance on take-home impact lands.
+ * 子ども・子育て支援金率 0.23% (FY2026) is NOT yet included here.
+ * TODO(FY2026-09): wire once the official 協会けんぽ guidance on whether the
+ *   employee-portion is paid separately or rolled into 健康保険料 is settled.
+ *   Tracking: see RATES_VERSION.md "Pending guidance" section.
+ *   @see https://www.kyoukaikenpo.or.jp/lp/2026hokenryou/
  *
  * @see https://www.kyoukaikenpo.or.jp/about/business/insurance_rate/rate_prefectures/r08/index.html
  */

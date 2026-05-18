@@ -13,6 +13,12 @@
  *
  * @see https://www.city.osaka.lg.jp/fukushi/cmsfiles/contents/0000007/7173/R7-2-4-3_houkoku2.pdf — 大阪市
  * @see https://www.city.nerima.tokyo.jp/kurashi/nenkinhoken/kokuminkenkohoken/hoken_hokenryo/keisan_hoho.html — 練馬区 (23区 unified rate)
+ *
+ * The 23区 unified 基準料率 is adopted as-published by most wards. Verified
+ * matching: 練馬区, 中野区, 江東区 (all confirmed FY2026). A few wards
+ * (notably 世田谷区, 港区) historically apply small adjustments — they are
+ * approximated by the unified rate here. Add per-ward override later if
+ * accuracy demands.
  */
 
 import type { FreelanceMunicipality, KokuhoRateSet } from '@/types/tax';
