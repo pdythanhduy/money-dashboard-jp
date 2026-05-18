@@ -3,9 +3,36 @@
     "name": "Money Dashboard JP",
     "tagline": "Tính lương, thuế và bảo hiểm tại Nhật"
   },
+  "tabs": {
+    "dashboard": "Tổng quan",
+    "calculator": "Tính lương",
+    "history": "Lịch sử",
+    "settings": "Cài đặt"
+  },
+  "screens": {
+    "dashboard": {
+      "title": "Tổng quan",
+      "placeholder": "Coming soon"
+    },
+    "calculator": {
+      "title": "Tính lương",
+      "placeholder": "Coming soon"
+    },
+    "history": {
+      "title": "Lịch sử",
+      "placeholder": "Coming soon"
+    },
+    "settings": {
+      "title": "Cài đặt",
+      "placeholder": "Coming soon"
+    }
+  },
   "common": {
     "save": "Lưu",
     "cancel": "Hủy",
-    "calculate": "Tính"
+    "calculate": "Tính",
+    "back": "Quay lại",
+    "next": "Tiếp theo",
+    "done": "Xong"
   }
 }
