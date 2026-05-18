@@ -30,10 +30,184 @@
   "common": {
     "save": "保存",
     "cancel": "キャンセル",
+    "close": "閉じる",
     "calculate": "計算",
     "back": "戻る",
     "next": "次へ",
     "done": "完了"
+  },
+  "calculator": {
+    "sections": {
+      "jobType": "仕事の種類",
+      "income": "収入",
+      "personal": "個人情報",
+      "dependents": "扶養家族",
+      "advanced": "詳細設定"
+    },
+    "jobTypes": {
+      "baito": {
+        "title": "アルバイト",
+        "description": "時給制の勤務。学生やパートタイム向けです。"
+      },
+      "seishain": {
+        "title": "正社員",
+        "description": "会社員として、会社の社会保険を前提に計算します。"
+      },
+      "freelance": {
+        "title": "フリーランス",
+        "description": "個人事業として、国民健康保険と国民年金で計算します。"
+      }
+    },
+    "fields": {
+      "annualIncome": {
+        "label": "年収",
+        "jp": "年収",
+        "placeholder": "¥3,600,000",
+        "helper": "税金と保険料を引く前の金額",
+        "baitoHint": "目安: 時給 x 勤務時間 x 12か月"
+      },
+      "age": {
+        "label": "年齢",
+        "placeholder": "24"
+      },
+      "prefecture": {
+        "label": "お住まいの都道府県",
+        "jp": "都道府県",
+        "placeholder": "都道府県を選択"
+      },
+      "municipality": {
+        "label": "市区町村",
+        "jp": "市区町村",
+        "placeholder": "地域を選択"
+      },
+      "pensionType": {
+        "label": "保険の種類",
+        "helper": "年金保険の種類を選択します。",
+        "kosei": "厚生年金",
+        "kokumin": "国民年金"
+      }
+    },
+    "prefectures": {
+      "tokyo": {
+        "label": "東京都",
+        "description": "東京エリア"
+      },
+      "osaka": {
+        "label": "大阪府",
+        "description": "大阪エリア"
+      },
+      "aichi": {
+        "label": "愛知県",
+        "description": "名古屋周辺"
+      },
+      "kanagawa": {
+        "label": "神奈川県",
+        "description": "横浜、川崎"
+      },
+      "saitama": {
+        "label": "埼玉県",
+        "description": "埼玉エリア"
+      },
+      "chiba": {
+        "label": "千葉県",
+        "description": "千葉エリア"
+      },
+      "hyogo": {
+        "label": "兵庫県",
+        "description": "神戸周辺"
+      },
+      "fukuoka": {
+        "label": "福岡県",
+        "description": "福岡エリア"
+      }
+    },
+    "municipalities": {
+      "osaka-shi": {
+        "label": "大阪市",
+        "description": "大阪市の国民健康保険"
+      },
+      "tokyo-23ku": {
+        "label": "東京23区",
+        "description": "東京23区の国民健康保険"
+      }
+    },
+    "dependents": {
+      "subtitle": "配偶者、子ども、親族を追加できます。",
+      "hasDependents": "扶養家族がいる",
+      "spouse": "年収130万円未満の配偶者",
+      "childrenUnder16": "16歳未満の子ども",
+      "studentChildren": "16-22歳の学生の子ども",
+      "elderly": "同居している70歳以上の親族"
+    },
+    "advanced": {
+      "subtitle": "フリーランス向け",
+      "blueReturnDeduction": "青色申告控除",
+      "blueReturnExplain": "要件を満たす場合、青色申告の控除額を選択します。"
+    },
+    "actions": {
+      "calculate": "計算する",
+      "editInput": "入力を修正",
+      "saveHistory": "履歴に保存",
+      "recalculate": "再計算"
+    },
+    "errors": {
+      "annualIncomeRequired": "年収を入力してください。",
+      "annualIncomePositive": "年収は0円より大きい必要があります。",
+      "ageRequired": "年齢を入力してください。",
+      "ageRange": "年齢は15-100歳の範囲で入力してください。",
+      "prefectureRequired": "都道府県を選択してください。",
+      "municipalityRequired": "フリーランスの場合は市区町村を選択してください。",
+      "calculationFailed": "現在の入力では計算できません。内容を確認してください。"
+    },
+    "result": {
+      "takeHomeMonthly": "月の手取り",
+      "takeHomeAnnual": "年額 {{amount}}",
+      "takeHomeJapanese": "月収手取り / 年収手取り",
+      "legend": {
+        "takeHome": "手取り",
+        "tax": "税金",
+        "insurance": "保険"
+      }
+    },
+    "breakdown": {
+      "groups": {
+        "tax": "税金",
+        "insurance": "保険",
+        "details": "計算の詳細"
+      },
+      "items": {
+        "incomeTax": "所得税",
+        "reconstructionSurtax": "復興特別所得税",
+        "residentTax": "住民税",
+        "healthInsurance": "健康保険",
+        "nationalHealthInsurance": "国民健康保険",
+        "pension": "厚生年金",
+        "nationalPension": "国民年金",
+        "employmentInsurance": "雇用保険",
+        "longTermCare": "介護保険",
+        "employmentIncomeDeduction": "給与所得控除",
+        "basicDeductionNational": "基礎控除 (所得税)",
+        "basicDeductionResident": "基礎控除 (住民税)",
+        "taxableNational": "課税所得 (所得税)",
+        "taxableResident": "課税所得 (住民税)",
+        "standardMonthlyRemuneration": "標準報酬月額"
+      },
+      "info": {
+        "incomeTax": "国税としての所得税です。最終的な丸めを含みます。",
+        "reconstructionSurtax": "基準所得税に対して計算される復興特別所得税です。",
+        "residentTax": "所得割と均等割を含む住民税です。",
+        "healthInsurance": "住所地と働き方に応じた年間の健康保険料です。",
+        "pension": "厚生年金または国民年金の年間額です。",
+        "employmentInsurance": "給与所得者にかかる雇用保険料です。",
+        "longTermCare": "40-64歳に適用される介護保険料です。",
+        "employmentIncomeDeduction": "給与収入から差し引く給与所得控除です。",
+        "basicDeductionNational": "所得税で使う基礎控除です。",
+        "basicDeductionResident": "住民税で使う基礎控除です。",
+        "taxableNational": "控除後、1,000円未満を切り捨てた所得税の課税所得です。",
+        "taxableResident": "控除後の住民税の課税所得です。",
+        "standardMonthlyRemuneration": "社会保険料の計算に使う標準報酬月額です。"
+      }
+    }
   },
   "dashboard": {
     "greeting": {
