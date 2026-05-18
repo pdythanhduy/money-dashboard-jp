@@ -43,6 +43,9 @@ export type Municipality = 'osaka-shi' | 'tokyo-23ku';
  */
 export type IncomeCategory = 'salary' | 'business';
 
+/** Pension enrollment used for salary workers. Defaults to employee pension. */
+export type SalaryPensionType = 'employee' | 'national';
+
 /**
  * Required for `business` category (国保 lookup is municipality-specific).
  * Ignored for `salary`.
@@ -61,6 +64,8 @@ export interface SalaryInput {
   category: IncomeCategory;
   /** Required for `salary`. */
   prefecture?: Prefecture;
+  /** Optional for `salary`; `employee` maps to 厚生年金, `national` maps to 国民年金. */
+  pensionType?: SalaryPensionType;
   /** Required for `business`. */
   municipality?: FreelanceMunicipality;
   /** Whether the taxpayer is a 勤労学生 (working student). Default: false. */

@@ -10,6 +10,8 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { RootNavigator } from '@/navigation/RootNavigator';
 import { ThemeProvider } from '@/theme';
 
+console.log('[App] module loaded');
+
 // Expo Go on iOS occasionally fails to auto-hide the splash, which leaves
 // a white overlay covering the rendered React tree. Calling hideAsync()
 // at module load + on mount makes it deterministic. Errors are swallowed
@@ -21,6 +23,7 @@ export default function App() {
   const navTheme = scheme === 'dark' ? DarkTheme : DefaultTheme;
 
   useEffect(() => {
+    console.log('[App] mounted');
     SplashScreen.hideAsync().catch(() => {});
   }, []);
 

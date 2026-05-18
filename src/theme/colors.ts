@@ -11,6 +11,7 @@
 
 export interface ColorPalette {
   brand: string;
+  brandStrong: string;
   brandSubtle: string;
   accent: string;
   accentSubtle: string;
@@ -41,6 +42,7 @@ const yellowSubtle = '#fef3c7';
 
 export const lightColors: ColorPalette = {
   brand: navy,
+  brandStrong: '#102a43',
   brandSubtle: '#e6edf5',
   accent: yellow,
   accentSubtle: yellowSubtle,
@@ -66,6 +68,7 @@ export const lightColors: ColorPalette = {
 
 export const darkColors: ColorPalette = {
   brand: '#63b3ed',
+  brandStrong: '#1a365d',
   brandSubtle: '#1a365d',
   accent: yellow,
   accentSubtle: '#78350f',

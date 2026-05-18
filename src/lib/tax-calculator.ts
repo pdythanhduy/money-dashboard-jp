@@ -284,6 +284,9 @@ function calculateNationalHealthInsurance(
 export function calculatePension(input: SalaryInput): number {
   validateInput(input);
   if (input.category === 'salary') {
+    if (input.pensionType === 'national') {
+      return calculateNationalPensionAnnual();
+    }
     return calculatePensionSalary(input.annualIncome / 12);
   }
   return calculateNationalPensionAnnual();
