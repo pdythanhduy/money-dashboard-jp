@@ -30,183 +30,59 @@
   "common": {
     "save": "Lưu",
     "cancel": "Hủy",
-    "close": "Đóng",
     "calculate": "Tính",
     "back": "Quay lại",
     "next": "Tiếp theo",
     "done": "Xong"
   },
-  "calculator": {
-    "sections": {
-      "jobType": "Loại công việc",
-      "income": "Thu nhập",
-      "personal": "Thông tin cá nhân",
-      "dependents": "Người phụ thuộc",
-      "advanced": "Tùy chọn nâng cao"
+  "dashboard": {
+    "greeting": {
+      "morning": "Chào buổi sáng",
+      "afternoon": "Chào buổi chiều",
+      "evening": "Chào buổi tối",
+      "name": "bạn"
     },
-    "jobTypes": {
-      "baito": {
-        "title": "Baito",
-        "description": "Làm thêm theo giờ, phù hợp sinh viên hoặc nhân viên bán thời gian."
-      },
-      "seishain": {
-        "title": "Seishain",
-        "description": "Nhân viên công ty, mặc định tính bảo hiểm xã hội công ty."
-      },
-      "freelance": {
-        "title": "Freelance",
-        "description": "Tự kinh doanh, tính theo 国民健康保険 và 国民年金."
-      }
+    "paydayBadge": "Còn {{days}} ngày tới ngày lương",
+    "paydayBadgeToday": "Hôm nay là ngày lương!",
+    "takeHomeCard": {
+      "title": "Take-home tháng này",
+      "subtitle": "今月の手取り",
+      "earned": "đã kiếm được",
+      "asOfToday": "tính đến hôm nay",
+      "expected": "Dự kiến cuối tháng",
+      "averageDaily": "Bạn đang kiếm trung bình",
+      "perDay": "/ngày",
+      "dayStart": "Ngày 1",
+      "dayEnd": "Ngày {{day}}"
     },
-    "fields": {
-      "annualIncome": {
-        "label": "Thu nhập năm",
-        "jp": "年収",
-        "placeholder": "¥3,600,000",
-        "helper": "Trước thuế và bảo hiểm",
-        "baitoHint": "Gợi ý: lương giờ x giờ làm x 12 tháng"
-      },
-      "age": {
-        "label": "Tuổi",
-        "placeholder": "24"
-      },
-      "prefecture": {
-        "label": "Tỉnh đang ở",
-        "jp": "都道府県",
-        "placeholder": "Chọn tỉnh"
-      },
-      "municipality": {
-        "label": "Thành phố/quận",
-        "jp": "市区町村",
-        "placeholder": "Chọn khu vực"
-      },
-      "pensionType": {
-        "label": "Loại bảo hiểm",
-        "helper": "Chọn loại lương hưu để tính khoản bảo hiểm.",
-        "kosei": "厚生年金",
-        "kokumin": "国民年金"
-      }
+    "quickStats": {
+      "tax": "Thuế tháng này",
+      "insurance": "Bảo hiểm",
+      "retention": "Tỷ lệ giữ",
+      "retentionSub": "Cứ 100¥ kiếm bạn giữ được {{kept}}¥"
     },
-    "prefectures": {
-      "tokyo": {
-        "label": "Tokyo / 東京都",
-        "description": "Khu vực Tokyo"
-      },
-      "osaka": {
-        "label": "Osaka / 大阪府",
-        "description": "Khu vực Osaka"
-      },
-      "aichi": {
-        "label": "Aichi / 愛知県",
-        "description": "Nagoya và khu vực lân cận"
-      },
-      "kanagawa": {
-        "label": "Kanagawa / 神奈川県",
-        "description": "Yokohama, Kawasaki"
-      },
-      "saitama": {
-        "label": "Saitama / 埼玉県",
-        "description": "Khu vực Saitama"
-      },
-      "chiba": {
-        "label": "Chiba / 千葉県",
-        "description": "Khu vực Chiba"
-      },
-      "hyogo": {
-        "label": "Hyogo / 兵庫県",
-        "description": "Kobe và khu vực lân cận"
-      },
-      "fukuoka": {
-        "label": "Fukuoka / 福岡県",
-        "description": "Khu vực Fukuoka"
-      }
+    "trend": {
+      "title": "Xu hướng 6 tháng",
+      "placeholder": "Tính năng đang phát triển — sẽ ra mắt phase sau"
     },
-    "municipalities": {
-      "osaka-shi": {
-        "label": "Osaka-shi / 大阪市",
-        "description": "国民健康保険 cho Osaka-shi"
-      },
-      "tokyo-23ku": {
-        "label": "Tokyo 23-ku / 東京23区",
-        "description": "国民健康保険 cho 23 quận Tokyo"
-      }
-    },
-    "dependents": {
-      "subtitle": "Mở để thêm vợ/chồng, con hoặc người thân.",
-      "hasDependents": "Có người phụ thuộc",
-      "spouse": "Vợ/chồng có thu nhập dưới 130万",
-      "childrenUnder16": "Số con dưới 16 tuổi",
-      "studentChildren": "Số con 16-22 tuổi đi học",
-      "elderly": "Số người 70+ tuổi sống cùng"
-    },
-    "advanced": {
-      "subtitle": "Dành cho freelance",
-      "blueReturnDeduction": "青色申告控除",
-      "blueReturnExplain": "Chọn mức khấu trừ khai thuế xanh nếu bạn đủ điều kiện."
-    },
-    "actions": {
-      "calculate": "TÍNH TOÁN",
-      "editInput": "Sửa thông tin",
-      "saveHistory": "Lưu vào lịch sử",
-      "recalculate": "Tính lại"
-    },
-    "errors": {
-      "annualIncomeRequired": "Nhập thu nhập năm.",
-      "annualIncomePositive": "Thu nhập năm phải lớn hơn 0.",
-      "ageRequired": "Nhập tuổi.",
-      "ageRange": "Tuổi phải trong khoảng 15-100.",
-      "prefectureRequired": "Chọn tỉnh đang ở.",
-      "municipalityRequired": "Chọn thành phố/quận cho freelance.",
-      "calculationFailed": "Không thể tính với dữ liệu hiện tại. Kiểm tra lại thông tin đã nhập."
-    },
-    "result": {
-      "takeHomeMonthly": "Take-home tháng",
-      "takeHomeAnnual": "{{amount}} / năm",
-      "takeHomeJapanese": "月収手取り / 年収手取り",
-      "legend": {
-        "takeHome": "Take-home",
-        "tax": "Thuế",
-        "insurance": "Bảo hiểm"
-      }
-    },
-    "breakdown": {
-      "groups": {
-        "tax": "Thuế",
-        "insurance": "Bảo hiểm",
-        "details": "Chi tiết tính toán"
-      },
+    "upcoming": {
+      "title": "Sắp tới hạn",
+      "daysLeft": "còn {{days}} ngày",
+      "today": "hôm nay",
       "items": {
-        "incomeTax": "所得税 / Thuế thu nhập",
-        "reconstructionSurtax": "復興特別所得税",
-        "residentTax": "住民税 / Thuế cư trú",
-        "healthInsurance": "健康保険",
-        "nationalHealthInsurance": "国民健康保険",
-        "pension": "厚生年金",
-        "nationalPension": "国民年金",
-        "employmentInsurance": "雇用保険",
-        "longTermCare": "介護保険",
-        "employmentIncomeDeduction": "給与所得控除",
-        "basicDeductionNational": "基礎控除 (所得税)",
-        "basicDeductionResident": "基礎控除 (住民税)",
-        "taxableNational": "課税所得 (所得税)",
-        "taxableResident": "課税所得 (住民税)",
-        "standardMonthlyRemuneration": "標準報酬月額"
-      },
-      "info": {
-        "incomeTax": "Thuế thu nhập quốc gia, đã gồm phần làm tròn cuối cùng.",
-        "reconstructionSurtax": "Phụ thu tái thiết tính theo tỷ lệ trên thuế thu nhập cơ bản.",
-        "residentTax": "Thuế cư trú gồm phần thu nhập và phần bình quân đầu người.",
-        "healthInsurance": "Bảo hiểm y tế hằng năm theo nơi ở và loại công việc.",
-        "pension": "Lương hưu hằng năm, theo 厚生年金 hoặc 国民年金.",
-        "employmentInsurance": "Bảo hiểm thất nghiệp cho người làm công ăn lương.",
-        "longTermCare": "Bảo hiểm chăm sóc áp dụng cho tuổi 40-64.",
-        "employmentIncomeDeduction": "Khoản giảm trừ thu nhập lương trước khi tính thuế.",
-        "basicDeductionNational": "Giảm trừ cơ bản dùng cho thuế thu nhập.",
-        "basicDeductionResident": "Giảm trừ cơ bản dùng cho thuế cư trú.",
-        "taxableNational": "Thu nhập chịu thuế sau giảm trừ, làm tròn xuống 1,000 yên.",
-        "taxableResident": "Thu nhập chịu thuế cư trú sau giảm trừ.",
-        "standardMonthlyRemuneration": "Mức lương tiêu chuẩn dùng để tính bảo hiểm xã hội."
+        "kakuteiShinkoku": "確定申告 (Quyết toán thuế)",
+        "zairyuCard": "在留カード (Gia hạn thẻ cư trú)"
       }
+    },
+    "footer": {
+      "note": "Số liệu cập nhật real-time dựa trên thông tin bạn nhập",
+      "updateCta": "Cập nhật thông tin lương"
+    },
+    "empty": {
+      "title": "Bắt đầu hành trình tài chính",
+      "subtitle": "Nhập thông tin lương để xem dashboard cập nhật real-time",
+      "subtitleJa": "給与情報を入力してダッシュボードを表示",
+      "cta": "Tính lương ngay"
     }
   }
 }

@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 
+import { formatCurrency as formatCurrencyShared } from '@/lib/format';
 import { calculateTakeHome } from '@/lib/tax-calculator';
 import { useCalculatorStore } from '@/store/calculatorStore';
 import type {
@@ -87,12 +88,9 @@ export function parseCurrencyInput(value: string): number {
   return sign * Number.parseInt(digits, 10);
 }
 
-export function formatCurrency(value: number): string {
-  const sign = value < 0 ? '-' : '';
-  const wholeYen = Math.abs(Math.trunc(value));
-  const grouped = wholeYen.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  return `${sign}¥${grouped}`;
-}
+// Re-export so existing call sites continue to work; new code should import
+// directly from '@/lib/format'.
+export const formatCurrency = formatCurrencyShared;
 
 export function formatCurrencyInput(value: string): string {
   if (!value) return '';
