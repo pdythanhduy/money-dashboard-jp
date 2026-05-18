@@ -209,6 +209,56 @@
       }
     }
   },
+  "history": {
+    "title": "Lịch sử",
+    "subtitle": "履歴 · Theo dõi thu nhập qua các lần tính",
+    "clearConfirmTitle": "Xóa toàn bộ lịch sử?",
+    "clearConfirmBody": "Hành động này không thể hoàn tác. Tất cả các lần tính sẽ bị xóa.",
+    "clearConfirmOk": "Xóa hết",
+    "stats": {
+      "totalCount": "Tổng lần tính",
+      "highest": "Cao nhất",
+      "average": "Trung bình",
+      "tax": "Tổng thuế"
+    },
+    "trend": {
+      "title": "Xu hướng take-home",
+      "needsTwoPoints": "Cần ít nhất 2 lần tính để xem biểu đồ trend."
+    },
+    "filter": {
+      "all": "Tất cả",
+      "salary": "Nhân viên",
+      "business": "Freelance"
+    },
+    "badge": {
+      "salary": "Lương",
+      "business": "Freelance"
+    },
+    "list": {
+      "month": "tháng",
+      "year": "năm",
+      "age": "{{age}} tuổi",
+      "emptyForFilter": "Chưa có lần tính nào khớp bộ lọc này."
+    },
+    "detail": {
+      "title": "Chi tiết lần tính",
+      "labelField": "Đặt tên",
+      "labelPlaceholder": "Vd: Lương mới tháng 5",
+      "noteField": "Ghi chú",
+      "notePlaceholder": "Thêm ghi chú cho lần tính này...",
+      "save": "Lưu thay đổi",
+      "delete": "Xóa entry",
+      "deleteConfirmTitle": "Xóa entry này?",
+      "deleteConfirmBody": "Hành động này không thể hoàn tác.",
+      "deleteConfirmOk": "Xóa"
+    },
+    "empty": {
+      "title": "Chưa có lịch sử nào",
+      "subtitle": "Hãy bắt đầu tính lương để theo dõi thu nhập theo thời gian.",
+      "cta": "Tính lương ngay"
+    },
+    "limitReached": "Lịch sử đầy ({{max}} entries). Vui lòng xóa bớt trước khi lưu thêm."
+  },
   "dashboard": {
     "greeting": {
       "morning": "Chào buổi sáng",

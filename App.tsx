@@ -8,6 +8,7 @@ import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-c
 import '@/lib/i18n';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { RootNavigator } from '@/navigation/RootNavigator';
+import { useHistoryMigration } from '@/store/useHistoryMigration';
 import { ThemeProvider } from '@/theme';
 
 console.log('[App] module loaded');
@@ -21,6 +22,7 @@ SplashScreen.hideAsync().catch(() => {});
 export default function App() {
   const scheme = useColorScheme();
   const navTheme = scheme === 'dark' ? DarkTheme : DefaultTheme;
+  useHistoryMigration();
 
   useEffect(() => {
     console.log('[App] mounted');

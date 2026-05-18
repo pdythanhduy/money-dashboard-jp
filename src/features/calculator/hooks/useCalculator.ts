@@ -3,6 +3,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { formatCurrency as formatCurrencyShared } from '@/lib/format';
 import { calculateTakeHome } from '@/lib/tax-calculator';
 import { useCalculatorStore } from '@/store/calculatorStore';
+import { useHistoryStore } from '@/store/historyStore';
 import type {
   FreelanceMunicipality,
   IncomeCategory,
@@ -209,6 +210,7 @@ export function useCalculator() {
   const setStoredInput = useCalculatorStore((state) => state.setInput);
   const setStoredResult = useCalculatorStore((state) => state.setResult);
   const resetStore = useCalculatorStore((state) => state.reset);
+  const addHistoryEntry = useHistoryStore((state) => state.addEntry);
 
   const initialForm = useMemo(() => formFromSalaryInput(lastInput), [lastInput]);
   const [mode, setMode] = useState<CalculatorMode>('input');
@@ -261,11 +263,14 @@ export function useCalculator() {
 
     setStoredInput(next.input);
     setStoredResult(next.result);
+    // Auto-append to history. If the store reports limit_reached the UI
+    // will still show the latest result; user must clear some entries.
+    addHistoryEntry(next.input, next.result);
     setSubmittedInput(next.input);
     setResult(next.result);
     setMode('result');
     return true;
-  }, [form, setStoredInput, setStoredResult]);
+  }, [form, setStoredInput, setStoredResult, addHistoryEntry]);
 
   const editInput = useCallback(() => {
     setMode('input');

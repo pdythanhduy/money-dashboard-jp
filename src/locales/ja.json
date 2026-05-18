@@ -209,6 +209,56 @@
       }
     }
   },
+  "history": {
+    "title": "履歴",
+    "subtitle": "計算した記録を時系列で確認",
+    "clearConfirmTitle": "履歴を全て削除しますか？",
+    "clearConfirmBody": "この操作は元に戻せません。すべての計算記録が消えます。",
+    "clearConfirmOk": "削除",
+    "stats": {
+      "totalCount": "計算回数",
+      "highest": "最高額",
+      "average": "平均",
+      "tax": "税金合計"
+    },
+    "trend": {
+      "title": "手取りトレンド",
+      "needsTwoPoints": "トレンドグラフには2回以上の計算が必要です。"
+    },
+    "filter": {
+      "all": "すべて",
+      "salary": "給与所得",
+      "business": "事業所得"
+    },
+    "badge": {
+      "salary": "給与",
+      "business": "事業"
+    },
+    "list": {
+      "month": "月",
+      "year": "年",
+      "age": "{{age}}歳",
+      "emptyForFilter": "このフィルターに該当する記録がありません。"
+    },
+    "detail": {
+      "title": "計算の詳細",
+      "labelField": "ラベル",
+      "labelPlaceholder": "例：5月の新給与",
+      "noteField": "メモ",
+      "notePlaceholder": "この計算に関するメモを追加...",
+      "save": "変更を保存",
+      "delete": "削除",
+      "deleteConfirmTitle": "この記録を削除しますか？",
+      "deleteConfirmBody": "この操作は元に戻せません。",
+      "deleteConfirmOk": "削除"
+    },
+    "empty": {
+      "title": "まだ履歴がありません",
+      "subtitle": "給与を計算して、時系列で収入を追跡しましょう。",
+      "cta": "今すぐ計算"
+    },
+    "limitReached": "履歴が上限（{{max}}件）に達しました。古い記録を削除してください。"
+  },
   "dashboard": {
     "greeting": {
       "morning": "おはようございます",

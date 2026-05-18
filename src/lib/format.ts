@@ -27,3 +27,18 @@ export function formatPercent(ratio: number): string {
   const pct = Math.max(0, Math.min(100, ratio * 100));
   return `${pct.toFixed(1)}%`;
 }
+
+import { formatDistanceToNowStrict } from 'date-fns';
+import { ja, vi } from 'date-fns/locale';
+
+const LOCALES = { vi, ja } as const;
+type LocaleKey = keyof typeof LOCALES;
+
+/**
+ * Human-friendly relative time: "2 ngày trước" / "2日前" / etc.
+ * Locale defaults to `vi`. Pass `'ja'` for Japanese.
+ */
+export function formatRelativeTime(timestamp: number, locale: LocaleKey = 'vi'): string {
+  const distance = formatDistanceToNowStrict(timestamp, { addSuffix: true, locale: LOCALES[locale] });
+  return distance;
+}
