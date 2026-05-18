@@ -1,0 +1,11 @@
+{
+  "app": {
+    "name": "Money Dashboard JP",
+    "tagline": "Tính lương, thuế và bảo hiểm tại Nhật"
+  },
+  "common": {
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "calculate": "Tính"
+  }
+}

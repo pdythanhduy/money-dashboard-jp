@@ -1,0 +1,11 @@
+{
+  "app": {
+    "name": "Money Dashboard JP",
+    "tagline": "日本での給与・税金・保険を計算"
+  },
+  "common": {
+    "save": "保存",
+    "cancel": "キャンセル",
+    "calculate": "計算"
+  }
+}

@@ -31,7 +31,12 @@ yarn-error.*
 *.pem
 
 # local env files
-.env*.local
+.env
+.env.*
+!.env.example
+
+# Claude Code per-user overrides (commit .claude/settings.json only)
+.claude/settings.local.json
 
 # typescript
 *.tsbuildinfo
