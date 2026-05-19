@@ -91,6 +91,23 @@
         "helper": "Chọn loại lương hưu để tính khoản bảo hiểm.",
         "kosei": "厚生年金",
         "kokumin": "国民年金"
+      },
+      "hourlyRate": {
+        "label": "Lương theo giờ",
+        "placeholder": "1200",
+        "helper": "Ví dụ: ¥1,113 (min wage Tokyo 2024)"
+      },
+      "hoursPerDay": {
+        "label": "Giờ/ngày",
+        "helper": "0.5 - 24h"
+      },
+      "daysPerWeek": {
+        "label": "Ngày/tuần",
+        "helper": "1 - 7"
+      },
+      "weeksPerYear": {
+        "label": "Tuần/năm",
+        "helper": "Mặc định 52. Sinh viên semester có thể là ~40."
       }
     },
     "prefectures": {
@@ -164,7 +181,65 @@
       "prefectureRequired": "Chọn tỉnh đang ở.",
       "municipalityRequired": "Chọn thành phố/quận cho freelance.",
       "calculationFailed": "Không thể tính với dữ liệu hiện tại. Kiểm tra lại thông tin đã nhập.",
-      "veryHighIncomeWarning": "Mức thu nhập rất cao (>¥100tr/năm) — kết quả có thể không phản ánh kế hoạch thuế cho doanh nghiệp lớn."
+      "veryHighIncomeWarning": "Mức thu nhập rất cao (>¥100tr/năm) — kết quả có thể không phản ánh kế hoạch thuế cho doanh nghiệp lớn.",
+      "hourlyRateRequired": "Nhập mức lương theo giờ.",
+      "hourlyRatePositive": "Lương theo giờ phải lớn hơn 0.",
+      "hoursDayRange": "Số giờ/ngày phải trong khoảng 0.5 - 24.",
+      "daysWeekRange": "Số ngày/tuần phải trong khoảng 1 - 7."
+    },
+    "incomeMode": {
+      "label": "Cách nhập thu nhập",
+      "annual": "Lương năm",
+      "hourly": "Theo giờ (時給制)"
+    },
+    "hourlyPreview": {
+      "label": "Tổng năm dự kiến"
+    },
+    "allowances": {
+      "nightShift": {
+        "title": "Có 夜勤 (22:00-05:00)",
+        "sub": "Tính thêm 25% cho giờ làm đêm",
+        "hoursPerDay": "Số giờ đêm / ngày"
+      },
+      "overtime": {
+        "title": "Có 残業 (OT > 8h/ngày)",
+        "sub": "Tính thêm 25% cho giờ OT",
+        "hoursPerDay": "Số giờ OT / ngày"
+      },
+      "weekend": {
+        "title": "Có làm cuối tuần",
+        "sub": "Tính thêm 25% cho ngày cuối tuần",
+        "daysPerMonth": "Số ngày cuối tuần / tháng"
+      }
+    },
+    "walls": {
+      "sectionTitle": "Cảnh báo ngưỡng (壁)",
+      "approachingBy": "Còn cách ngưỡng {{amount}}",
+      "crossedBy": "Đã vượt ngưỡng {{amount}}",
+      "basic_deduction_103": {
+        "title": "103万円の壁 (cũ)",
+        "body": "Mốc thuế thu nhập trước reform 令和7年. Hiện tại đã được nâng lên 160万 (basic_deduction_160). Để tham khảo."
+      },
+      "shaho_106": {
+        "title": "106万円の壁 — 社会保険加入",
+        "body": "Vượt ngưỡng này nếu làm parttime ở cty 51+ nhân viên, phải đóng 健康保険 + 厚生年金. Take-home giảm ~15%."
+      },
+      "shaho_130": {
+        "title": "130万円の壁 — 配偶者扶養 (社保)",
+        "body": "Vượt ngưỡng → bị loại khỏi 健保 của vợ/chồng. Phải tự đóng 国保 hoặc 健保 công ty."
+      },
+      "spouse_deduction_150": {
+        "title": "150万円の壁 — 配偶者特別控除 (full)",
+        "body": "Trên ngưỡng này, 配偶者特別控除 cho vợ/chồng giảm dần. Mất thuế lợi cho người trụ cột."
+      },
+      "basic_deduction_160": {
+        "title": "160万円の壁 (mới FY2025+)",
+        "body": "Ngưỡng 基礎控除 mới: dưới mức này không phải đóng 所得税. Reform 令和7年12月."
+      },
+      "spouse_deduction_201": {
+        "title": "201万円の壁 — 配偶者特別控除 (kết thúc)",
+        "body": "Vượt ngưỡng → 配偶者特別控除 = 0. Hoàn toàn mất ưu đãi vợ/chồng."
+      }
     },
     "result": {
       "takeHomeMonthly": "Take-home tháng",

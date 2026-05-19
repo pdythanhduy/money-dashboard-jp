@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
@@ -10,16 +11,22 @@ import { QuickStatsRow } from '@/features/dashboard/components/QuickStatsRow';
 import { TakeHomeProgressCard } from '@/features/dashboard/components/TakeHomeProgressCard';
 import { UpcomingEventsCard } from '@/features/dashboard/components/UpcomingEventsCard';
 import { useDashboardData } from '@/features/dashboard/hooks/useDashboardData';
+import { formatCurrency } from '@/lib/format';
+import { activeWalls } from '@/lib/wall-warnings';
 import type { MainTabParamList } from '@/navigation/MainTabs';
+import { useCalculatorStore } from '@/store/calculatorStore';
 import { useTheme } from '@/theme';
 
 type DashboardNavigationProp = BottomTabNavigationProp<MainTabParamList, 'Dashboard'>;
 
 export function DashboardScreen() {
   const { t } = useTranslation();
-  const { colors, typography, spacing } = useTheme();
+  const { colors, typography, spacing, radius } = useTheme();
   const navigation = useNavigation<DashboardNavigationProp>();
   const data = useDashboardData();
+  const lastInputAnnual = useCalculatorStore((s) => s.lastInput?.annualIncome ?? 0);
+  const walls = activeWalls(lastInputAnnual);
+  const topWall = walls[0];
 
   const goToCalculator = () => navigation.navigate('Calculator');
 
@@ -59,6 +66,40 @@ export function DashboardScreen() {
           daysUntilPayday={data.daysUntilPayday}
           isPayday={data.isPayday}
         />
+        {topWall ? (
+          <Pressable
+            accessibilityRole="link"
+            accessibilityLabel={t(`calculator.walls.${topWall.wall}.title`)}
+            onPress={goToCalculator}
+            style={({ pressed }) => ({
+              marginHorizontal: spacing.lg,
+              marginTop: spacing.md,
+              padding: spacing.sm,
+              paddingHorizontal: spacing.md,
+              borderRadius: radius.md,
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: spacing.sm,
+              backgroundColor: colors.surfaceElevated,
+              borderLeftWidth: 4,
+              borderLeftColor: topWall.severity === 'crossed' ? colors.danger : colors.warning,
+              opacity: pressed ? 0.85 : 1,
+            })}
+          >
+            <Ionicons
+              name={topWall.severity === 'crossed' ? 'alert-circle' : 'warning'}
+              size={18}
+              color={topWall.severity === 'crossed' ? colors.danger : colors.warning}
+            />
+            <Text style={[typography.footnote, { color: colors.text, flex: 1 }]} numberOfLines={2}>
+              {t(`calculator.walls.${topWall.wall}.title`)} ·{' '}
+              {topWall.severity === 'crossed'
+                ? t('calculator.walls.crossedBy', { amount: formatCurrency(Math.abs(topWall.distance)) })
+                : t('calculator.walls.approachingBy', { amount: formatCurrency(Math.abs(topWall.distance)) })}
+            </Text>
+            <Ionicons name="chevron-forward" size={16} color={colors.textSecondary} />
+          </Pressable>
+        ) : null}
         <TakeHomeProgressCard
           proportionalTakeHome={data.proportionalTakeHome}
           monthlyTakeHome={data.monthlyTakeHome}
