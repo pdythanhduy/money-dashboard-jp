@@ -7,6 +7,7 @@
     "dashboard": "Tổng quan",
     "calculator": "Tính lương",
     "history": "Lịch sử",
+    "documents": "Giấy tờ",
     "settings": "Cài đặt"
   },
   "screens": {
@@ -546,6 +547,68 @@
         "language": "Ngôn ngữ ưa thích",
         "languageSub": "Bạn có thể đổi bất cứ lúc nào"
       }
+    }
+  },
+  "documents": {
+    "title": "Giấy tờ",
+    "subtitle": "Nhắc các giấy tờ sắp hết hạn",
+    "expiryLabel": "Hết hạn:",
+    "daysLeft": "Còn {{days}} ngày",
+    "expired": "Đã hết hạn",
+    "today": "Hôm nay",
+    "invalidDate": "Ngày không hợp lệ.",
+    "kindLabel": "Loại giấy tờ",
+    "nameLabel": "Tên tuỳ chỉnh (không bắt buộc)",
+    "notifyLabel": "Nhắc trước",
+    "notesLabel": "Ghi chú",
+    "save": "Lưu",
+    "delete": "Xoá giấy tờ",
+    "list": {
+      "limitReached": "Đã đạt giới hạn {{max}} giấy tờ. Xoá bớt để thêm."
+    },
+    "add": {
+      "title": "Thêm giấy tờ"
+    },
+    "edit": {
+      "title": "Sửa giấy tờ"
+    },
+    "empty": {
+      "title": "Chưa có giấy tờ nào",
+      "body": "Thêm 在留カード, hộ chiếu, マイナンバー... để nhận nhắc nhở trước khi hết hạn.",
+      "cta": "Thêm giấy tờ"
+    },
+    "permission": {
+      "title": "Bật thông báo để nhận nhắc nhở",
+      "enableButton": "Bật",
+      "status": {
+        "granted": "Đã bật thông báo.",
+        "denied": "Bạn đã từ chối — mở Cài đặt hệ thống để bật lại.",
+        "undetermined": "Cần quyền thông báo để nhắc nhở đúng hạn."
+      }
+    },
+    "notifyOptions": {
+      "30": "30 ngày trước",
+      "7": "7 ngày trước",
+      "1": "1 ngày trước"
+    },
+    "reminder": {
+      "body": "Còn {{days}} ngày trước hạn ({{date}}). Hãy chuẩn bị giấy tờ."
+    },
+    "kinds": {
+      "zairyu_card": "在留カード",
+      "passport_vn": "Hộ chiếu Việt Nam",
+      "passport_jp": "Hộ chiếu Nhật",
+      "mynumber_card": "マイナンバーカード",
+      "driving_license_jp": "Giấy phép lái xe Nhật",
+      "driving_license_vn": "Giấy phép lái xe Việt Nam",
+      "health_insurance_card": "Thẻ bảo hiểm y tế",
+      "visa_renewal": "Gia hạn visa",
+      "kakutei_shinkoku": "確定申告 (Quyết toán thuế)",
+      "nenmatsu_chosei": "年末調整 (Cuối năm)",
+      "jumin_zei_q1": "住民税 Quý 1 (06/30)",
+      "jumin_zei_q2": "住民税 Quý 2 (08/31)",
+      "jumin_zei_q3": "住民税 Quý 3 (10/31)",
+      "jumin_zei_q4": "住民税 Quý 4 (01/31)"
     }
   }
 }

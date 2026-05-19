@@ -7,6 +7,7 @@
     "dashboard": "ダッシュボード",
     "calculator": "給与計算",
     "history": "履歴",
+    "documents": "書類",
     "settings": "設定"
   },
   "screens": {
@@ -546,6 +547,68 @@
         "language": "希望言語",
         "languageSub": "いつでも変更できます"
       }
+    }
+  },
+  "documents": {
+    "title": "書類",
+    "subtitle": "期限が近い書類を通知",
+    "expiryLabel": "期限:",
+    "daysLeft": "あと{{days}}日",
+    "expired": "期限切れ",
+    "today": "本日",
+    "invalidDate": "日付が無効です。",
+    "kindLabel": "書類の種類",
+    "nameLabel": "カスタム名（任意）",
+    "notifyLabel": "事前通知",
+    "notesLabel": "メモ",
+    "save": "保存",
+    "delete": "書類を削除",
+    "list": {
+      "limitReached": "上限{{max}}件に達しました。削除してから追加してください。"
+    },
+    "add": {
+      "title": "書類を追加"
+    },
+    "edit": {
+      "title": "書類を編集"
+    },
+    "empty": {
+      "title": "書類がまだありません",
+      "body": "在留カード、パスポート、マイナンバーなどを追加して、期限前に通知を受け取りましょう。",
+      "cta": "書類を追加"
+    },
+    "permission": {
+      "title": "通知を有効にして期限を逃さない",
+      "enableButton": "有効化",
+      "status": {
+        "granted": "通知は有効です。",
+        "denied": "拒否されています — システム設定から再度許可してください。",
+        "undetermined": "通知の許可が必要です。"
+      }
+    },
+    "notifyOptions": {
+      "30": "30日前",
+      "7": "7日前",
+      "1": "1日前"
+    },
+    "reminder": {
+      "body": "期限まであと{{days}}日 ({{date}})。書類の準備をしましょう。"
+    },
+    "kinds": {
+      "zairyu_card": "在留カード",
+      "passport_vn": "ベトナム パスポート",
+      "passport_jp": "日本 パスポート",
+      "mynumber_card": "マイナンバーカード",
+      "driving_license_jp": "日本の運転免許証",
+      "driving_license_vn": "ベトナムの運転免許証",
+      "health_insurance_card": "健康保険証",
+      "visa_renewal": "ビザ更新",
+      "kakutei_shinkoku": "確定申告",
+      "nenmatsu_chosei": "年末調整",
+      "jumin_zei_q1": "住民税 第1期 (6/30)",
+      "jumin_zei_q2": "住民税 第2期 (8/31)",
+      "jumin_zei_q3": "住民税 第3期 (10/31)",
+      "jumin_zei_q4": "住民税 第4期 (1/31)"
     }
   }
 }

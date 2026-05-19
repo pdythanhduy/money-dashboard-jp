@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { CalculatorScreen } from '@/features/calculator/CalculatorScreen';
 import { DashboardScreen } from '@/features/dashboard/DashboardScreen';
+import { DocumentsScreen } from '@/features/documents/DocumentsScreen';
 import { HistoryScreen } from '@/features/history/HistoryScreen';
 import { SettingsScreen } from '@/features/settings/SettingsScreen';
 import { useTheme } from '@/theme';
@@ -12,6 +13,7 @@ export type MainTabParamList = {
   Dashboard: undefined;
   Calculator: undefined;
   History: undefined;
+  Documents: undefined;
   Settings: undefined;
 };
 
@@ -22,6 +24,7 @@ const TAB_ICONS: Record<TabName, keyof typeof Ionicons.glyphMap> = {
   Dashboard:  'home-outline',
   Calculator: 'calculator-outline',
   History:    'stats-chart-outline',
+  Documents:  'document-text-outline',
   Settings:   'settings-outline',
 };
 
@@ -48,6 +51,7 @@ export function MainTabs() {
       <Tab.Screen name="Dashboard"  component={DashboardScreen}  options={{ tabBarLabel: t('tabs.dashboard') }} />
       <Tab.Screen name="Calculator" component={CalculatorScreen} options={{ tabBarLabel: t('tabs.calculator') }} />
       <Tab.Screen name="History"    component={HistoryScreen}    options={{ tabBarLabel: t('tabs.history') }} />
+      <Tab.Screen name="Documents"  component={DocumentsScreen}  options={{ tabBarLabel: t('tabs.documents') }} />
       <Tab.Screen name="Settings"   component={SettingsScreen}   options={{ tabBarLabel: t('tabs.settings') }} />
     </Tab.Navigator>
   );
