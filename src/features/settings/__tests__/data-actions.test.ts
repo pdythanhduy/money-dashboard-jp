@@ -28,6 +28,7 @@ jest.mock('expo-crypto', () => {
 import { buildExportPayload, wipeAllAppData } from '@/features/settings/data-actions';
 import { useCalculatorStore } from '@/store/calculatorStore';
 import { useHistoryStore } from '@/store/historyStore';
+import { useMultiJobStore } from '@/store/multiJobStore';
 import { useOnboardingStore } from '@/store/onboardingStore';
 import { DEFAULT_SETTINGS, useSettingsStore } from '@/store/settingsStore';
 import type { HistoryEntry } from '@/types/history';
@@ -126,6 +127,11 @@ describe('wipeAllAppData', () => {
     useCalculatorStore.getState().setResult(fakeResult);
     useSettingsStore.getState().updateSetting('language', 'ja');
     useOnboardingStore.getState().completeOnboarding();
+    useMultiJobStore.getState().addJob('Combini', {
+      hourlyRate: 1_200,
+      hoursPerDay: 8,
+      daysPerWeek: 5,
+    });
 
     await wipeAllAppData();
 
@@ -136,5 +142,6 @@ describe('wipeAllAppData', () => {
     expect(useSettingsStore.getState().settings).toEqual(DEFAULT_SETTINGS);
     expect(useOnboardingStore.getState().hasCompletedOnboarding).toBe(false);
     expect(useOnboardingStore.getState().currentSlide).toBe(0);
+    expect(useMultiJobStore.getState().jobs).toEqual([]);
   });
 });

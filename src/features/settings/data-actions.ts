@@ -13,6 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { APP_VERSION } from '@/lib/app-info';
 import { useCalculatorStore } from '@/store/calculatorStore';
 import { useHistoryStore } from '@/store/historyStore';
+import { useMultiJobStore } from '@/store/multiJobStore';
 import { useOnboardingStore } from '@/store/onboardingStore';
 import { DEFAULT_SETTINGS, useSettingsStore, type AppSettings } from '@/store/settingsStore';
 import type { HistoryEntry } from '@/types/history';
@@ -58,4 +59,5 @@ export async function wipeAllAppData(): Promise<void> {
   useCalculatorStore.getState().reset();
   useSettingsStore.setState({ settings: DEFAULT_SETTINGS });
   useOnboardingStore.getState().reset();
+  useMultiJobStore.getState().clearAll();
 }

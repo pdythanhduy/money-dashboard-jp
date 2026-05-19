@@ -106,3 +106,23 @@ export function computeHourlyAnnual(input: HourlyJobInput): HourlyBreakdown {
     totalAnnual: baseAnnual + nightAllowanceAnnual + overtimeAllowanceAnnual + weekendAllowanceAnnual,
   };
 }
+
+export interface MultiJobBreakdown {
+  /** Per-job breakdowns in the order they were passed in. */
+  perJob: HourlyBreakdown[];
+  /** Sum of every job's `totalAnnual`. Each job is floored individually
+   *  by `computeHourlyAnnual`; the sum is already integer. */
+  totalAnnual: number;
+}
+
+/**
+ * Aggregate multiple hourly jobs for users who hold more than one baito
+ * at once (combini sáng + nhà hàng tối + dạy thêm cuối tuần). Validation
+ * propagates from `computeHourlyAnnual` — if any job is invalid the call
+ * throws and no partial result is returned.
+ */
+export function computeMultiJobAnnual(jobs: readonly HourlyJobInput[]): MultiJobBreakdown {
+  const perJob = jobs.map((j) => computeHourlyAnnual(j));
+  const totalAnnual = perJob.reduce((sum, b) => sum + b.totalAnnual, 0);
+  return { perJob, totalAnnual };
+}

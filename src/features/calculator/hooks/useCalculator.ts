@@ -1,10 +1,15 @@
 import { useCallback, useMemo, useState } from 'react';
 
 import { formatCurrency as formatCurrencyShared } from '@/lib/format';
-import { computeHourlyAnnual, type HourlyJobInput } from '@/lib/hourly-wage-calculator';
+import {
+  computeHourlyAnnual,
+  computeMultiJobAnnual,
+  type HourlyJobInput,
+} from '@/lib/hourly-wage-calculator';
 import { calculateTakeHome } from '@/lib/tax-calculator';
 import { useCalculatorStore } from '@/store/calculatorStore';
 import { useHistoryStore } from '@/store/historyStore';
+import { useMultiJobStore } from '@/store/multiJobStore';
 import { useSettingsStore } from '@/store/settingsStore';
 import type {
   FreelanceMunicipality,
@@ -17,7 +22,7 @@ import type {
 export type JobType = 'baito' | 'seishain' | 'freelance';
 export type PensionType = 'kosei' | 'kokumin';
 export type CalculatorMode = 'input' | 'result';
-export type IncomeMode = 'annual' | 'hourly';
+export type IncomeMode = 'annual' | 'hourly' | 'multi-job';
 export type BlueReturnDeduction = 0 | 100_000 | 550_000 | 650_000;
 
 export interface CalculatorFormState {
@@ -67,6 +72,7 @@ export type CalculatorErrorCode =
   | 'hourlyRatePositive'
   | 'hoursDayRange'
   | 'daysWeekRange'
+  | 'noJobsAdded'
   | 'ageRequired'
   | 'ageRange'
   | 'prefectureRequired'
@@ -181,11 +187,18 @@ export function computeHourlyTotalFromForm(form: CalculatorFormState): number {
   }
 }
 
-export function validateCalculatorForm(form: CalculatorFormState): ValidationErrors {
+export function validateCalculatorForm(
+  form: CalculatorFormState,
+  options: { multiJobCount?: number } = {},
+): ValidationErrors {
   const errors: ValidationErrors = {};
   const age = Number.parseInt(form.ageInput, 10);
 
-  if (form.incomeMode === 'hourly') {
+  if (form.incomeMode === 'multi-job') {
+    if ((options.multiJobCount ?? 0) === 0) {
+      errors.general = 'noJobsAdded';
+    }
+  } else if (form.incomeMode === 'hourly') {
     const rate = parseCurrencyInput(form.hourlyRateInput);
     const hours = parseDecimal(form.hoursPerDayInput);
     const days = parseDecimal(form.daysPerWeekInput);
@@ -234,7 +247,10 @@ function repeatDependents(count: number, age: number, livesWithTaxpayer: boolean
   return Array.from({ length: Math.max(0, count) }, () => ({ age, livesWithTaxpayer }));
 }
 
-export function buildSalaryInput(form: CalculatorFormState): SalaryInput {
+export function buildSalaryInput(
+  form: CalculatorFormState,
+  multiJobInputs: readonly HourlyJobInput[] = [],
+): SalaryInput {
   const category: IncomeCategory = form.jobType === 'freelance' ? 'business' : 'salary';
   const dependents = form.hasDependents
     ? [
@@ -244,12 +260,22 @@ export function buildSalaryInput(form: CalculatorFormState): SalaryInput {
       ]
     : [];
 
-  // Hourly mode is a baito/parttime affordance — always derives an annual
-  // figure then flows through the existing salary pipeline.
-  const annualIncome =
-    form.incomeMode === 'hourly'
-      ? computeHourlyTotalFromForm(form)
-      : parseCurrencyInput(form.annualIncomeInput);
+  // Hourly + multi-job both derive an annual figure then flow through the
+  // existing salary pipeline. calculateTakeHome's public API is unchanged.
+  let annualIncome: number;
+  if (form.incomeMode === 'hourly') {
+    annualIncome = computeHourlyTotalFromForm(form);
+  } else if (form.incomeMode === 'multi-job') {
+    annualIncome = (() => {
+      try {
+        return computeMultiJobAnnual(multiJobInputs).totalAnnual;
+      } catch {
+        return 0;
+      }
+    })();
+  } else {
+    annualIncome = parseCurrencyInput(form.annualIncomeInput);
+  }
 
   const baseInput: SalaryInput = {
     annualIncome,
@@ -278,18 +304,21 @@ export function buildSalaryInput(form: CalculatorFormState): SalaryInput {
   };
 }
 
-export function computeCalculatorResult(form: CalculatorFormState): {
+export function computeCalculatorResult(
+  form: CalculatorFormState,
+  multiJobInputs: readonly HourlyJobInput[] = [],
+): {
   input: SalaryInput | null;
   result: TakeHomeResult | null;
   errors: ValidationErrors;
 } {
-  const errors = validateCalculatorForm(form);
+  const errors = validateCalculatorForm(form, { multiJobCount: multiJobInputs.length });
   if (hasValidationErrors(errors)) {
     return { input: null, result: null, errors };
   }
 
   try {
-    const input = buildSalaryInput(form);
+    const input = buildSalaryInput(form, multiJobInputs);
     return { input, result: calculateTakeHome(input), errors: {} };
   } catch {
     return { input: null, result: null, errors: { general: 'calculationFailed' } };
@@ -335,6 +364,8 @@ export function useCalculator() {
   const setStoredResult = useCalculatorStore((state) => state.setResult);
   const resetStore = useCalculatorStore((state) => state.reset);
   const addHistoryEntry = useHistoryStore((state) => state.addEntry);
+  const multiJobs = useMultiJobStore((state) => state.jobs);
+  const multiJobInputs = useMemo(() => multiJobs.map((j) => j.input), [multiJobs]);
   const defaultPrefecture = useSettingsStore((s) => s.settings.defaultPrefecture);
   const defaultMunicipality = useSettingsStore((s) => s.settings.defaultMunicipality);
 
@@ -348,7 +379,10 @@ export function useCalculator() {
   const [result, setResult] = useState<TakeHomeResult | null>(lastResult);
   const [submittedInput, setSubmittedInput] = useState<SalaryInput | null>(lastInput);
 
-  const currentValidation = useMemo(() => validateCalculatorForm(form), [form]);
+  const currentValidation = useMemo(
+    () => validateCalculatorForm(form, { multiJobCount: multiJobInputs.length }),
+    [form, multiJobInputs.length],
+  );
   const canSubmit = !hasValidationErrors(currentValidation);
 
   const updateField = useCallback(
@@ -386,7 +420,7 @@ export function useCalculator() {
   }, [updateField]);
 
   const submit = useCallback(() => {
-    const next = computeCalculatorResult(form);
+    const next = computeCalculatorResult(form, multiJobInputs);
     setErrors(next.errors);
     if (!next.input || !next.result) return false;
 
@@ -399,7 +433,7 @@ export function useCalculator() {
     setResult(next.result);
     setMode('result');
     return true;
-  }, [form, setStoredInput, setStoredResult, addHistoryEntry]);
+  }, [form, multiJobInputs, setStoredInput, setStoredResult, addHistoryEntry]);
 
   const editInput = useCallback(() => {
     setMode('input');
