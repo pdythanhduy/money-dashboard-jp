@@ -29,7 +29,16 @@
     "plugins": [
       "expo-sqlite",
       "expo-localization",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#1a365d",
+          "defaultChannel": "default",
+          "enableBackgroundRemoteNotifications": false
+        }
+      ]
     ]
   }
 }

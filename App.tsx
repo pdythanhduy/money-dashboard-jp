@@ -6,6 +6,7 @@ import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-c
 
 import '@/lib/i18n';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { configureNotifications } from '@/lib/notifications';
 import { RootNavigator } from '@/navigation/RootNavigator';
 import { useSettingsHydrated } from '@/store/settingsStore';
 import { useHistoryMigration } from '@/store/useHistoryMigration';
@@ -19,6 +20,11 @@ console.log('[App] module loaded');
 // at module load + on mount makes it deterministic. Errors are swallowed
 // because hideAsync rejects if the splash is already hidden.
 SplashScreen.hideAsync().catch(() => {});
+
+// Set up the foreground notification handler. Pure local — no push tokens
+// requested, no remote registration. Safe to call when native module is
+// absent (no-op on web/jest).
+configureNotifications();
 
 export default function App() {
   useHistoryMigration();

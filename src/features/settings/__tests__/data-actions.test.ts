@@ -25,8 +25,14 @@ jest.mock('expo-crypto', () => {
   return { randomUUID: jest.fn(() => `uuid-${++n}`) };
 });
 
+const mockCancelAll = jest.fn();
+jest.mock('@/lib/notifications', () => ({
+  cancelAllReminders: () => mockCancelAll(),
+}));
+
 import { buildExportPayload, wipeAllAppData } from '@/features/settings/data-actions';
 import { useCalculatorStore } from '@/store/calculatorStore';
+import { useDocumentsStore } from '@/store/documentsStore';
 import { useHistoryStore } from '@/store/historyStore';
 import { useMultiJobStore } from '@/store/multiJobStore';
 import { useOnboardingStore } from '@/store/onboardingStore';
@@ -122,6 +128,8 @@ describe('buildExportPayload', () => {
 
 describe('wipeAllAppData', () => {
   it('resets every store to its initial state', async () => {
+    mockCancelAll.mockReset();
+    mockCancelAll.mockResolvedValue(undefined);
     useHistoryStore.getState().addEntry(fakeInput, fakeResult);
     useCalculatorStore.getState().setInput(fakeInput);
     useCalculatorStore.getState().setResult(fakeResult);
@@ -132,9 +140,14 @@ describe('wipeAllAppData', () => {
       hoursPerDay: 8,
       daysPerWeek: 5,
     });
+    useDocumentsStore.getState().addDocument({
+      kind: 'zairyu_card',
+      expiryDate: '2027-03-15',
+    });
 
     await wipeAllAppData();
 
+    expect(mockCancelAll).toHaveBeenCalledTimes(1);
     expect(useHistoryStore.getState().entries).toEqual([]);
     expect(useHistoryStore.getState().migratedFromLatest).toBe(false);
     expect(useCalculatorStore.getState().lastInput).toBeNull();
@@ -143,5 +156,6 @@ describe('wipeAllAppData', () => {
     expect(useOnboardingStore.getState().hasCompletedOnboarding).toBe(false);
     expect(useOnboardingStore.getState().currentSlide).toBe(0);
     expect(useMultiJobStore.getState().jobs).toEqual([]);
+    expect(useDocumentsStore.getState().documents).toEqual([]);
   });
 });

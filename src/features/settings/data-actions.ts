@@ -11,7 +11,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { APP_VERSION } from '@/lib/app-info';
+import { cancelAllReminders } from '@/lib/notifications';
 import { useCalculatorStore } from '@/store/calculatorStore';
+import { useDocumentsStore } from '@/store/documentsStore';
 import { useHistoryStore } from '@/store/historyStore';
 import { useMultiJobStore } from '@/store/multiJobStore';
 import { useOnboardingStore } from '@/store/onboardingStore';
@@ -49,6 +51,9 @@ export function buildExportPayload(
 }
 
 export async function wipeAllAppData(): Promise<void> {
+  // Cancel system notifications first — the in-memory document store
+  // about to be cleared was the source of truth.
+  await cancelAllReminders();
   try {
     await AsyncStorage.clear();
   } catch {
@@ -60,4 +65,5 @@ export async function wipeAllAppData(): Promise<void> {
   useSettingsStore.setState({ settings: DEFAULT_SETTINGS });
   useOnboardingStore.getState().reset();
   useMultiJobStore.getState().clearAll();
+  useDocumentsStore.getState().clearAll();
 }

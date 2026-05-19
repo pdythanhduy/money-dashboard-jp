@@ -4,7 +4,7 @@
  * declarative (state → row → action handler).
  */
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Linking, ScrollView, Share, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -20,6 +20,10 @@ import { SettingsSection } from '@/features/settings/components/SettingsSection'
 import { ThemePicker } from '@/features/settings/components/ThemePicker';
 import { buildExportPayload, wipeAllAppData } from '@/features/settings/data-actions';
 import { APP_BUILD, APP_VERSION } from '@/lib/app-info';
+import {
+  getPermissionStatus,
+  requestNotificationPermission,
+} from '@/lib/notifications';
 import { useCalculatorStore } from '@/store/calculatorStore';
 import { useHistoryStore } from '@/store/historyStore';
 import { useOnboardingStore } from '@/store/onboardingStore';
@@ -46,6 +50,19 @@ export function SettingsScreen() {
     lastInput?.category === 'business' || settings.defaultMunicipality !== null;
 
   const [openModal, setOpenModal] = useState<ModalKey | null>(null);
+  const [notifPermStatus, setNotifPermStatus] = useState<'granted' | 'denied' | 'undetermined'>(
+    'undetermined',
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+    void getPermissionStatus().then((s) => {
+      if (!cancelled) setNotifPermStatus(s);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const close = useCallback(() => setOpenModal(null), []);
 
@@ -166,14 +183,16 @@ export function SettingsScreen() {
 
         <SettingsSection
           title={t('settings.sections.notifications')}
-          footer={t('settings.footers.notifications')}
+          footer={t(`documents.permission.status.${notifPermStatus}`)}
         >
           <SettingsItem
-            kind="toggle"
+            kind="value"
             icon="notifications-outline"
             label={t('settings.items.notifications')}
-            value={settings.notificationsEnabled}
-            onChange={(v) => updateSetting('notificationsEnabled', v)}
+            value={t(`documents.permission.status.${notifPermStatus}`).slice(0, 20)}
+            onPress={() => {
+              void requestNotificationPermission().then(setNotifPermStatus);
+            }}
           />
         </SettingsSection>
 
