@@ -91,6 +91,23 @@
         "helper": "年金保険の種類を選択します。",
         "kosei": "厚生年金",
         "kokumin": "国民年金"
+      },
+      "hourlyRate": {
+        "label": "時給",
+        "placeholder": "1200",
+        "helper": "例：¥1,113（東京都最低賃金 2024）"
+      },
+      "hoursPerDay": {
+        "label": "1日の労働時間",
+        "helper": "0.5〜24時間"
+      },
+      "daysPerWeek": {
+        "label": "週の労働日数",
+        "helper": "1〜7"
+      },
+      "weeksPerYear": {
+        "label": "年の労働週数",
+        "helper": "デフォルト52。学生は学期のみで約40。"
       }
     },
     "prefectures": {
@@ -164,7 +181,65 @@
       "prefectureRequired": "都道府県を選択してください。",
       "municipalityRequired": "フリーランスの場合は市区町村を選択してください。",
       "calculationFailed": "現在の入力では計算できません。内容を確認してください。",
-      "veryHighIncomeWarning": "年収が1億円超 — このアプリは大企業向けの税務計画を反映しきれません。参考値としてご利用ください。"
+      "veryHighIncomeWarning": "年収が1億円超 — このアプリは大企業向けの税務計画を反映しきれません。参考値としてご利用ください。",
+      "hourlyRateRequired": "時給を入力してください。",
+      "hourlyRatePositive": "時給は0円より大きい必要があります。",
+      "hoursDayRange": "1日の労働時間は0.5〜24の範囲で入力してください。",
+      "daysWeekRange": "週の労働日数は1〜7の範囲で入力してください。"
+    },
+    "incomeMode": {
+      "label": "収入の入力方法",
+      "annual": "年収",
+      "hourly": "時給制"
+    },
+    "hourlyPreview": {
+      "label": "年収予想"
+    },
+    "allowances": {
+      "nightShift": {
+        "title": "深夜勤務 (22:00-05:00)",
+        "sub": "深夜時間は25%増しで計算",
+        "hoursPerDay": "1日の深夜時間"
+      },
+      "overtime": {
+        "title": "残業 (8時間超)",
+        "sub": "残業時間は25%増しで計算",
+        "hoursPerDay": "1日の残業時間"
+      },
+      "weekend": {
+        "title": "週末勤務",
+        "sub": "週末勤務日は25%増しで計算",
+        "daysPerMonth": "月の週末勤務日数"
+      }
+    },
+    "walls": {
+      "sectionTitle": "壁の警告",
+      "approachingBy": "あと{{amount}}で到達",
+      "crossedBy": "{{amount}}超過",
+      "basic_deduction_103": {
+        "title": "103万円の壁（旧）",
+        "body": "令和7年改正前の所得税ライン。新しい基準は160万円。参考情報として表示。"
+      },
+      "shaho_106": {
+        "title": "106万円の壁 — 社会保険加入",
+        "body": "51人以上の会社でパートとして働く場合、健康保険と厚生年金に加入義務。手取りが約15%減少。"
+      },
+      "shaho_130": {
+        "title": "130万円の壁 — 配偶者の扶養（社保）",
+        "body": "この線を超えると配偶者の健保扶養から外れ、自分で国保または会社の健保に加入する必要があります。"
+      },
+      "spouse_deduction_150": {
+        "title": "150万円の壁 — 配偶者特別控除（満額）",
+        "body": "この線を超えると配偶者特別控除が段階的に減少。扶養者の税負担が増えます。"
+      },
+      "basic_deduction_160": {
+        "title": "160万円の壁（FY2025新）",
+        "body": "令和7年12月改正の新しい基礎控除ライン。この線以下は所得税ゼロ。"
+      },
+      "spouse_deduction_201": {
+        "title": "201万円の壁 — 配偶者特別控除（終了）",
+        "body": "この線を超えると配偶者特別控除はゼロ。配偶者優遇が完全に消滅。"
+      }
     },
     "result": {
       "takeHomeMonthly": "月の手取り",

@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 
 import { formatCurrency as formatCurrencyShared } from '@/lib/format';
+import { computeHourlyAnnual, type HourlyJobInput } from '@/lib/hourly-wage-calculator';
 import { calculateTakeHome } from '@/lib/tax-calculator';
 import { useCalculatorStore } from '@/store/calculatorStore';
 import { useHistoryStore } from '@/store/historyStore';
@@ -16,11 +17,27 @@ import type {
 export type JobType = 'baito' | 'seishain' | 'freelance';
 export type PensionType = 'kosei' | 'kokumin';
 export type CalculatorMode = 'input' | 'result';
+export type IncomeMode = 'annual' | 'hourly';
 export type BlueReturnDeduction = 0 | 100_000 | 550_000 | 650_000;
 
 export interface CalculatorFormState {
   jobType: JobType;
+  /** Source the annual figure comes from: directly typed, or computed from
+   *  hourly schedule. Hourly mode forces category=salary (baito flow). */
+  incomeMode: IncomeMode;
   annualIncomeInput: string;
+  // Hourly-mode-only fields. Ignored when incomeMode === 'annual'.
+  hourlyRateInput: string;
+  hoursPerDayInput: string;
+  daysPerWeekInput: string;
+  weeksPerYearInput: string;
+  hasNightShift: boolean;
+  nightHoursPerDayInput: string;
+  hasOvertime: boolean;
+  overtimeHoursPerDayInput: string;
+  hasWeekend: boolean;
+  weekendDaysPerMonthInput: string;
+
   ageInput: string;
   prefecture?: Prefecture;
   pensionType: PensionType;
@@ -35,6 +52,9 @@ export interface CalculatorFormState {
 
 export type CalculatorField =
   | 'annualIncomeInput'
+  | 'hourlyRateInput'
+  | 'hoursPerDayInput'
+  | 'daysPerWeekInput'
   | 'ageInput'
   | 'prefecture'
   | 'municipality'
@@ -43,6 +63,10 @@ export type CalculatorField =
 export type CalculatorErrorCode =
   | 'annualIncomeRequired'
   | 'annualIncomePositive'
+  | 'hourlyRateRequired'
+  | 'hourlyRatePositive'
+  | 'hoursDayRange'
+  | 'daysWeekRange'
   | 'ageRequired'
   | 'ageRange'
   | 'prefectureRequired'
@@ -53,7 +77,18 @@ export type ValidationErrors = Partial<Record<CalculatorField, CalculatorErrorCo
 
 export const DEFAULT_CALCULATOR_FORM: CalculatorFormState = {
   jobType: 'seishain',
+  incomeMode: 'annual',
   annualIncomeInput: '',
+  hourlyRateInput: '',
+  hoursPerDayInput: '8',
+  daysPerWeekInput: '5',
+  weeksPerYearInput: '52',
+  hasNightShift: false,
+  nightHoursPerDayInput: '0',
+  hasOvertime: false,
+  overtimeHoursPerDayInput: '0',
+  hasWeekend: false,
+  weekendDaysPerMonthInput: '0',
   ageInput: '',
   pensionType: 'kosei',
   hasDependents: false,
@@ -99,15 +134,79 @@ export function formatCurrencyInput(value: string): string {
   return formatCurrency(parseCurrencyInput(value));
 }
 
+/** Lenient decimal parse — accepts "8", "8.5", "8,5" (comma decimal). */
+function parseDecimal(value: string): number {
+  const normalized = value.trim().replace(',', '.');
+  if (!normalized) return Number.NaN;
+  return Number.parseFloat(normalized);
+}
+
+/**
+ * Build a `HourlyJobInput` from the form's text fields, honoring the
+ * per-allowance toggles (a zero stays zero unless the user opens that
+ * section, so accidentally typed values don't leak into the total).
+ */
+function hourlyInputFromForm(form: CalculatorFormState): HourlyJobInput {
+  const weeksRaw = parseDecimal(form.weeksPerYearInput);
+  const weeks = Number.isFinite(weeksRaw) && weeksRaw > 0 ? weeksRaw : 52;
+
+  const input: HourlyJobInput = {
+    hourlyRate: parseCurrencyInput(form.hourlyRateInput),
+    hoursPerDay: parseDecimal(form.hoursPerDayInput),
+    daysPerWeek: parseDecimal(form.daysPerWeekInput),
+    weeksPerYear: weeks,
+  };
+  if (form.hasNightShift) {
+    const n = parseDecimal(form.nightHoursPerDayInput);
+    if (Number.isFinite(n) && n > 0) input.nightHoursPerDay = n;
+  }
+  if (form.hasOvertime) {
+    const o = parseDecimal(form.overtimeHoursPerDayInput);
+    if (Number.isFinite(o) && o > 0) input.overtimeHoursPerDay = o;
+  }
+  if (form.hasWeekend) {
+    const w = parseDecimal(form.weekendDaysPerMonthInput);
+    if (Number.isFinite(w) && w > 0) input.weekendDaysPerMonth = w;
+  }
+  return input;
+}
+
+/** Public: derive the annual-yen figure from hourly fields without
+ *  computing the rest of the take-home pipeline (useful for previews). */
+export function computeHourlyTotalFromForm(form: CalculatorFormState): number {
+  try {
+    return computeHourlyAnnual(hourlyInputFromForm(form)).totalAnnual;
+  } catch {
+    return 0;
+  }
+}
+
 export function validateCalculatorForm(form: CalculatorFormState): ValidationErrors {
   const errors: ValidationErrors = {};
-  const annualIncome = parseCurrencyInput(form.annualIncomeInput);
   const age = Number.parseInt(form.ageInput, 10);
 
-  if (!form.annualIncomeInput.trim()) {
-    errors.annualIncomeInput = 'annualIncomeRequired';
-  } else if (!Number.isFinite(annualIncome) || annualIncome <= 0) {
-    errors.annualIncomeInput = 'annualIncomePositive';
+  if (form.incomeMode === 'hourly') {
+    const rate = parseCurrencyInput(form.hourlyRateInput);
+    const hours = parseDecimal(form.hoursPerDayInput);
+    const days = parseDecimal(form.daysPerWeekInput);
+    if (!form.hourlyRateInput.trim()) {
+      errors.hourlyRateInput = 'hourlyRateRequired';
+    } else if (!Number.isFinite(rate) || rate <= 0) {
+      errors.hourlyRateInput = 'hourlyRatePositive';
+    }
+    if (!Number.isFinite(hours) || hours < 0.5 || hours > 24) {
+      errors.hoursPerDayInput = 'hoursDayRange';
+    }
+    if (!Number.isFinite(days) || days < 1 || days > 7) {
+      errors.daysPerWeekInput = 'daysWeekRange';
+    }
+  } else {
+    const annualIncome = parseCurrencyInput(form.annualIncomeInput);
+    if (!form.annualIncomeInput.trim()) {
+      errors.annualIncomeInput = 'annualIncomeRequired';
+    } else if (!Number.isFinite(annualIncome) || annualIncome <= 0) {
+      errors.annualIncomeInput = 'annualIncomePositive';
+    }
   }
 
   if (!form.ageInput.trim()) {
@@ -145,8 +244,15 @@ export function buildSalaryInput(form: CalculatorFormState): SalaryInput {
       ]
     : [];
 
+  // Hourly mode is a baito/parttime affordance — always derives an annual
+  // figure then flows through the existing salary pipeline.
+  const annualIncome =
+    form.incomeMode === 'hourly'
+      ? computeHourlyTotalFromForm(form)
+      : parseCurrencyInput(form.annualIncomeInput);
+
   const baseInput: SalaryInput = {
-    annualIncome: parseCurrencyInput(form.annualIncomeInput),
+    annualIncome,
     age: Number.parseInt(form.ageInput, 10),
     category,
     hasSpouse: form.hasDependents && form.hasSpouse,

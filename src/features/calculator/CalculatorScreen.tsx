@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { BreakdownList } from '@/features/calculator/components/BreakdownList';
 import { ResultCard } from '@/features/calculator/components/ResultCard';
+import { WallWarningBanner } from '@/features/calculator/components/WallWarningBanner';
 import { SalaryForm } from '@/features/calculator/components/SalaryForm';
 import { useCalculator } from '@/features/calculator/hooks/useCalculator';
 import { useTheme } from '@/theme';
@@ -58,6 +59,7 @@ export function CalculatorScreen() {
           </Pressable>
 
           <ResultCard result={calculator.result} />
+          <WallWarningBanner annualIncome={calculator.result.grossAnnual} />
           <BreakdownList result={calculator.result} input={calculator.submittedInput} />
 
           <View style={{ flexDirection: 'row', gap: spacing.sm }}>
