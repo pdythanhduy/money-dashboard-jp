@@ -163,7 +163,8 @@
       "ageRange": "年齢は15-100歳の範囲で入力してください。",
       "prefectureRequired": "都道府県を選択してください。",
       "municipalityRequired": "フリーランスの場合は市区町村を選択してください。",
-      "calculationFailed": "現在の入力では計算できません。内容を確認してください。"
+      "calculationFailed": "現在の入力では計算できません。内容を確認してください。",
+      "veryHighIncomeWarning": "年収が1億円超 — このアプリは大企業向けの税務計画を反映しきれません。参考値としてご利用ください。"
     },
     "result": {
       "takeHomeMonthly": "月の手取り",
@@ -274,6 +275,9 @@
     },
     "paydayBadge": "給料日まであと{{days}}日",
     "paydayBadgeToday": "今日は給料日です！",
+    "a11y": {
+      "takeHomeProgress": "今月の手取り：{{earned}}、月末予想{{total}}。{{day}}/{{of}}日。"
+    },
     "takeHomeCard": {
       "title": "今月の手取り",
       "subtitle": "Take-home tháng này",
@@ -312,7 +316,9 @@
       "title": "家計管理を始めよう",
       "subtitle": "給与情報を入力するとダッシュボードがリアルタイムで更新されます",
       "subtitleJa": "Nhập thông tin lương để xem dashboard cập nhật real-time",
-      "cta": "今すぐ計算"
+      "cta": "今すぐ計算",
+      "zeroIncomeTitle": "計算結果が¥0です",
+      "zeroIncomeBody": "直近の計算で手取りが¥0になりました（課税ラインに達していません）。数値を見直して再計算してください。"
     }
   },
   "settings": {
@@ -378,7 +384,7 @@
       "shareTitle": "Kakei — 履歴データの書き出し",
       "success": "共有用データを準備しました",
       "error": "書き出しに失敗しました。再度お試しください。",
-      "noData": "書き出すデータがありません。"
+      "noData": "書き出せる履歴がありません。給与計算タブで一度計算してから戻ってきてください。"
     },
     "clear": {
       "title": "すべてのデータを削除しますか？",

@@ -70,7 +70,12 @@ export function HistoryDetailModal({ entry, onClose, onSave, onDelete }: Props) 
           <Text style={[typography.title3, { color: colors.text, flex: 1 }]} numberOfLines={1}>
             {entry.label ?? t('history.detail.title')}
           </Text>
-          <Pressable onPress={onClose} hitSlop={8}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t('common.close')}
+            onPress={onClose}
+            hitSlop={8}
+          >
             <Ionicons name="close" size={24} color={colors.text} />
           </Pressable>
         </View>
@@ -115,6 +120,8 @@ export function HistoryDetailModal({ entry, onClose, onSave, onDelete }: Props) 
 
           <View style={{ flexDirection: 'row', gap: spacing.sm, paddingHorizontal: spacing.lg }}>
             <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t('history.detail.delete')}
               onPress={handleDelete}
               style={({ pressed }) => ({
                 flex: 1, minHeight: 50, borderRadius: radius.sm,
@@ -128,6 +135,8 @@ export function HistoryDetailModal({ entry, onClose, onSave, onDelete }: Props) 
               </Text>
             </Pressable>
             <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t('history.detail.save')}
               onPress={handleSave}
               style={({ pressed }) => ({
                 flex: 1, minHeight: 50, borderRadius: radius.sm,

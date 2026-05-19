@@ -121,7 +121,12 @@ function StatCard({ icon, tint, label, value, sub, onPress }: StatCardProps) {
 
   if (onPress) {
     return (
-      <Pressable onPress={onPress} style={({ pressed }) => ({ flex: 1, opacity: pressed ? 0.85 : 1 })}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={`${label}: ${value}`}
+        onPress={onPress}
+        style={({ pressed }) => ({ flex: 1, opacity: pressed ? 0.85 : 1 })}
+      >
         {inner}
       </Pressable>
     );

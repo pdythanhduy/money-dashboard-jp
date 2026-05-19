@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -18,9 +19,20 @@ export function PaydayPicker({ visible, value, onChange, onClose }: PaydayPicker
   const { t } = useTranslation();
   const { colors, typography, spacing, radius, isDark } = useTheme();
 
+  // Stable per-day handler so DayChip's memo equality holds across renders.
+  const handlePick = useCallback(
+    (day: number) => {
+      onChange(day);
+      onClose();
+    },
+    [onChange, onClose],
+  );
+
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
       <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={t('common.close')}
         style={{
           flex: 1,
           backgroundColor: isDark ? 'rgba(0,0,0,0.64)' : 'rgba(15,20,25,0.42)',
@@ -29,6 +41,7 @@ export function PaydayPicker({ visible, value, onChange, onClose }: PaydayPicker
         onPress={onClose}
       >
         <Pressable
+          accessibilityRole="none"
           style={{
             maxHeight: '72%',
             backgroundColor: colors.surface,
@@ -88,43 +101,14 @@ export function PaydayPicker({ visible, value, onChange, onClose }: PaydayPicker
               }}
               showsVerticalScrollIndicator={false}
             >
-              {DAYS.map((day) => {
-                const selected = day === value;
-                return (
-                  <Pressable
-                    key={day}
-                    accessibilityRole="button"
-                    accessibilityState={{ selected }}
-                    accessibilityLabel={`day-${day}`}
-                    onPress={() => {
-                      onChange(day);
-                      onClose();
-                    }}
-                    style={{
-                      width: 52,
-                      height: 52,
-                      borderRadius: radius.md,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: selected ? colors.accent : colors.background,
-                      borderWidth: 1,
-                      borderColor: selected ? colors.accent : colors.border,
-                    }}
-                  >
-                    <Text
-                      style={[
-                        typography.body,
-                        {
-                          color: selected ? '#1a202c' : colors.text,
-                          fontWeight: selected ? '700' : '500',
-                        },
-                      ]}
-                    >
-                      {day}
-                    </Text>
-                  </Pressable>
-                );
-              })}
+              {DAYS.map((day) => (
+                <DayChip
+                  key={day}
+                  day={day}
+                  selected={day === value}
+                  onPick={handlePick}
+                />
+              ))}
             </ScrollView>
           </SafeAreaView>
         </Pressable>
@@ -132,3 +116,47 @@ export function PaydayPicker({ visible, value, onChange, onClose }: PaydayPicker
     </Modal>
   );
 }
+
+interface DayChipProps {
+  day: number;
+  selected: boolean;
+  onPick: (day: number) => void;
+}
+
+/**
+ * Memoized so the 31 chips don't all re-render when one is selected — only
+ * the old-selected and new-selected ones flip props.
+ */
+const DayChip = memo(function DayChip({ day, selected, onPick }: DayChipProps) {
+  const { colors, typography, radius } = useTheme();
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityState={{ selected }}
+      accessibilityLabel={`day-${day}`}
+      onPress={() => onPick(day)}
+      style={{
+        width: 52,
+        height: 52,
+        borderRadius: radius.md,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: selected ? colors.accent : colors.background,
+        borderWidth: 1,
+        borderColor: selected ? colors.accent : colors.border,
+      }}
+    >
+      <Text
+        style={[
+          typography.body,
+          {
+            color: selected ? '#1a202c' : colors.text,
+            fontWeight: selected ? '700' : '500',
+          },
+        ]}
+      >
+        {day}
+      </Text>
+    </Pressable>
+  );
+});

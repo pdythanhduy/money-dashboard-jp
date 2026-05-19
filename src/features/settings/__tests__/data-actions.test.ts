@@ -111,6 +111,12 @@ describe('buildExportPayload', () => {
     const parsed = JSON.parse(JSON.stringify(payload));
     expect(parsed.schemaVersion).toBe(1);
   });
+
+  it('schemaVersion is the FIRST documented key after exportedAt — JSON order matters for human readers', () => {
+    const payload = buildExportPayload(DEFAULT_SETTINGS, [], new Date('2026-05-19T00:00:00Z'));
+    const keys = Object.keys(payload);
+    expect(keys[0]).toBe('schemaVersion');
+  });
 });
 
 describe('wipeAllAppData', () => {

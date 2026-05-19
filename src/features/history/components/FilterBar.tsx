@@ -30,6 +30,9 @@ export function FilterBar({ value, onChange }: Props) {
         return (
           <Pressable
             key={opt}
+            accessibilityRole="button"
+            accessibilityState={{ selected }}
+            accessibilityLabel={t(`history.filter.${opt}`)}
             onPress={() => onChange(opt)}
             style={({ pressed }) => ({
               paddingHorizontal: spacing.md,

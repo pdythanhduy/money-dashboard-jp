@@ -117,3 +117,13 @@ describe('settingsStore.resetToDefaults', () => {
     expect(useSettingsStore.getState().settings).toEqual(DEFAULT_SETTINGS);
   });
 });
+
+describe('useSettingsHydrated', () => {
+  it('is a function that returns boolean', () => {
+    const mod = require('@/store/settingsStore') as typeof import('@/store/settingsStore');
+    expect(typeof mod.useSettingsHydrated).toBe('function');
+    // Zustand persist exposes hasHydrated() synchronously after first
+    // rehydrate; in test (mocked AsyncStorage) it resolves true eagerly.
+    expect(typeof mod.useSettingsHydrated()).toBe('boolean');
+  });
+});

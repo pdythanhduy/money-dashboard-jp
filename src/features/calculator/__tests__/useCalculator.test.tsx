@@ -183,6 +183,23 @@ describe('computeCalculatorResult', () => {
     expect(output.result).toBeNull();
     expect(output.errors.annualIncomeInput).toBe('annualIncomeRequired');
   });
+
+  it('computes successfully for very high income (>¥100M)', () => {
+    // 1.2億 — still inside the top NTA bracket (45 %); the warning the UI
+    // surfaces is informational, the math should still produce a result.
+    const output = computeCalculatorResult({
+      ...DEFAULT_CALCULATOR_FORM,
+      annualIncomeInput: '120000000',
+      ageInput: '45',
+      prefecture: 'tokyo',
+    });
+    expect(output.errors).toEqual({});
+    expect(output.result).not.toBeNull();
+    expect(output.result!.incomeTax).toBeGreaterThan(0);
+    // Sanity: take-home is significantly less than gross (top brackets bite hard).
+    expect(output.result!.takeHomeAnnual).toBeLessThan(120_000_000);
+    expect(output.result!.takeHomeAnnual).toBeGreaterThan(0);
+  });
 });
 
 // ---------------------------------------------------------------------------

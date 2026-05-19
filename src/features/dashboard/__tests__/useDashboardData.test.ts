@@ -157,3 +157,26 @@ describe('computeDashboardData — payday override', () => {
     expect(data.isPayday).toBe(false);
   });
 });
+
+describe('computeDashboardData — zero-income edge case', () => {
+  it('still reports hasData=true but monthlyTakeHome === 0 when result is zeroed', () => {
+    // Income below all tax/insurance thresholds — every monetary field is 0.
+    const zeroResult = makeResult({
+      grossAnnual: 0,
+      takeHomeAnnual: 0,
+      takeHomeMonthly: 0,
+      incomeTax: 0,
+      residentTax: 0,
+      healthInsurance: 0,
+      pension: 0,
+      employmentInsurance: 0,
+    });
+    const data = computeDashboardData(new Date(2026, 4, 19), zeroResult);
+    expect(data.hasData).toBe(true);
+    expect(data.monthlyTakeHome).toBe(0);
+    expect(data.proportionalTakeHome).toBe(0);
+    expect(data.averageDaily).toBe(0);
+    // Retention rate guard — must not produce NaN even with grossAnnual=0.
+    expect(data.retentionRate).toBe(0);
+  });
+});

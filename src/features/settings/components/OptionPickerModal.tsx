@@ -43,6 +43,8 @@ export function OptionPickerModal<T extends string>({
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
       <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={closeLabel}
         style={{
           flex: 1,
           backgroundColor: isDark ? 'rgba(0,0,0,0.64)' : 'rgba(15,20,25,0.42)',
@@ -51,6 +53,7 @@ export function OptionPickerModal<T extends string>({
         onPress={onClose}
       >
         <Pressable
+          accessibilityRole="none"
           style={{
             maxHeight: '72%',
             backgroundColor: colors.surface,

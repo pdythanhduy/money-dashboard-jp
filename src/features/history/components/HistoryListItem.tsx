@@ -30,6 +30,8 @@ function HistoryListItemImpl({ entry, onPress }: Props) {
 
   return (
     <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`${label} · ${formatCurrency(entry.result.takeHomeMonthly)}`}
       onPress={() => onPress(entry)}
       style={({ pressed }) => ({
         marginHorizontal: spacing.lg,

@@ -33,6 +33,8 @@ export function HistoryEmptyState({ onPressCta }: Props) {
           {t('history.empty.subtitle')}
         </Text>
         <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t('history.empty.cta')}
           onPress={onPressCta}
           style={({ pressed }) => ({
             backgroundColor: colors.brand,

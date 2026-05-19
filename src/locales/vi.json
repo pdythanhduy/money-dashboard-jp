@@ -163,7 +163,8 @@
       "ageRange": "Tuổi phải trong khoảng 15-100.",
       "prefectureRequired": "Chọn tỉnh đang ở.",
       "municipalityRequired": "Chọn thành phố/quận cho freelance.",
-      "calculationFailed": "Không thể tính với dữ liệu hiện tại. Kiểm tra lại thông tin đã nhập."
+      "calculationFailed": "Không thể tính với dữ liệu hiện tại. Kiểm tra lại thông tin đã nhập.",
+      "veryHighIncomeWarning": "Mức thu nhập rất cao (>¥100tr/năm) — kết quả có thể không phản ánh kế hoạch thuế cho doanh nghiệp lớn."
     },
     "result": {
       "takeHomeMonthly": "Take-home tháng",
@@ -274,6 +275,9 @@
     },
     "paydayBadge": "Còn {{days}} ngày tới ngày lương",
     "paydayBadgeToday": "Hôm nay là ngày lương!",
+    "a11y": {
+      "takeHomeProgress": "Take-home tháng này: {{earned}}, dự kiến {{total}} cuối tháng. Ngày {{day}}/{{of}}."
+    },
     "takeHomeCard": {
       "title": "Take-home tháng này",
       "subtitle": "今月の手取り",
@@ -312,7 +316,9 @@
       "title": "Bắt đầu hành trình tài chính",
       "subtitle": "Nhập thông tin lương để xem dashboard cập nhật real-time",
       "subtitleJa": "給与情報を入力してダッシュボードを表示",
-      "cta": "Tính lương ngay"
+      "cta": "Tính lương ngay",
+      "zeroIncomeTitle": "Thu nhập quá thấp để tính",
+      "zeroIncomeBody": "Lần tính gần nhất ra take-home ¥0 — chưa đạt ngưỡng tối thiểu. Hãy điều chỉnh số liệu rồi tính lại."
     }
   },
   "settings": {
@@ -378,7 +384,7 @@
       "shareTitle": "Kakei - Xuất dữ liệu lịch sử",
       "success": "Đã chuẩn bị dữ liệu để chia sẻ",
       "error": "Không thể xuất dữ liệu. Vui lòng thử lại.",
-      "noData": "Chưa có dữ liệu để xuất."
+      "noData": "Chưa có lịch sử để xuất. Hãy mở tab Tính lương, tính một lần rồi quay lại đây."
     },
     "clear": {
       "title": "Xóa toàn bộ dữ liệu?",
