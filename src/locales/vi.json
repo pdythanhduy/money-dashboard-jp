@@ -332,6 +332,7 @@
       "theme": "Giao diện",
       "defaultPrefecture": "Tỉnh mặc định",
       "defaultMunicipality": "Quận/Thành phố (freelance)",
+      "municipalityHint": "Tự động hiện khi bạn chọn Freelance",
       "payday": "Ngày lương hàng tháng",
       "notifications": "Bật thông báo",
       "faceId": "Face ID / Touch ID",

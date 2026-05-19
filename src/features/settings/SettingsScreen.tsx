@@ -20,6 +20,7 @@ import { SettingsSection } from '@/features/settings/components/SettingsSection'
 import { ThemePicker } from '@/features/settings/components/ThemePicker';
 import { buildExportPayload, wipeAllAppData } from '@/features/settings/data-actions';
 import { APP_BUILD, APP_VERSION } from '@/lib/app-info';
+import { useCalculatorStore } from '@/store/calculatorStore';
 import { useHistoryStore } from '@/store/historyStore';
 import { useOnboardingStore } from '@/store/onboardingStore';
 import { useSettingsStore } from '@/store/settingsStore';
@@ -35,7 +36,14 @@ export function SettingsScreen() {
   const updateSetting = useSettingsStore((s) => s.updateSetting);
 
   const entries = useHistoryStore((s) => s.entries);
+  const lastInput = useCalculatorStore((s) => s.lastInput);
   const resetOnboarding = useOnboardingStore((s) => s.reset);
+
+  // Municipality picker stays hidden until the user actually goes freelance
+  // (or has previously set a default). Avoids three rows of clutter for the
+  // 95% of users who are 給与所得者.
+  const showMunicipality =
+    lastInput?.category === 'business' || settings.defaultMunicipality !== null;
 
   const [openModal, setOpenModal] = useState<ModalKey | null>(null);
 
@@ -132,15 +140,20 @@ export function SettingsScreen() {
             label={t('settings.items.defaultPrefecture')}
             value={prefectureDisplay}
             onPress={() => setOpenModal('prefecture')}
+            {...(showMunicipality
+              ? {}
+              : { sublabel: t('settings.items.municipalityHint') })}
           />
-          <SettingsItem
-            kind="value"
-            icon="business-outline"
-            label={t('settings.items.defaultMunicipality')}
-            value={municipalityDisplay}
-            onPress={() => setOpenModal('municipality')}
-            showBorder
-          />
+          {showMunicipality ? (
+            <SettingsItem
+              kind="value"
+              icon="business-outline"
+              label={t('settings.items.defaultMunicipality')}
+              value={municipalityDisplay}
+              onPress={() => setOpenModal('municipality')}
+              showBorder
+            />
+          ) : null}
           <SettingsItem
             kind="value"
             icon="calendar-outline"

@@ -184,3 +184,132 @@ describe('computeCalculatorResult', () => {
     expect(output.errors.annualIncomeInput).toBe('annualIncomeRequired');
   });
 });
+
+// ---------------------------------------------------------------------------
+// formFromSalaryInput — defaults wiring (Phase 5G)
+// ---------------------------------------------------------------------------
+
+import { __testing } from '@/features/calculator/hooks/useCalculator';
+
+describe('formFromSalaryInput — settings defaults', () => {
+  const { formFromSalaryInput } = __testing;
+
+  it('fills prefecture from settings on first calculation (no stored input)', () => {
+    const form = formFromSalaryInput(null, {
+      defaultPrefecture: 'osaka',
+      defaultMunicipality: null,
+    });
+    expect(form.prefecture).toBe('osaka');
+    expect(form.municipality).toBeUndefined();
+  });
+
+  it('respects existing lastInput.prefecture over settings default', () => {
+    const lastInput = {
+      annualIncome: 3_000_000,
+      age: 30,
+      category: 'salary' as const,
+      prefecture: 'tokyo' as const,
+    };
+    const form = formFromSalaryInput(lastInput, {
+      defaultPrefecture: 'osaka',
+      defaultMunicipality: null,
+    });
+    expect(form.prefecture).toBe('tokyo'); // user's last choice wins
+  });
+
+  it('seeds defaultMunicipality on first calculation when set', () => {
+    const form = formFromSalaryInput(null, {
+      defaultPrefecture: null,
+      defaultMunicipality: 'osaka-shi',
+    });
+    expect(form.municipality).toBe('osaka-shi');
+    // The form still defaults to seishain — user picks 'freelance' to use it.
+    expect(form.jobType).toBe('seishain');
+  });
+
+  it('defaults remain unset when no settings provided', () => {
+    const form = formFromSalaryInput(null);
+    expect(form.prefecture).toBeUndefined();
+    expect(form.municipality).toBeUndefined();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// useCalculator hook — integration with settingsStore defaults
+// ---------------------------------------------------------------------------
+
+import { DEFAULT_SETTINGS, useSettingsStore } from '@/store/settingsStore';
+
+describe('useCalculator + settingsStore defaults (integration)', () => {
+  beforeEach(() => {
+    TestRenderer.act(() => {
+      useCalculatorStore.getState().reset();
+      useSettingsStore.setState({ settings: { ...DEFAULT_SETTINGS } });
+    });
+  });
+
+  function mountHook(): { hook: () => UseCalculatorReturn | undefined; renderer: { unmount: () => void } } {
+    let captured: UseCalculatorReturn | undefined;
+    function Harness() {
+      captured = useCalculator();
+      return null;
+    }
+    let renderer!: { unmount: () => void };
+    TestRenderer.act(() => {
+      renderer = TestRenderer.create(<Harness />);
+    });
+    return { hook: () => captured, renderer };
+  }
+
+  it('initial form.prefecture pre-fills from settings.defaultPrefecture (no stored input)', () => {
+    TestRenderer.act(() => {
+      useSettingsStore.getState().updateSetting('defaultPrefecture', 'osaka');
+    });
+    const { hook, renderer } = mountHook();
+    expect(hook()?.form.prefecture).toBe('osaka');
+    TestRenderer.act(() => renderer.unmount());
+  });
+
+  it('initial form.municipality pre-fills from settings.defaultMunicipality', () => {
+    TestRenderer.act(() => {
+      useSettingsStore.getState().updateSetting('defaultMunicipality', 'osaka-shi');
+    });
+    const { hook, renderer } = mountHook();
+    expect(hook()?.form.municipality).toBe('osaka-shi');
+    TestRenderer.act(() => renderer.unmount());
+  });
+
+  it('stored lastInput.prefecture wins over settings default', () => {
+    TestRenderer.act(() => {
+      useSettingsStore.getState().updateSetting('defaultPrefecture', 'osaka');
+      useCalculatorStore.getState().setInput({
+        annualIncome: 3_000_000,
+        age: 28,
+        category: 'salary',
+        prefecture: 'tokyo',
+      });
+    });
+    const { hook, renderer } = mountHook();
+    expect(hook()?.form.prefecture).toBe('tokyo');
+    TestRenderer.act(() => renderer.unmount());
+  });
+
+  it('reset() reapplies settings defaults instead of wiping to blank', () => {
+    TestRenderer.act(() => {
+      useSettingsStore.getState().updateSetting('defaultPrefecture', 'aichi');
+      useCalculatorStore.getState().setInput({
+        annualIncome: 5_000_000,
+        age: 35,
+        category: 'salary',
+        prefecture: 'fukuoka',
+      });
+    });
+    const { hook, renderer } = mountHook();
+    expect(hook()?.form.prefecture).toBe('fukuoka');
+    TestRenderer.act(() => {
+      hook()?.reset();
+    });
+    expect(hook()?.form.prefecture).toBe('aichi');
+    TestRenderer.act(() => renderer.unmount());
+  });
+});

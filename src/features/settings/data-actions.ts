@@ -17,7 +17,14 @@ import { useOnboardingStore } from '@/store/onboardingStore';
 import { DEFAULT_SETTINGS, useSettingsStore, type AppSettings } from '@/store/settingsStore';
 import type { HistoryEntry } from '@/types/history';
 
+/**
+ * Bump when the on-disk export shape changes in a backwards-incompatible
+ * way. Consumers can branch on this to migrate older exports forward.
+ */
+export const EXPORT_SCHEMA_VERSION = 1;
+
 export interface ExportPayload {
+  schemaVersion: number;
   exportedAt: string;
   appVersion: string;
   settings: AppSettings;
@@ -31,6 +38,7 @@ export function buildExportPayload(
   now: Date = new Date(),
 ): ExportPayload {
   return {
+    schemaVersion: EXPORT_SCHEMA_VERSION,
     exportedAt: now.toISOString(),
     appVersion: APP_VERSION,
     settings,
