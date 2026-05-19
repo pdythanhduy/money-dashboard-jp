@@ -83,6 +83,28 @@ describe('settingsStore.updateSetting', () => {
   });
 });
 
+describe('settingsStore.updateSettings (batch)', () => {
+  it('merges multiple keys in a single write', () => {
+    useSettingsStore.getState().updateSettings({
+      language: 'ja',
+      theme: 'dark',
+      defaultPrefecture: 'osaka',
+    });
+    const { settings } = useSettingsStore.getState();
+    expect(settings.language).toBe('ja');
+    expect(settings.theme).toBe('dark');
+    expect(settings.defaultPrefecture).toBe('osaka');
+    expect(settings.payday).toBe(25); // unchanged
+  });
+
+  it('clamps payday inside a batch', () => {
+    useSettingsStore.getState().updateSettings({ language: 'ja', payday: 99 });
+    const { settings } = useSettingsStore.getState();
+    expect(settings.language).toBe('ja');
+    expect(settings.payday).toBe(31);
+  });
+});
+
 describe('settingsStore.resetToDefaults', () => {
   it('restores all keys to their defaults', () => {
     const { updateSetting, resetToDefaults } = useSettingsStore.getState();

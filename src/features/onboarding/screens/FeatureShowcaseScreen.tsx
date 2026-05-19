@@ -7,10 +7,7 @@ import { useTheme } from '@/theme';
 
 interface FeatureShowcaseScreenProps {
   slideIndex: 1 | 2;
-  onNext: () => void;
-  onBack: () => void;
   onSkip: () => void;
-  onJumpToSlide: (i: number) => void;
 }
 
 const COPY_KEY_BY_INDEX = {
@@ -23,30 +20,17 @@ const ICON_BY_INDEX: Record<1 | 2, keyof typeof Ionicons.glyphMap> = {
   2: 'trending-up',
 };
 
-export function FeatureShowcaseScreen({
-  slideIndex,
-  onNext,
-  onBack,
-  onSkip,
-  onJumpToSlide,
-}: FeatureShowcaseScreenProps) {
+export function FeatureShowcaseScreen({ slideIndex, onSkip }: FeatureShowcaseScreenProps) {
   const { t } = useTranslation();
   const { typography, spacing, radius } = useTheme();
   const copy = COPY_KEY_BY_INDEX[slideIndex];
 
   const bulletKeys = ['reform', 'deduction', 'wall'] as const;
   const slide3BulletKeys = ['daily', 'countdown', 'trend'] as const;
-
   const keys = slideIndex === 1 ? bulletKeys : slide3BulletKeys;
 
   return (
-    <OnboardingSlide
-      slideIndex={slideIndex}
-      onSkip={onSkip}
-      onJumpToSlide={onJumpToSlide}
-      primaryAction={{ label: t('onboarding.next'), onPress: onNext }}
-      secondaryAction={{ label: t('onboarding.back'), onPress: onBack }}
-    >
+    <OnboardingSlide onSkip={onSkip}>
       <View style={{ flex: 1, paddingTop: spacing.xl }}>
         <View
           style={{

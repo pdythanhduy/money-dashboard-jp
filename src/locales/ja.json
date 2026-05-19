@@ -389,10 +389,10 @@
         "onboarding": "オンボーディングが再表示されます"
       },
       "continueLabel": "理解した上で続行",
-      "confirmTitle": "確認のため「削除」と入力してください",
-      "confirmPlaceholder": "削除",
-      "confirmWord": "削除",
-      "confirmHint": "完全に一致する必要があります。",
+      "confirmTitle": "「DELETE」と入力して確認",
+      "confirmPlaceholder": "DELETE",
+      "confirmWord": "DELETE",
+      "confirmHint": "DELETEと半角ラテン文字で入力してください（大文字小文字は区別しません）。",
       "deleteButton": "すべて削除",
       "doneToast": "すべてのデータを削除しました"
     },

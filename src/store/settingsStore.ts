@@ -41,6 +41,9 @@ export const DEFAULT_SETTINGS: AppSettings = {
 interface SettingsStore {
   settings: AppSettings;
   updateSetting: <K extends keyof AppSettings>(key: K, value: AppSettings[K]) => void;
+  /** Merge multiple keys in a single store write — fewer renders for callers
+   *  like OnboardingNavigator that commit 3+ fields at once. */
+  updateSettings: (partial: Partial<AppSettings>) => void;
   resetToDefaults: () => void;
 }
 
@@ -63,6 +66,14 @@ export const useSettingsStore = create<SettingsStore>()(
         set({ settings: next });
       },
 
+      updateSettings: (partial) => {
+        const next = { ...get().settings, ...partial } as AppSettings;
+        if ('payday' in partial && partial.payday !== undefined) {
+          next.payday = clampPayday(partial.payday);
+        }
+        set({ settings: next });
+      },
+
       resetToDefaults: () => set({ settings: DEFAULT_SETTINGS }),
     }),
     {
@@ -72,3 +83,17 @@ export const useSettingsStore = create<SettingsStore>()(
     },
   ),
 );
+
+/**
+ * `true` once the persisted settings have been rehydrated from AsyncStorage.
+ * App.tsx gates the navigation tree on this so the user doesn't briefly see
+ * default settings (light theme / system language) flicker into their saved
+ * preferences. Returns `true` in environments where the persist middleware
+ * doesn't expose `hasHydrated` (e.g. unmocked test paths).
+ */
+export function useSettingsHydrated(): boolean {
+  const persistApi = (useSettingsStore as unknown as {
+    persist?: { hasHydrated: () => boolean };
+  }).persist;
+  return persistApi ? persistApi.hasHydrated() : true;
+}

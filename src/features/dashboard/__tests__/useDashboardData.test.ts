@@ -140,3 +140,20 @@ describe('computeDashboardData — upcoming reminders', () => {
     expect(days).toEqual([...days].sort((a, b) => a - b));
   });
 });
+
+describe('computeDashboardData — payday override', () => {
+  const result = makeResult();
+  // 2026-05-19 (Tue). Day 19. Payday default 25 → 6 days until payday.
+  const now = new Date(2026, 4, 19);
+
+  it('falls back to DEFAULT_PAYDAY (25) when payday omitted', () => {
+    expect(computeDashboardData(now, result).daysUntilPayday).toBe(6);
+  });
+
+  it('respects payday from settings — payday=10 (already past), rolls to next month', () => {
+    // Day 19, payday 10 → past. Next: (31 - 19) + 10 = 22.
+    const data = computeDashboardData(now, result, 10);
+    expect(data.daysUntilPayday).toBe(22);
+    expect(data.isPayday).toBe(false);
+  });
+});

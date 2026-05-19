@@ -43,8 +43,10 @@ export function ClearDataConfirmModal({
     }
   }, [visible]);
 
-  const expected = t('settings.clear.confirmWord');
-  const canDelete = text.trim() === expected;
+  // Latin word — works on every keyboard / IME, no need for the user to
+  // switch input modes. Same word across vi/ja locales.
+  const EXPECTED_WORD = 'DELETE';
+  const canDelete = text.trim().toUpperCase() === EXPECTED_WORD;
 
   const handleClose = () => {
     setStep('warn');

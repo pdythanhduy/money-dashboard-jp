@@ -6,9 +6,8 @@
  *   - Payday (drives dashboard's pacing & countdown).
  *   - Language preference.
  *
- * On "finish" we write into `settingsStore` and flag onboarding complete.
- * Skip from prior slides instead writes the spec defaults (Tokyo, 25,
- * system) and still completes — see `OnboardingNavigator.applyDefaultsAndComplete`.
+ * Slide 4 has no skip button (user reached the end). Finish committed by
+ * the navigator's primary button via `onFinish`.
  */
 
 import { Ionicons } from '@expo/vector-icons';
@@ -31,10 +30,6 @@ interface InitialSetupScreenProps {
   onChangePrefecture: (p: Prefecture) => void;
   onChangePayday: (n: number) => void;
   onChangeLanguage: (l: LanguageSetting) => void;
-  onBack: () => void;
-  onSkip: () => void;
-  onJumpToSlide: (i: number) => void;
-  onFinish: () => void;
 }
 
 export function InitialSetupScreen({
@@ -44,10 +39,6 @@ export function InitialSetupScreen({
   onChangePrefecture,
   onChangePayday,
   onChangeLanguage,
-  onBack,
-  onSkip,
-  onJumpToSlide,
-  onFinish,
 }: InitialSetupScreenProps) {
   const { t } = useTranslation();
   const { typography, spacing, radius } = useTheme();
@@ -68,13 +59,7 @@ export function InitialSetupScreen({
 
   return (
     <>
-      <OnboardingSlide
-        slideIndex={3}
-        onSkip={onSkip}
-        onJumpToSlide={onJumpToSlide}
-        primaryAction={{ label: t('onboarding.finish'), onPress: onFinish }}
-        secondaryAction={{ label: t('onboarding.back'), onPress: onBack }}
-      >
+      <OnboardingSlide>
         <View style={{ flex: 1, paddingTop: spacing.lg }}>
           <Text style={[typography.title1, { color: '#fff', textAlign: 'center' }]}>
             {t('onboarding.slide4.title')}
