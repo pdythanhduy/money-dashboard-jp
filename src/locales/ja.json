@@ -185,12 +185,25 @@
       "hourlyRateRequired": "時給を入力してください。",
       "hourlyRatePositive": "時給は0円より大きい必要があります。",
       "hoursDayRange": "1日の労働時間は0.5〜24の範囲で入力してください。",
-      "daysWeekRange": "週の労働日数は1〜7の範囲で入力してください。"
+      "daysWeekRange": "週の労働日数は1〜7の範囲で入力してください。",
+      "noJobsAdded": "計算する前に最低1件のバイトを追加してください。"
     },
     "incomeMode": {
       "label": "収入の入力方法",
       "annual": "年収",
-      "hourly": "時給制"
+      "hourly": "時給制",
+      "multiJob": "複数のバイト"
+    },
+    "multiJob": {
+      "title": "登録中のバイト",
+      "addJob": "+ バイトを追加",
+      "addTitle": "バイトを追加",
+      "editTitle": "バイトを編集",
+      "nameLabel": "バイト名",
+      "jobNamePlaceholder": "例: コンビニ朝、塾講師...",
+      "emptyState": "バイトが登録されていません。「バイトを追加」をタップして1つずつ登録してください。",
+      "limitReached": "上限{{max}}件に達しました。削除してから追加してください。",
+      "totalLabel": "合計 {{count}} 件"
     },
     "hourlyPreview": {
       "label": "年収予想"

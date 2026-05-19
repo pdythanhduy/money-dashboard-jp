@@ -13,7 +13,6 @@ import {
   BLUE_RETURN_DEDUCTIONS,
   MUNICIPALITY_VALUES,
   PREFECTURE_VALUES,
-  computeHourlyTotalFromForm,
   formatCurrency,
   formatCurrencyInput,
   parseCurrencyInput,
@@ -22,6 +21,12 @@ import {
   type PensionType,
   type UseCalculatorReturn,
 } from '@/features/calculator/hooks/useCalculator';
+import {
+  HourlyFields as HourlyFieldsCore,
+  type HourlyFieldErrors,
+  type HourlyFieldsValue,
+} from './HourlyFields';
+import { MultiJobEditor } from './MultiJobEditor';
 
 interface SalaryFormProps {
   calculator: UseCalculatorReturn;
@@ -77,7 +82,9 @@ export function SalaryForm({ calculator }: SalaryFormProps) {
               value={form.incomeMode}
               onChange={(value) => updateField('incomeMode', value)}
             />
-            {form.incomeMode === 'annual' ? (
+            {form.incomeMode === 'multi-job' ? (
+              <MultiJobEditor />
+            ) : form.incomeMode === 'annual' ? (
               <View style={{ gap: spacing.xs }}>
                 <Text style={[typography.headline, { color: colors.text }]}>
                   {t('calculator.fields.annualIncome.label')}
@@ -396,7 +403,7 @@ function PensionRadio({
 }
 
 // ---------------------------------------------------------------------------
-// Phase 5I — Income mode toggle + hourly schedule fields
+// Phase 5I — Income mode toggle
 // ---------------------------------------------------------------------------
 
 function IncomeModeToggle({
@@ -408,7 +415,7 @@ function IncomeModeToggle({
 }) {
   const { t } = useTranslation();
   const { colors, typography, spacing, radius } = useTheme();
-  const opts: IncomeMode[] = ['annual', 'hourly'];
+  const opts: IncomeMode[] = ['annual', 'hourly', 'multi-job'];
   return (
     <View>
       <Text style={[typography.caption, { color: colors.textSecondary, marginBottom: spacing.xs }]}>
@@ -417,12 +424,13 @@ function IncomeModeToggle({
       <View style={{ flexDirection: 'row', gap: spacing.sm }}>
         {opts.map((opt) => {
           const selected = value === opt;
+          const i18nKey = opt === 'multi-job' ? 'multiJob' : opt;
           return (
             <Pressable
               key={opt}
               accessibilityRole="radio"
               accessibilityState={{ checked: selected }}
-              accessibilityLabel={t(`calculator.incomeMode.${opt}`)}
+              accessibilityLabel={t(`calculator.incomeMode.${i18nKey}`)}
               onPress={() => onChange(opt)}
               style={{
                 flex: 1,
@@ -433,15 +441,18 @@ function IncomeModeToggle({
                 backgroundColor: selected ? colors.brandSubtle : colors.surface,
                 alignItems: 'center',
                 justifyContent: 'center',
+                paddingHorizontal: spacing.xs,
               }}
             >
               <Text
                 style={[
-                  typography.body,
-                  { color: selected ? colors.brand : colors.text, fontWeight: selected ? '700' : '400' },
+                  typography.callout,
+                  { color: selected ? colors.brand : colors.text, fontWeight: selected ? '700' : '400', textAlign: 'center' },
                 ]}
+                numberOfLines={2}
+                adjustsFontSizeToFit
               >
-                {t(`calculator.incomeMode.${opt}`)}
+                {t(`calculator.incomeMode.${i18nKey}`)}
               </Text>
             </Pressable>
           );
@@ -451,227 +462,49 @@ function IncomeModeToggle({
   );
 }
 
+/**
+ * Thin wrapper that adapts the global `useCalculator` form state to the
+ * standalone `HourlyFields` component. Multi-job mode renders the same
+ * component but driven by local draft state inside `JobEditModal`.
+ */
 function HourlyFields({ calculator }: { calculator: UseCalculatorReturn }) {
   const { t } = useTranslation();
-  const { colors, typography, spacing, radius } = useTheme();
   const { form, errors, updateField } = calculator;
 
-  const previewTotal = useMemo(() => computeHourlyTotalFromForm(form), [form]);
+  const fieldValue: HourlyFieldsValue = {
+    hourlyRateInput: form.hourlyRateInput,
+    hoursPerDayInput: form.hoursPerDayInput,
+    daysPerWeekInput: form.daysPerWeekInput,
+    weeksPerYearInput: form.weeksPerYearInput,
+    hasNightShift: form.hasNightShift,
+    nightHoursPerDayInput: form.nightHoursPerDayInput,
+    hasOvertime: form.hasOvertime,
+    overtimeHoursPerDayInput: form.overtimeHoursPerDayInput,
+    hasWeekend: form.hasWeekend,
+    weekendDaysPerMonthInput: form.weekendDaysPerMonthInput,
+  };
+
+  const fieldErrors: HourlyFieldErrors = {};
+  if (errors.hourlyRateInput) fieldErrors.hourlyRate = t(`calculator.errors.${errors.hourlyRateInput}`);
+  if (errors.hoursPerDayInput) fieldErrors.hoursPerDay = t(`calculator.errors.${errors.hoursPerDayInput}`);
+  if (errors.daysPerWeekInput) fieldErrors.daysPerWeek = t(`calculator.errors.${errors.daysPerWeekInput}`);
 
   return (
-    <View style={{ gap: spacing.md }}>
-      <NumericRow
-        label={t('calculator.fields.hourlyRate.label')}
-        placeholder={t('calculator.fields.hourlyRate.placeholder')}
-        helper={t('calculator.fields.hourlyRate.helper')}
-        value={form.hourlyRateInput}
-        onChange={(v) => updateField('hourlyRateInput', v.replace(/[^\d]/g, ''))}
-        prefix="¥"
-        error={errors.hourlyRateInput ? t(`calculator.errors.${errors.hourlyRateInput}`) : undefined}
-      />
-
-      <View style={{ flexDirection: 'row', gap: spacing.md }}>
-        <View style={{ flex: 1 }}>
-          <NumericRow
-            label={t('calculator.fields.hoursPerDay.label')}
-            placeholder="8"
-            helper={t('calculator.fields.hoursPerDay.helper')}
-            value={form.hoursPerDayInput}
-            onChange={(v) => updateField('hoursPerDayInput', v)}
-            decimal
-            error={errors.hoursPerDayInput ? t(`calculator.errors.${errors.hoursPerDayInput}`) : undefined}
-          />
-        </View>
-        <View style={{ flex: 1 }}>
-          <NumericRow
-            label={t('calculator.fields.daysPerWeek.label')}
-            placeholder="5"
-            helper={t('calculator.fields.daysPerWeek.helper')}
-            value={form.daysPerWeekInput}
-            onChange={(v) => updateField('daysPerWeekInput', v)}
-            error={errors.daysPerWeekInput ? t(`calculator.errors.${errors.daysPerWeekInput}`) : undefined}
-          />
-        </View>
-      </View>
-
-      <NumericRow
-        label={t('calculator.fields.weeksPerYear.label')}
-        placeholder="52"
-        helper={t('calculator.fields.weeksPerYear.helper')}
-        value={form.weeksPerYearInput}
-        onChange={(v) => updateField('weeksPerYearInput', v)}
-      />
-
-      <AllowanceSection
-        titleKey="nightShift"
-        toggleValue={form.hasNightShift}
-        onToggle={(v) => updateField('hasNightShift', v)}
-        hoursValue={form.nightHoursPerDayInput}
-        onHoursChange={(v) => updateField('nightHoursPerDayInput', v)}
-      />
-      <AllowanceSection
-        titleKey="overtime"
-        toggleValue={form.hasOvertime}
-        onToggle={(v) => updateField('hasOvertime', v)}
-        hoursValue={form.overtimeHoursPerDayInput}
-        onHoursChange={(v) => updateField('overtimeHoursPerDayInput', v)}
-      />
-      <AllowanceSection
-        titleKey="weekend"
-        toggleValue={form.hasWeekend}
-        onToggle={(v) => updateField('hasWeekend', v)}
-        hoursValue={form.weekendDaysPerMonthInput}
-        onHoursChange={(v) => updateField('weekendDaysPerMonthInput', v)}
-        fieldLabelKey="daysPerMonth"
-      />
-
-      <View
-        style={{
-          padding: spacing.md,
-          backgroundColor: colors.brandSubtle,
-          borderRadius: radius.md,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}
-      >
-        <Text style={[typography.callout, { color: colors.text }]}>
-          {t('calculator.hourlyPreview.label')}
-        </Text>
-        <Text style={[typography.title3, { color: colors.brand, fontWeight: '700' }]}>
-          {formatCurrency(previewTotal)}
-        </Text>
-      </View>
-    </View>
-  );
-}
-
-interface NumericRowProps {
-  label: string;
-  placeholder: string;
-  helper?: string;
-  value: string;
-  onChange: (next: string) => void;
-  prefix?: string;
-  decimal?: boolean;
-  error?: string;
-}
-
-function NumericRow({
-  label,
-  placeholder,
-  helper,
-  value,
-  onChange,
-  prefix,
-  decimal,
-  error,
-}: NumericRowProps) {
-  const { colors, typography, spacing, radius } = useTheme();
-  return (
-    <View style={{ gap: spacing.xs }}>
-      <Text style={[typography.headline, { color: colors.text }]}>{label}</Text>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: spacing.xs,
-          borderWidth: 1,
-          borderColor: error ? colors.danger : colors.border,
-          borderRadius: radius.sm,
-          paddingHorizontal: spacing.md,
-          backgroundColor: colors.surface,
-        }}
-      >
-        {prefix ? (
-          <Text style={[typography.title3, { color: colors.textSecondary }]}>{prefix}</Text>
-        ) : null}
-        <TextInput
-          value={prefix ? formatCurrencyInput(value).replace('¥', '') : value}
-          onChangeText={onChange}
-          placeholder={placeholder}
-          placeholderTextColor={colors.textSecondary}
-          keyboardType={decimal ? 'decimal-pad' : 'numeric'}
-          inputMode={decimal ? 'decimal' : 'numeric'}
-          style={{ flex: 1, minHeight: 50, color: colors.text, ...typography.title3 }}
-        />
-      </View>
-      {helper ? (
-        <Text style={[typography.caption, { color: colors.textSecondary }]}>{helper}</Text>
-      ) : null}
-      {error ? (
-        <Text style={[typography.caption, { color: colors.danger }]}>{error}</Text>
-      ) : null}
-    </View>
-  );
-}
-
-interface AllowanceSectionProps {
-  titleKey: 'nightShift' | 'overtime' | 'weekend';
-  toggleValue: boolean;
-  onToggle: (next: boolean) => void;
-  hoursValue: string;
-  onHoursChange: (next: string) => void;
-  fieldLabelKey?: 'hoursPerDay' | 'daysPerMonth';
-}
-
-function AllowanceSection({
-  titleKey,
-  toggleValue,
-  onToggle,
-  hoursValue,
-  onHoursChange,
-  fieldLabelKey = 'hoursPerDay',
-}: AllowanceSectionProps) {
-  const { t } = useTranslation();
-  const { colors, typography, spacing, radius } = useTheme();
-  return (
-    <View
-      style={{
-        borderRadius: radius.md,
-        borderWidth: 1,
-        borderColor: colors.border,
-        backgroundColor: colors.surface,
-        overflow: 'hidden',
+    <HourlyFieldsCore
+      value={fieldValue}
+      errors={fieldErrors}
+      onChange={(next) => {
+        // Diff what changed — write each modified field individually so we
+        // don't blow away unrelated keys in the global form.
+        (Object.keys(next) as Array<keyof HourlyFieldsValue>).forEach((key) => {
+          if (next[key] !== fieldValue[key]) {
+            // Both branches share the same form-state field name.
+            updateField(key, next[key] as never);
+          }
+        });
       }}
-    >
-      <Pressable
-        accessibilityRole="button"
-        accessibilityState={{ expanded: toggleValue }}
-        accessibilityLabel={t(`calculator.allowances.${titleKey}.title`)}
-        onPress={() => onToggle(!toggleValue)}
-        style={{
-          padding: spacing.md,
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <View style={{ flex: 1 }}>
-          <Text style={[typography.body, { color: colors.text }]}>
-            {t(`calculator.allowances.${titleKey}.title`)}
-          </Text>
-          <Text style={[typography.caption, { color: colors.textSecondary, marginTop: 2 }]}>
-            {t(`calculator.allowances.${titleKey}.sub`)}
-          </Text>
-        </View>
-        <Ionicons
-          name={toggleValue ? 'chevron-up' : 'chevron-down'}
-          size={20}
-          color={colors.textSecondary}
-        />
-      </Pressable>
-      {toggleValue ? (
-        <View style={{ padding: spacing.md, paddingTop: 0 }}>
-          <NumericRow
-            label={t(`calculator.allowances.${titleKey}.${fieldLabelKey}`)}
-            placeholder="0"
-            value={hoursValue}
-            onChange={onHoursChange}
-            decimal={fieldLabelKey === 'hoursPerDay'}
-          />
-        </View>
-      ) : null}
-    </View>
+    />
   );
 }
+
+

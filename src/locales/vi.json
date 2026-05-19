@@ -185,12 +185,25 @@
       "hourlyRateRequired": "Nhập mức lương theo giờ.",
       "hourlyRatePositive": "Lương theo giờ phải lớn hơn 0.",
       "hoursDayRange": "Số giờ/ngày phải trong khoảng 0.5 - 24.",
-      "daysWeekRange": "Số ngày/tuần phải trong khoảng 1 - 7."
+      "daysWeekRange": "Số ngày/tuần phải trong khoảng 1 - 7.",
+      "noJobsAdded": "Hãy thêm ít nhất 1 job trước khi tính."
     },
     "incomeMode": {
       "label": "Cách nhập thu nhập",
       "annual": "Lương năm",
-      "hourly": "Theo giờ (時給制)"
+      "hourly": "Theo giờ (時給制)",
+      "multiJob": "Nhiều job"
+    },
+    "multiJob": {
+      "title": "Các job đang làm",
+      "addJob": "+ Thêm job",
+      "addTitle": "Thêm job mới",
+      "editTitle": "Sửa job",
+      "nameLabel": "Tên job",
+      "jobNamePlaceholder": "VD: Combini sáng, 塾の講師...",
+      "emptyState": "Chưa có job nào. Bấm \"Thêm job\" để khai báo lần lượt từng công việc.",
+      "limitReached": "Đã đạt giới hạn {{max}} job. Xóa bớt để thêm.",
+      "totalLabel": "Tổng {{count}} job"
     },
     "hourlyPreview": {
       "label": "Tổng năm dự kiến"

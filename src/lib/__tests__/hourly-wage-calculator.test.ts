@@ -1,4 +1,4 @@
-import { computeHourlyAnnual } from '@/lib/hourly-wage-calculator';
+import { computeHourlyAnnual, computeMultiJobAnnual } from '@/lib/hourly-wage-calculator';
 
 describe('computeHourlyAnnual — base only', () => {
   it('¥1,200/h × 8h × 5d × 52w = ¥2,496,000', () => {
@@ -99,5 +99,58 @@ describe('computeHourlyAnnual — edge cases', () => {
     const out = computeHourlyAnnual({ hourlyRate: 1_200, hoursPerDay: 8, daysPerWeek: 0 });
     expect(out.baseAnnual).toBe(0);
     expect(out.totalAnnual).toBe(0);
+  });
+});
+
+describe('computeMultiJobAnnual', () => {
+  const baitoCombini = { hourlyRate: 1_200, hoursPerDay: 8, daysPerWeek: 5 };
+  // baseAnnual = 1200×8×5×52 = 2,496,000
+
+  it('empty array → totalAnnual 0, perJob []', () => {
+    const out = computeMultiJobAnnual([]);
+    expect(out.totalAnnual).toBe(0);
+    expect(out.perJob).toEqual([]);
+  });
+
+  it('single job matches computeHourlyAnnual exactly', () => {
+    const single = computeHourlyAnnual(baitoCombini);
+    const multi = computeMultiJobAnnual([baitoCombini]);
+    expect(multi.perJob).toHaveLength(1);
+    expect(multi.perJob[0]).toEqual(single);
+    expect(multi.totalAnnual).toBe(single.totalAnnual);
+  });
+
+  it('two identical jobs → sum doubles', () => {
+    const single = computeHourlyAnnual(baitoCombini);
+    const multi = computeMultiJobAnnual([baitoCombini, baitoCombini]);
+    expect(multi.totalAnnual).toBe(single.totalAnnual * 2);
+  });
+
+  it('three hybrid jobs (combini base + restaurant w/ night + tutor w/ weekend)', () => {
+    const combini = baitoCombini;
+    const restaurant = { hourlyRate: 1_400, hoursPerDay: 6, daysPerWeek: 3, nightHoursPerDay: 2 };
+    const tutor = { hourlyRate: 2_500, hoursPerDay: 4, daysPerWeek: 1, weekendDaysPerMonth: 4 };
+    const out = computeMultiJobAnnual([combini, restaurant, tutor]);
+    expect(out.perJob).toHaveLength(3);
+    const expectedSum =
+      computeHourlyAnnual(combini).totalAnnual +
+      computeHourlyAnnual(restaurant).totalAnnual +
+      computeHourlyAnnual(tutor).totalAnnual;
+    expect(out.totalAnnual).toBe(expectedSum);
+  });
+
+  it('floors each job individually, sum is plain integer addition (no double-floor)', () => {
+    // Use a rate that produces a non-integer per-component when allowances
+    // are involved, so we can confirm the sum is sum-of-floors, not floor-of-sum.
+    const job = { hourlyRate: 1_207, hoursPerDay: 7.5, daysPerWeek: 5, nightHoursPerDay: 3 };
+    const single = computeHourlyAnnual(job);
+    const multi = computeMultiJobAnnual([job, job, job]);
+    expect(multi.totalAnnual).toBe(single.totalAnnual * 3);
+  });
+
+  it('propagates validation throws from any invalid job', () => {
+    expect(() =>
+      computeMultiJobAnnual([baitoCombini, { hourlyRate: 0, hoursPerDay: 8, daysPerWeek: 5 }]),
+    ).toThrow(/hourlyRate/);
   });
 });
