@@ -1,6 +1,10 @@
 /**
- * ThemeProvider — wires color palette to system color scheme (light/dark)
- * and exposes everything via `useTheme()`.
+ * ThemeProvider — resolves color palette from the user's theme preference
+ * (`system` / `light` / `dark`) stored in `useSettingsStore`. Falls back to
+ * the device color scheme when set to `system`.
+ *
+ * Re-renders automatically when either the setting or the device scheme
+ * flips, so callers never need to call `i18n.changeLanguage`-style helpers.
  *
  * Usage:
  *   const { colors, typography, spacing, radius, isDark } = useTheme();
@@ -9,6 +13,8 @@
 
 import { createContext, useContext, useMemo, type ReactNode } from 'react';
 import { useColorScheme } from 'react-native';
+
+import { useSettingsStore } from '@/store/settingsStore';
 
 import { darkColors, lightColors, type ColorPalette } from './colors';
 import { radius } from './radius';
@@ -27,7 +33,10 @@ const ThemeContext = createContext<Theme | null>(null);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const scheme = useColorScheme();
-  const isDark = scheme === 'dark';
+  const themeSetting = useSettingsStore((s) => s.settings.theme);
+
+  const isDark = themeSetting === 'system' ? scheme === 'dark' : themeSetting === 'dark';
+
   const value = useMemo<Theme>(
     () => ({
       colors: isDark ? darkColors : lightColors,

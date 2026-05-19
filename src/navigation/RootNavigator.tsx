@@ -1,7 +1,9 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import { OnboardingNavigator } from '@/features/onboarding/OnboardingNavigator';
+import { useOnboardingStore } from '@/store/onboardingStore';
+
 import { MainTabs } from './MainTabs';
-import { OnboardingStack } from './OnboardingStack';
 
 export type RootStackParamList = {
   Onboarding: undefined;
@@ -10,17 +12,15 @@ export type RootStackParamList = {
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-// TODO(Phase 5C): replace with a Zustand-backed `useSettingsStore` value.
-// Phase 5A always lands on Main so the tab skeleton is visible.
-const HAS_COMPLETED_ONBOARDING = true;
-
 export function RootNavigator() {
+  const hasCompletedOnboarding = useOnboardingStore((s) => s.hasCompletedOnboarding);
+
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {HAS_COMPLETED_ONBOARDING ? (
+      {hasCompletedOnboarding ? (
         <Stack.Screen name="Main" component={MainTabs} />
       ) : (
-        <Stack.Screen name="Onboarding" component={OnboardingStack} />
+        <Stack.Screen name="Onboarding" component={OnboardingNavigator} />
       )}
     </Stack.Navigator>
   );
