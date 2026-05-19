@@ -69,6 +69,7 @@ export function DependentsInput({ form, updateField }: DependentsInputProps) {
               {t('calculator.dependents.hasDependents')}
             </Text>
             <Switch
+              accessibilityLabel={t('calculator.dependents.hasDependents')}
               value={form.hasDependents}
               onValueChange={(value) => updateField('hasDependents', value)}
               trackColor={{ false: colors.borderStrong, true: colors.accentSubtle }}
@@ -83,6 +84,7 @@ export function DependentsInput({ form, updateField }: DependentsInputProps) {
                   {t('calculator.dependents.spouse')}
                 </Text>
                 <Switch
+                  accessibilityLabel={t('calculator.dependents.spouse')}
                   value={form.hasSpouse}
                   onValueChange={(value) => updateField('hasSpouse', value)}
                   trackColor={{ false: colors.borderStrong, true: colors.accentSubtle }}

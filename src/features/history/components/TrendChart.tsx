@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 import Svg, { Circle, Line, Path, Text as SvgText } from 'react-native-svg';
@@ -36,7 +36,9 @@ export function TrendChart({ data, width, height }: TrendChartProps) {
     );
   }
 
-  const layout = buildTrendChartLayout(data, width, height);
+  // Layout math is pure but non-trivial — memo so swipes / theme flips don't
+  // recompute the SVG path string on every render.
+  const layout = useMemo(() => buildTrendChartLayout(data, width, height), [data, width, height]);
   if (!layout) return null;
   const activeDot = activeIndex !== null ? layout.dots[activeIndex] : null;
 

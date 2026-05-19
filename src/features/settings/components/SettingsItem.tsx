@@ -51,6 +51,7 @@ export function SettingsItem(props: SettingsItemProps) {
     if (props.kind === 'toggle') {
       return (
         <Switch
+          accessibilityLabel={props.label}
           value={props.value}
           onValueChange={props.onChange}
           disabled={props.disabled}

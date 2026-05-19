@@ -82,7 +82,17 @@ export function TakeHomeProgressCard({
         {t('dashboard.takeHomeCard.subtitle')}
       </Text>
 
-      <View style={{ alignItems: 'center', marginTop: spacing.lg, marginBottom: spacing.md }}>
+      <View
+        accessible
+        accessibilityRole="text"
+        accessibilityLabel={t('dashboard.a11y.takeHomeProgress', {
+          earned: formatCurrency(proportionalTakeHome),
+          total: formatCurrency(monthlyTakeHome),
+          day: daysPassed,
+          of: daysInMonth,
+        })}
+        style={{ alignItems: 'center', marginTop: spacing.lg, marginBottom: spacing.md }}
+      >
         <Text style={[typography.largeTitle, { color: colors.brand, fontSize: 44, lineHeight: 52 }]}>
           {formatCurrency(displayedAmount)}
         </Text>

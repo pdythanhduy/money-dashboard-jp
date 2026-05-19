@@ -27,6 +27,19 @@ export function DashboardScreen() {
     return <EmptyState onPressCta={goToCalculator} />;
   }
 
+  // Edge: stored calculation but monthly take-home rounds to ¥0 (income below
+  // every tax/insurance threshold). Show a friendlier explainer instead of a
+  // ¥0 progress bar that looks broken.
+  if (data.monthlyTakeHome <= 0) {
+    return (
+      <EmptyState
+        onPressCta={goToCalculator}
+        title={t('dashboard.empty.zeroIncomeTitle')}
+        subtitle={t('dashboard.empty.zeroIncomeBody')}
+      />
+    );
+  }
+
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
       <ScrollView
@@ -72,6 +85,8 @@ export function DashboardScreen() {
             {t('dashboard.footer.note')}
           </Text>
           <Pressable
+            accessibilityRole="link"
+            accessibilityLabel={t('dashboard.footer.updateCta')}
             onPress={goToCalculator}
             style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
           >

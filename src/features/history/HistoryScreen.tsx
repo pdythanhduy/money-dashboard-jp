@@ -83,7 +83,12 @@ export function HistoryScreen() {
             {t('history.subtitle')}
           </Text>
         </View>
-        <Pressable onPress={handleClearAll} hitSlop={8}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t('history.clearConfirmTitle')}
+          onPress={handleClearAll}
+          hitSlop={8}
+        >
           <Ionicons name="trash-outline" size={22} color={colors.danger} />
         </Pressable>
       </View>

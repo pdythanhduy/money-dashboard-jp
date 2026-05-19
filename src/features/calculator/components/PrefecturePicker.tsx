@@ -64,6 +64,8 @@ export function PrefecturePicker<T extends string>({
 
       <Modal visible={open} transparent animationType="fade" onRequestClose={() => setOpen(false)}>
         <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={closeLabel}
           style={{
             flex: 1,
             backgroundColor: isDark ? 'rgba(0,0,0,0.64)' : 'rgba(15,20,25,0.42)',
@@ -72,6 +74,7 @@ export function PrefecturePicker<T extends string>({
           onPress={() => setOpen(false)}
         >
           <Pressable
+            accessibilityRole="none"
             style={{
               maxHeight: '72%',
               backgroundColor: colors.surface,

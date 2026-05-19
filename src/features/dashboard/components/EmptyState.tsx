@@ -7,11 +7,17 @@ import { useTheme } from '@/theme';
 
 interface EmptyStateProps {
   onPressCta: () => void;
+  /** Optional overrides — when not provided, falls back to the generic
+   *  "Bắt đầu hành trình..." copy. Used by zero-income edge case. */
+  title?: string;
+  subtitle?: string;
 }
 
-export function EmptyState({ onPressCta }: EmptyStateProps) {
+export function EmptyState({ onPressCta, title, subtitle }: EmptyStateProps) {
   const { t } = useTranslation();
   const { colors, typography, spacing, radius } = useTheme();
+  const titleText = title ?? t('dashboard.empty.title');
+  const subtitleText = subtitle ?? t('dashboard.empty.subtitle');
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }} edges={['top']}>
@@ -42,7 +48,7 @@ export function EmptyState({ onPressCta }: EmptyStateProps) {
             { color: colors.text, textAlign: 'center', marginBottom: spacing.sm },
           ]}
         >
-          {t('dashboard.empty.title')}
+          {titleText}
         </Text>
         <Text
           style={[
@@ -50,7 +56,7 @@ export function EmptyState({ onPressCta }: EmptyStateProps) {
             { color: colors.textSecondary, textAlign: 'center', marginBottom: spacing.xs },
           ]}
         >
-          {t('dashboard.empty.subtitle')}
+          {subtitleText}
         </Text>
         <Text
           style={[
@@ -61,6 +67,8 @@ export function EmptyState({ onPressCta }: EmptyStateProps) {
           {t('dashboard.empty.subtitleJa')}
         </Text>
         <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t('dashboard.empty.cta')}
           onPress={onPressCta}
           style={({ pressed }) => ({
             backgroundColor: colors.brand,

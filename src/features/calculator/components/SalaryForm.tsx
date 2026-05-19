@@ -15,6 +15,7 @@ import {
   PREFECTURE_VALUES,
   formatCurrency,
   formatCurrencyInput,
+  parseCurrencyInput,
   type BlueReturnDeduction,
   type PensionType,
   type UseCalculatorReturn,
@@ -105,6 +106,14 @@ export function SalaryForm({ calculator }: SalaryFormProps) {
             {errors.annualIncomeInput ? (
               <Text style={[typography.caption, { color: colors.danger }]}>
                 {t(`calculator.errors.${errors.annualIncomeInput}`)}
+              </Text>
+            ) : null}
+            {/* Soft warning, doesn't block submit. NTA tables stay accurate
+                across all bands but enterprise-scale incomes have their own
+                tax planning that this simple calculator can't model. */}
+            {parseCurrencyInput(form.annualIncomeInput) > 100_000_000 ? (
+              <Text style={[typography.caption, { color: colors.warning }]}>
+                ⚠ {t('calculator.errors.veryHighIncomeWarning')}
               </Text>
             ) : null}
           </View>
