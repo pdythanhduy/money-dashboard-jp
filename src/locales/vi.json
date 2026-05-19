@@ -259,6 +259,102 @@
     },
     "limitReached": "Lịch sử đầy ({{max}} entries). Vui lòng xóa bớt trước khi lưu thêm."
   },
+  "onboarding": {
+    "skip": "Bỏ qua",
+    "next": "Tiếp theo",
+    "finish": "Hoàn tất",
+    "welcome": {
+      "title": "Chào mừng đến Kakei",
+      "subtitle": "App tính lương Nhật chính xác cho người Việt",
+      "subtitleJa": "日本での給与計算アプリ"
+    },
+    "calc": {
+      "title": "Tính lương đúng FY2026",
+      "bullet1": "Áp dụng cải cách thuế mới 令和7年12月",
+      "bullet2": "基礎控除 lên tới ¥950,000 (số mới)",
+      "bullet3": "\"103万円の壁\" giờ thành \"160万円の壁\""
+    },
+    "dashboard": {
+      "title": "Dashboard cập nhật mỗi ngày",
+      "bullet1": "Take-home tăng theo từng ngày",
+      "bullet2": "Đếm ngược tới ngày lương",
+      "bullet3": "Lịch sử và xu hướng theo tháng"
+    },
+    "setup": {
+      "title": "Thiết lập nhanh",
+      "subtitle": "Bạn có thể đổi sau ở Cài đặt",
+      "prefectureLabel": "Tỉnh bạn đang ở",
+      "paydayLabel": "Ngày lương hàng tháng",
+      "paydayUnit": "ngày",
+      "paydayHelper": "Số ngày 1-31. Phổ biến nhất ở Nhật là ngày 25."
+    }
+  },
+  "settings": {
+    "title": "Cài đặt",
+    "subtitle": "設定 · Tùy chỉnh trải nghiệm Kakei",
+    "notSet": "Chưa đặt",
+    "comingSoon": "Sắp ra mắt",
+    "sections": {
+      "personal": "Cá nhân hóa",
+      "payroll": "Thông tin lương",
+      "notifications": "Thông báo",
+      "security": "Bảo mật",
+      "data": "Dữ liệu",
+      "legal": "Pháp lý",
+      "app": "Về Kakei"
+    },
+    "items": {
+      "language": "Ngôn ngữ",
+      "theme": "Giao diện",
+      "defaultPrefecture": "Tỉnh mặc định",
+      "payday": "Ngày lương",
+      "notifications": "Bật thông báo",
+      "faceId": "Mở khóa Face ID",
+      "exportData": "Xuất dữ liệu",
+      "clearData": "Xóa toàn bộ dữ liệu",
+      "resetOnboarding": "Reset onboarding (dev)",
+      "privacy": "Chính sách bảo mật",
+      "terms": "Điều khoản sử dụng",
+      "about": "Giấy phép và Credits",
+      "version": "Phiên bản",
+      "feedback": "Gửi feedback"
+    },
+    "language": {
+      "system": "Theo hệ thống",
+      "vi": "Tiếng Việt",
+      "ja": "日本語"
+    },
+    "theme": {
+      "system": "Theo hệ thống",
+      "light": "Sáng",
+      "dark": "Tối"
+    },
+    "payday": {
+      "dayOfMonth": "Ngày {{day}}"
+    },
+    "clearData": {
+      "title": "Xóa toàn bộ dữ liệu",
+      "stage1Body": "Hành động này sẽ xóa vĩnh viễn:",
+      "stage2Body": "Để chắc chắn, vui lòng gõ chữ in hoa bên dưới.",
+      "items": {
+        "history": "Toàn bộ lịch sử tính lương",
+        "lastCalculation": "Lần tính gần nhất",
+        "settings": "Mọi cài đặt cá nhân",
+        "onboarding": "Trạng thái onboarding (sẽ hiện lại từ đầu)"
+      },
+      "typePrompt": "Gõ \"{{word}}\" để xác nhận",
+      "continue": "Tiếp tục",
+      "confirmFinal": "Xóa vĩnh viễn"
+    },
+    "about": {
+      "title": "Về Kakei",
+      "tagline": "App tính lương Nhật cho người Việt",
+      "credits": "Kakei được thiết kế và phát triển hoàn toàn ngoại tuyến. Mọi dữ liệu lương, thuế, lịch sử của bạn chỉ lưu trên thiết bị này. Không có máy chủ, không có theo dõi.",
+      "licenses": "Open-source dependencies: Expo, React Native, React Navigation, Zustand, i18next, date-fns, react-native-svg, expo-localization, expo-sqlite.",
+      "openSource": "Released under the MIT License.",
+      "madeFor": "Made for Vietnamese in Japan"
+    }
+  },
   "dashboard": {
     "greeting": {
       "morning": "Chào buổi sáng",

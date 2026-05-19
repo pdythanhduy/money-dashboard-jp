@@ -1,14 +1,21 @@
 /**
- * ThemeProvider — wires color palette to system color scheme (light/dark)
- * and exposes everything via `useTheme()`.
+ * ThemeProvider — color palette source.
  *
- * Usage:
- *   const { colors, typography, spacing, radius, isDark } = useTheme();
- *   <View style={{ backgroundColor: colors.surface, padding: spacing.md }} />
+ * Reactivity chain:
+ *   useSettingsStore.settings.theme  (user pref: 'system' | 'light' | 'dark')
+ *   ↓
+ *   useColorScheme() iff 'system'
+ *   ↓
+ *   light/dark palette from colors.ts
+ *
+ * Any change to settings.theme or to the system scheme re-renders the
+ * provider, which propagates colors via context.
  */
 
 import { createContext, useContext, useMemo, type ReactNode } from 'react';
 import { useColorScheme } from 'react-native';
+
+import { useSettingsStore } from '@/store/settingsStore';
 
 import { darkColors, lightColors, type ColorPalette } from './colors';
 import { radius } from './radius';
@@ -26,8 +33,11 @@ export interface Theme {
 const ThemeContext = createContext<Theme | null>(null);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const scheme = useColorScheme();
-  const isDark = scheme === 'dark';
+  const themePref = useSettingsStore((s) => s.settings.theme);
+  const systemScheme = useColorScheme();
+  const effectiveScheme = themePref === 'system' ? systemScheme : themePref;
+  const isDark = effectiveScheme === 'dark';
+
   const value = useMemo<Theme>(
     () => ({
       colors: isDark ? darkColors : lightColors,
@@ -52,7 +62,6 @@ const FALLBACK_THEME: Theme = {
 export function useTheme(): Theme {
   const t = useContext(ThemeContext);
   if (!t) {
-    // eslint-disable-next-line no-console
     console.warn('[useTheme] called outside <ThemeProvider> — using fallback');
     return FALLBACK_THEME;
   }

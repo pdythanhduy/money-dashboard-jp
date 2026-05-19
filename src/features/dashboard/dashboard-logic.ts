@@ -53,9 +53,13 @@ const EMPTY: Omit<DashboardData, 'today' | 'greeting' | 'daysUntilPayday' | 'isP
   averageDaily: 0,
 };
 
-export function computeDashboardData(now: Date, result: TakeHomeResult | null): DashboardData {
+export function computeDashboardData(
+  now: Date,
+  result: TakeHomeResult | null,
+  payday: number = DEFAULT_PAYDAY,
+): DashboardData {
   const greeting = getGreeting(now);
-  const daysUntilPayday = getDaysUntilPayday(now, DEFAULT_PAYDAY);
+  const daysUntilPayday = getDaysUntilPayday(now, payday);
   const isPayday = daysUntilPayday === 0;
   const daysInMonth = getDaysInMonth(now);
   const daysPassed = getDayOfMonth(now);

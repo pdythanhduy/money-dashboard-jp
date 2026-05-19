@@ -259,6 +259,102 @@
     },
     "limitReached": "履歴が上限（{{max}}件）に達しました。古い記録を削除してください。"
   },
+  "onboarding": {
+    "skip": "スキップ",
+    "next": "次へ",
+    "finish": "完了",
+    "welcome": {
+      "title": "Kakeiへようこそ",
+      "subtitle": "日本での給与計算をベトナム人向けに正確に",
+      "subtitleJa": "Tính lương Nhật chính xác"
+    },
+    "calc": {
+      "title": "令和8年度の正しい計算",
+      "bullet1": "令和7年12月の税制改正に対応",
+      "bullet2": "基礎控除は最大¥950,000（新基準）",
+      "bullet3": "「103万円の壁」が「160万円の壁」へ"
+    },
+    "dashboard": {
+      "title": "毎日更新されるダッシュボード",
+      "bullet1": "手取りが日々増加",
+      "bullet2": "給料日までのカウントダウン",
+      "bullet3": "月別の履歴とトレンド"
+    },
+    "setup": {
+      "title": "クイック設定",
+      "subtitle": "後で「設定」から変更できます",
+      "prefectureLabel": "お住まいの都道府県",
+      "paydayLabel": "毎月の給料日",
+      "paydayUnit": "日",
+      "paydayHelper": "1〜31日。日本で最も一般的なのは25日です。"
+    }
+  },
+  "settings": {
+    "title": "設定",
+    "subtitle": "Kakeiの体験をカスタマイズ",
+    "notSet": "未設定",
+    "comingSoon": "近日公開",
+    "sections": {
+      "personal": "個人設定",
+      "payroll": "給与情報",
+      "notifications": "通知",
+      "security": "セキュリティ",
+      "data": "データ",
+      "legal": "法的情報",
+      "app": "Kakeiについて"
+    },
+    "items": {
+      "language": "言語",
+      "theme": "テーマ",
+      "defaultPrefecture": "デフォルト都道府県",
+      "payday": "給料日",
+      "notifications": "通知を有効化",
+      "faceId": "Face IDで開く",
+      "exportData": "データを書き出し",
+      "clearData": "すべてのデータを削除",
+      "resetOnboarding": "オンボーディングをリセット (dev)",
+      "privacy": "プライバシーポリシー",
+      "terms": "利用規約",
+      "about": "ライセンスとクレジット",
+      "version": "バージョン",
+      "feedback": "フィードバックを送信"
+    },
+    "language": {
+      "system": "システムに従う",
+      "vi": "Tiếng Việt",
+      "ja": "日本語"
+    },
+    "theme": {
+      "system": "システムに従う",
+      "light": "ライト",
+      "dark": "ダーク"
+    },
+    "payday": {
+      "dayOfMonth": "{{day}}日"
+    },
+    "clearData": {
+      "title": "すべてのデータを削除",
+      "stage1Body": "以下が完全に削除されます：",
+      "stage2Body": "確認のため、以下に大文字で入力してください。",
+      "items": {
+        "history": "すべての計算履歴",
+        "lastCalculation": "最新の計算結果",
+        "settings": "個人設定",
+        "onboarding": "オンボーディング状態（再表示されます）"
+      },
+      "typePrompt": "「{{word}}」と入力して確認",
+      "continue": "次へ",
+      "confirmFinal": "完全に削除"
+    },
+    "about": {
+      "title": "Kakeiについて",
+      "tagline": "ベトナム人のための日本給与計算アプリ",
+      "credits": "Kakeiは完全オフラインで動作するよう設計されています。給与、税金、履歴のすべてのデータはこのデバイスにのみ保存されます。サーバーなし、追跡なし。",
+      "licenses": "オープンソース依存関係：Expo、React Native、React Navigation、Zustand、i18next、date-fns、react-native-svg、expo-localization、expo-sqlite。",
+      "openSource": "MITライセンスで公開。",
+      "madeFor": "Made for Vietnamese in Japan"
+    }
+  },
   "dashboard": {
     "greeting": {
       "morning": "おはようございます",

@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-context';
 
-import '@/lib/i18n';
+import { useReactiveI18n } from '@/lib/i18n';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { RootNavigator } from '@/navigation/RootNavigator';
 import { useHistoryMigration } from '@/store/useHistoryMigration';
@@ -23,6 +23,7 @@ export default function App() {
   const scheme = useColorScheme();
   const navTheme = scheme === 'dark' ? DarkTheme : DefaultTheme;
   useHistoryMigration();
+  useReactiveI18n();
 
   useEffect(() => {
     console.log('[App] mounted');
