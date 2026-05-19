@@ -610,5 +610,74 @@
       "jumin_zei_q3": "住民税 第3期 (10/31)",
       "jumin_zei_q4": "住民税 第4期 (1/31)"
     }
+  },
+  "medical": {
+    "title": "医療費控除",
+    "subtitle": "年間の医療費を記録",
+    "summary": {
+      "total": "今年の合計",
+      "threshold": "控除ライン",
+      "deductible": "控除見込み",
+      "taxRefund": "還付見込み",
+      "progressLabel": "{{current}} / {{threshold}}"
+    },
+    "filter": {
+      "all": "すべて"
+    },
+    "categories": {
+      "doctor_visit": "通院",
+      "hospitalization": "入院",
+      "pharmacy": "薬局・処方箋",
+      "dental": "歯科",
+      "optical": "眼科・メガネ",
+      "maternity": "出産",
+      "transportation": "交通費",
+      "other": "その他"
+    },
+    "add": { "title": "医療費を追加" },
+    "edit": { "title": "医療費を編集" },
+    "fields": {
+      "amount": "金額",
+      "date": "日付",
+      "category": "種類",
+      "provider": "病院・薬局",
+      "providerPlaceholder": "例：〇〇クリニック",
+      "note": "メモ",
+      "notePlaceholder": "参考情報を入力...",
+      "reimbursed": "保険からの還付額",
+      "reimbursedHelper": "この金額は控除合計から差し引かれます。",
+      "receipt": "領収書の写真",
+      "receiptCamera": "カメラで撮影",
+      "receiptGallery": "ギャラリーから選択",
+      "receiptRemove": "写真を削除"
+    },
+    "actions": {
+      "save": "保存",
+      "delete": "医療費を削除",
+      "deleteConfirmTitle": "この医療費を削除しますか？",
+      "deleteConfirmBody": "添付されている領収書写真も削除されます。",
+      "deleteConfirmOk": "削除"
+    },
+    "errors": {
+      "amountRequired": "金額を入力してください。",
+      "amountPositive": "金額は0円より大きい必要があります。",
+      "dateRequired": "日付が無効です。",
+      "imagePicker": "カメラ/ギャラリーを開けませんでした。"
+    },
+    "list": {
+      "limitReached": "上限{{max}}件に達しました。削除してから追加してください。",
+      "emptyForFilter": "条件に一致する記録がありません。"
+    },
+    "empty": {
+      "title": "まだ医療費が記録されていません",
+      "body": "通院、薬、歯科などの領収書を追加して、年末の医療費控除に備えましょう。",
+      "cta": "最初の医療費を追加"
+    },
+    "dashboard": {
+      "cardTitle": "今年の医療費控除",
+      "viewDetails": "詳細を見る",
+      "belowThreshold": "あと{{remaining}}で控除ラインに到達。",
+      "aboveThreshold": "控除ライン突破 — 控除{{deductible}}、還付見込み~{{refund}}。"
+    }
   }
 }

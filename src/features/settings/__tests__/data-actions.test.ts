@@ -34,6 +34,7 @@ import { buildExportPayload, wipeAllAppData } from '@/features/settings/data-act
 import { useCalculatorStore } from '@/store/calculatorStore';
 import { useDocumentsStore } from '@/store/documentsStore';
 import { useHistoryStore } from '@/store/historyStore';
+import { useMedicalExpensesStore } from '@/store/medicalExpensesStore';
 import { useMultiJobStore } from '@/store/multiJobStore';
 import { useOnboardingStore } from '@/store/onboardingStore';
 import { DEFAULT_SETTINGS, useSettingsStore } from '@/store/settingsStore';
@@ -144,6 +145,11 @@ describe('wipeAllAppData', () => {
       kind: 'zairyu_card',
       expiryDate: '2027-03-15',
     });
+    useMedicalExpensesStore.getState().addExpense({
+      date: '2026-05-01',
+      amount: 12_000,
+      category: 'doctor_visit',
+    });
 
     await wipeAllAppData();
 
@@ -157,5 +163,6 @@ describe('wipeAllAppData', () => {
     expect(useOnboardingStore.getState().currentSlide).toBe(0);
     expect(useMultiJobStore.getState().jobs).toEqual([]);
     expect(useDocumentsStore.getState().documents).toEqual([]);
+    expect(useMedicalExpensesStore.getState().expenses).toEqual([]);
   });
 });

@@ -610,5 +610,74 @@
       "jumin_zei_q3": "住民税 Quý 3 (10/31)",
       "jumin_zei_q4": "住民税 Quý 4 (01/31)"
     }
+  },
+  "medical": {
+    "title": "医療費控除",
+    "subtitle": "Chi phí y tế khấu trừ thuế",
+    "summary": {
+      "total": "Tổng năm",
+      "threshold": "Ngưỡng",
+      "deductible": "Khấu trừ ước tính",
+      "taxRefund": "Hoàn thuế ước tính",
+      "progressLabel": "{{current}} / {{threshold}} ngưỡng"
+    },
+    "filter": {
+      "all": "Tất cả"
+    },
+    "categories": {
+      "doctor_visit": "Khám bệnh (通院)",
+      "hospitalization": "Nhập viện (入院)",
+      "pharmacy": "Thuốc (薬局)",
+      "dental": "Nha khoa (歯科)",
+      "optical": "Mắt / kính (眼科)",
+      "maternity": "Thai sản (出産)",
+      "transportation": "Đi lại y tế (交通費)",
+      "other": "Khác"
+    },
+    "add": { "title": "Thêm chi phí" },
+    "edit": { "title": "Sửa chi phí" },
+    "fields": {
+      "amount": "Số tiền",
+      "date": "Ngày",
+      "category": "Loại",
+      "provider": "Bệnh viện / nhà thuốc",
+      "providerPlaceholder": "VD: 〇〇クリニック",
+      "note": "Ghi chú",
+      "notePlaceholder": "Thêm thông tin tham khảo...",
+      "reimbursed": "Đã được bảo hiểm hoàn",
+      "reimbursedHelper": "Phần này sẽ được trừ khỏi tổng khấu trừ.",
+      "receipt": "Ảnh hóa đơn",
+      "receiptCamera": "Chụp ảnh",
+      "receiptGallery": "Chọn từ thư viện",
+      "receiptRemove": "Xóa ảnh"
+    },
+    "actions": {
+      "save": "Lưu",
+      "delete": "Xóa chi phí",
+      "deleteConfirmTitle": "Xóa chi phí này?",
+      "deleteConfirmBody": "Ảnh hóa đơn liên kết cũng sẽ bị xóa.",
+      "deleteConfirmOk": "Xóa"
+    },
+    "errors": {
+      "amountRequired": "Hãy nhập số tiền.",
+      "amountPositive": "Số tiền phải lớn hơn 0.",
+      "dateRequired": "Ngày không hợp lệ.",
+      "imagePicker": "Không mở được camera/thư viện ảnh."
+    },
+    "list": {
+      "limitReached": "Đã đạt giới hạn {{max}} chi phí. Xóa bớt để thêm.",
+      "emptyForFilter": "Không có chi phí nào khớp bộ lọc."
+    },
+    "empty": {
+      "title": "Chưa có chi phí y tế nào",
+      "body": "Thêm hóa đơn khám bệnh, thuốc, nha khoa... để theo dõi 医療費控除 cuối năm.",
+      "cta": "Thêm chi phí đầu tiên"
+    },
+    "dashboard": {
+      "cardTitle": "医療費控除 năm nay",
+      "viewDetails": "Xem chi tiết",
+      "belowThreshold": "Còn {{remaining}} nữa đạt ngưỡng khấu trừ.",
+      "aboveThreshold": "Đã vượt ngưỡng — khấu trừ {{deductible}}, hoàn thuế ~{{refund}}."
+    }
   }
 }

@@ -15,6 +15,7 @@ import { cancelAllReminders } from '@/lib/notifications';
 import { useCalculatorStore } from '@/store/calculatorStore';
 import { useDocumentsStore } from '@/store/documentsStore';
 import { useHistoryStore } from '@/store/historyStore';
+import { useMedicalExpensesStore } from '@/store/medicalExpensesStore';
 import { useMultiJobStore } from '@/store/multiJobStore';
 import { useOnboardingStore } from '@/store/onboardingStore';
 import { DEFAULT_SETTINGS, useSettingsStore, type AppSettings } from '@/store/settingsStore';
@@ -66,4 +67,5 @@ export async function wipeAllAppData(): Promise<void> {
   useOnboardingStore.getState().reset();
   useMultiJobStore.getState().clearAll();
   useDocumentsStore.getState().clearAll();
+  useMedicalExpensesStore.getState().clearAll();
 }
