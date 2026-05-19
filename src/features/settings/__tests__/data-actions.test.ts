@@ -103,6 +103,14 @@ describe('buildExportPayload', () => {
     expect(parsed.history[0].label).toBe('May salary');
     expect(parsed.settings.payday).toBe(25);
   });
+
+  it('payload includes schemaVersion = 1 for forward-compat', () => {
+    const payload = buildExportPayload(DEFAULT_SETTINGS, [], new Date('2026-05-19T00:00:00Z'));
+    expect(payload.schemaVersion).toBe(1);
+    // Round-trip preserves it so external consumers can read it back.
+    const parsed = JSON.parse(JSON.stringify(payload));
+    expect(parsed.schemaVersion).toBe(1);
+  });
 });
 
 describe('wipeAllAppData', () => {

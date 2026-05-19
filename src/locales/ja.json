@@ -332,6 +332,7 @@
       "theme": "テーマ",
       "defaultPrefecture": "デフォルトの都道府県",
       "defaultMunicipality": "市区町村（フリーランス）",
+      "municipalityHint": "フリーランスを選ぶと自動で表示されます",
       "payday": "給料日",
       "notifications": "通知を有効にする",
       "faceId": "Face ID / Touch ID",

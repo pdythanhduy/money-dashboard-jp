@@ -4,6 +4,7 @@ import { formatCurrency as formatCurrencyShared } from '@/lib/format';
 import { calculateTakeHome } from '@/lib/tax-calculator';
 import { useCalculatorStore } from '@/store/calculatorStore';
 import { useHistoryStore } from '@/store/historyStore';
+import { useSettingsStore } from '@/store/settingsStore';
 import type {
   FreelanceMunicipality,
   IncomeCategory,
@@ -189,8 +190,23 @@ export function computeCalculatorResult(form: CalculatorFormState): {
   }
 }
 
-function formFromSalaryInput(input: SalaryInput | null): CalculatorFormState {
-  if (!input) return DEFAULT_CALCULATOR_FORM;
+interface FormDefaults {
+  defaultPrefecture: Prefecture | null;
+  defaultMunicipality: FreelanceMunicipality | null;
+}
+
+function formFromSalaryInput(
+  input: SalaryInput | null,
+  defaults: FormDefaults = { defaultPrefecture: null, defaultMunicipality: null },
+): CalculatorFormState {
+  // First-time path: prefill from user-level settings so the picker isn't
+  // empty. Only applies when there's no stored calculation to restore.
+  if (!input) {
+    const seeded: CalculatorFormState = { ...DEFAULT_CALCULATOR_FORM };
+    if (defaults.defaultPrefecture) seeded.prefecture = defaults.defaultPrefecture;
+    if (defaults.defaultMunicipality) seeded.municipality = defaults.defaultMunicipality;
+    return seeded;
+  }
 
   return {
     ...DEFAULT_CALCULATOR_FORM,
@@ -204,6 +220,8 @@ function formFromSalaryInput(input: SalaryInput | null): CalculatorFormState {
   };
 }
 
+export const __testing = { formFromSalaryInput };
+
 export function useCalculator() {
   const lastInput = useCalculatorStore((state) => state.lastInput);
   const lastResult = useCalculatorStore((state) => state.lastResult);
@@ -211,8 +229,13 @@ export function useCalculator() {
   const setStoredResult = useCalculatorStore((state) => state.setResult);
   const resetStore = useCalculatorStore((state) => state.reset);
   const addHistoryEntry = useHistoryStore((state) => state.addEntry);
+  const defaultPrefecture = useSettingsStore((s) => s.settings.defaultPrefecture);
+  const defaultMunicipality = useSettingsStore((s) => s.settings.defaultMunicipality);
 
-  const initialForm = useMemo(() => formFromSalaryInput(lastInput), [lastInput]);
+  const initialForm = useMemo(
+    () => formFromSalaryInput(lastInput, { defaultPrefecture, defaultMunicipality }),
+    [lastInput, defaultPrefecture, defaultMunicipality],
+  );
   const [mode, setMode] = useState<CalculatorMode>('input');
   const [form, setForm] = useState<CalculatorFormState>(initialForm);
   const [errors, setErrors] = useState<ValidationErrors>({});
@@ -278,12 +301,12 @@ export function useCalculator() {
 
   const reset = useCallback(() => {
     resetStore();
-    setForm(DEFAULT_CALCULATOR_FORM);
+    setForm(formFromSalaryInput(null, { defaultPrefecture, defaultMunicipality }));
     setErrors({});
     setResult(null);
     setSubmittedInput(null);
     setMode('input');
-  }, [resetStore]);
+  }, [resetStore, defaultPrefecture, defaultMunicipality]);
 
   return {
     mode,

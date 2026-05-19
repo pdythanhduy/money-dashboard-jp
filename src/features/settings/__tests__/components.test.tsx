@@ -57,6 +57,7 @@ import { AboutModal } from '@/features/settings/components/AboutModal';
 import { ClearDataConfirmModal } from '@/features/settings/components/ClearDataConfirmModal';
 import { LanguagePicker } from '@/features/settings/components/LanguagePicker';
 import { OnboardingNavigator } from '@/features/onboarding/OnboardingNavigator';
+import { useCalculatorStore } from '@/store/calculatorStore';
 import { useOnboardingStore } from '@/store/onboardingStore';
 import { DEFAULT_SETTINGS, useSettingsStore } from '@/store/settingsStore';
 import { ThemeProvider } from '@/theme';
@@ -72,6 +73,7 @@ function renderTree(el: React.ReactElement) {
 beforeEach(() => {
   useSettingsStore.setState({ settings: { ...DEFAULT_SETTINGS } });
   useOnboardingStore.setState({ hasCompletedOnboarding: false, currentSlide: 0 });
+  useCalculatorStore.setState({ lastInput: null, lastResult: null });
 });
 
 describe('SettingsScreen', () => {
@@ -101,6 +103,41 @@ describe('SettingsScreen', () => {
     expect(tree).toContain('日本語');
     expect(tree).toContain('Ngày 10');
     expect(tree).toContain('Osaka');
+    TestRenderer.act(() => r.unmount());
+  });
+
+  it('hides MunicipalityPicker row when no freelance history and no default set', () => {
+    // Empty calculator + empty default → row hidden, hint surfaces under prefecture.
+    const r = renderTree(<SettingsScreen />);
+    const tree = JSON.stringify(r.toJSON());
+    expect(tree).not.toContain('Quận/Thành phố');
+    expect(tree).toContain('Tự động hiện khi bạn chọn Freelance');
+    TestRenderer.act(() => r.unmount());
+  });
+
+  it('shows MunicipalityPicker row when defaultMunicipality already set', () => {
+    useSettingsStore.getState().updateSetting('defaultMunicipality', 'osaka-shi');
+    const r = renderTree(<SettingsScreen />);
+    const tree = JSON.stringify(r.toJSON());
+    expect(tree).toContain('Quận/Thành phố');
+    expect(tree).not.toContain('Tự động hiện khi bạn chọn Freelance');
+    TestRenderer.act(() => r.unmount());
+  });
+
+  it('shows MunicipalityPicker row when last calculation was business', () => {
+    useCalculatorStore.setState({
+      lastInput: {
+        annualIncome: 5_000_000,
+        age: 35,
+        category: 'business',
+        municipality: 'osaka-shi',
+      },
+      lastResult: null,
+    });
+    const r = renderTree(<SettingsScreen />);
+    const tree = JSON.stringify(r.toJSON());
+    expect(tree).toContain('Quận/Thành phố');
+    expect(tree).not.toContain('Tự động hiện khi bạn chọn Freelance');
     TestRenderer.act(() => r.unmount());
   });
 });
