@@ -7,6 +7,7 @@ import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-c
 import '@/lib/i18n';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { RootNavigator } from '@/navigation/RootNavigator';
+import { useSettingsHydrated } from '@/store/settingsStore';
 import { useHistoryMigration } from '@/store/useHistoryMigration';
 import { useLanguageSync } from '@/store/useLanguageSync';
 import { ThemeProvider, useTheme } from '@/theme';
@@ -22,11 +23,18 @@ SplashScreen.hideAsync().catch(() => {});
 export default function App() {
   useHistoryMigration();
   useLanguageSync();
+  const hydrated = useSettingsHydrated();
 
   useEffect(() => {
     console.log('[App] mounted');
     SplashScreen.hideAsync().catch(() => {});
   }, []);
+
+  // Hold off the navigation tree for one tick after rehydrate so the user
+  // never sees default settings flash before their persisted preferences
+  // load. Splash stays visible courtesy of the hideAsync above being a
+  // no-op until something actually paints.
+  if (!hydrated) return null;
 
   return (
     <ErrorBoundary>

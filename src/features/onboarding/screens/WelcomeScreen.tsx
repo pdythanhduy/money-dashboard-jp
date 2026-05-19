@@ -5,22 +5,15 @@ import { OnboardingSlide } from '@/features/onboarding/components/OnboardingSlid
 import { useTheme } from '@/theme';
 
 interface WelcomeScreenProps {
-  onNext: () => void;
   onSkip: () => void;
-  onJumpToSlide: (i: number) => void;
 }
 
-export function WelcomeScreen({ onNext, onSkip, onJumpToSlide }: WelcomeScreenProps) {
+export function WelcomeScreen({ onSkip }: WelcomeScreenProps) {
   const { t } = useTranslation();
   const { typography, spacing } = useTheme();
 
   return (
-    <OnboardingSlide
-      slideIndex={0}
-      onSkip={onSkip}
-      onJumpToSlide={onJumpToSlide}
-      primaryAction={{ label: t('onboarding.next'), onPress: onNext }}
-    >
+    <OnboardingSlide onSkip={onSkip}>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: spacing.lg }}>
         <View
           style={{

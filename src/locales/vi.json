@@ -389,10 +389,10 @@
         "onboarding": "App sẽ chạy lại flow onboarding"
       },
       "continueLabel": "Tôi hiểu, tiếp tục",
-      "confirmTitle": "Nhập \"XÓA\" để xác nhận",
-      "confirmPlaceholder": "XÓA",
-      "confirmWord": "XÓA",
-      "confirmHint": "Phải khớp chính xác chữ in hoa.",
+      "confirmTitle": "Nhập \"DELETE\" để xác nhận",
+      "confirmPlaceholder": "DELETE",
+      "confirmWord": "DELETE",
+      "confirmHint": "Gõ DELETE (Latin, không phân biệt hoa thường) để bật nút xóa.",
       "deleteButton": "Xóa toàn bộ",
       "doneToast": "Đã xóa toàn bộ dữ liệu"
     },
