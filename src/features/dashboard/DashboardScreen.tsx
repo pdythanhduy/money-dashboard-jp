@@ -11,9 +11,11 @@ import { QuickStatsRow } from '@/features/dashboard/components/QuickStatsRow';
 import { TakeHomeProgressCard } from '@/features/dashboard/components/TakeHomeProgressCard';
 import { UpcomingEventsCard } from '@/features/dashboard/components/UpcomingEventsCard';
 import { useDashboardData } from '@/features/dashboard/hooks/useDashboardData';
+import { useMedicalSummary } from '@/features/medical/hooks/useMedicalSummary';
 import { formatCurrency } from '@/lib/format';
 import { activeWalls } from '@/lib/wall-warnings';
 import type { MainTabParamList } from '@/navigation/MainTabs';
+import type { RootStackParamList } from '@/navigation/RootNavigator';
 import { useCalculatorStore } from '@/store/calculatorStore';
 import { useTheme } from '@/theme';
 
@@ -27,8 +29,15 @@ export function DashboardScreen() {
   const lastInputAnnual = useCalculatorStore((s) => s.lastInput?.annualIncome ?? 0);
   const walls = activeWalls(lastInputAnnual);
   const topWall = walls[0];
+  const medical = useMedicalSummary();
 
   const goToCalculator = () => navigation.navigate('Calculator');
+  const goToMedical = () => {
+    // RootNavigator hosts Medical as a sibling of Main → reach it via the
+    // root-typed parent navigator.
+    const parent = navigation.getParent<{ navigate: (route: keyof RootStackParamList) => void }>();
+    parent?.navigate('Medical');
+  };
 
   if (!data.hasData) {
     return <EmptyState onPressCta={goToCalculator} />;
@@ -113,6 +122,42 @@ export function DashboardScreen() {
           retentionRate={data.retentionRate}
           onPressTax={goToCalculator}
         />
+        {medical.total > 0 ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t('medical.dashboard.cardTitle')}
+            onPress={goToMedical}
+            style={({ pressed }) => ({
+              marginHorizontal: spacing.lg,
+              marginTop: spacing.md,
+              padding: spacing.md,
+              borderRadius: 16,
+              backgroundColor: colors.surfaceElevated,
+              opacity: pressed ? 0.85 : 1,
+            })}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: spacing.xs }}>
+              <Ionicons name="medkit-outline" size={18} color={colors.brand} />
+              <Text style={[typography.headline, { color: colors.text, flex: 1 }]}>
+                {t('medical.dashboard.cardTitle')}
+              </Text>
+              <Ionicons name="chevron-forward" size={18} color={colors.textSecondary} />
+            </View>
+            <Text style={[typography.title3, { color: colors.brand, fontWeight: '800' }]}>
+              {formatCurrency(medical.total)}
+            </Text>
+            <Text style={[typography.caption, { color: colors.textSecondary, marginTop: 2 }]}>
+              {medical.hasReachedThreshold
+                ? t('medical.dashboard.aboveThreshold', {
+                    deductible: formatCurrency(medical.deductible),
+                    refund: formatCurrency(medical.refund),
+                  })
+                : t('medical.dashboard.belowThreshold', {
+                    remaining: formatCurrency(medical.remainingToThreshold),
+                  })}
+            </Text>
+          </Pressable>
+        ) : null}
         <MonthlyTrendChart />
         <UpcomingEventsCard reminders={data.upcomingReminders} />
 
