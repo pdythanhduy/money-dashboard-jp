@@ -12,12 +12,15 @@ import { TakeHomeProgressCard } from '@/features/dashboard/components/TakeHomePr
 import { UpcomingEventsCard } from '@/features/dashboard/components/UpcomingEventsCard';
 import { useDashboardData } from '@/features/dashboard/hooks/useDashboardData';
 import { useFurusatoSummary } from '@/features/furusato/hooks/useFurusatoSummary';
+import { iconNameFor } from '@/features/goals/components/IconPicker';
 import { useMedicalSummary } from '@/features/medical/hooks/useMedicalSummary';
 import { formatCurrency } from '@/lib/format';
+import { computeGoalProjection } from '@/lib/goals-math';
 import { activeWalls } from '@/lib/wall-warnings';
 import type { MainTabParamList } from '@/navigation/MainTabs';
 import type { RootStackParamList } from '@/navigation/RootNavigator';
 import { useCalculatorStore } from '@/store/calculatorStore';
+import { getSavedTotal, isGoalCompleted, useGoalsStore } from '@/store/goalsStore';
 import { useTheme } from '@/theme';
 
 type DashboardNavigationProp = BottomTabNavigationProp<MainTabParamList, 'Dashboard'>;
@@ -32,6 +35,27 @@ export function DashboardScreen() {
   const topWall = walls[0];
   const medical = useMedicalSummary();
   const furusato = useFurusatoSummary();
+  const goals = useGoalsStore((s) => s.goals);
+
+  // Pick the active goal closest to completion (highest progressPercent).
+  // We don't compute monthly figures here — the dashboard card only needs
+  // %-and-remaining, projection details live on the GoalsScreen.
+  const featuredGoal = (() => {
+    const active = goals.filter((g) => !isGoalCompleted(g));
+    if (active.length === 0) return null;
+    let best = active[0]!;
+    let bestPct = getSavedTotal(best) / best.targetAmount;
+    for (let i = 1; i < active.length; i++) {
+      const g = active[i]!;
+      const pct = getSavedTotal(g) / g.targetAmount;
+      if (pct > bestPct) {
+        best = g;
+        bestPct = pct;
+      }
+    }
+    const proj = computeGoalProjection({ saved: getSavedTotal(best), target: best.targetAmount });
+    return { goal: best, percent: Math.round(proj.progressPercent * 100), remaining: proj.remaining };
+  })();
 
   const goToCalculator = () => navigation.navigate('Calculator');
   const goToMedical = () => {
@@ -43,6 +67,10 @@ export function DashboardScreen() {
   const goToFurusato = () => {
     const parent = navigation.getParent<{ navigate: (route: keyof RootStackParamList) => void }>();
     parent?.navigate('Furusato');
+  };
+  const goToGoals = () => {
+    const parent = navigation.getParent<{ navigate: (route: keyof RootStackParamList) => void }>();
+    parent?.navigate('Goals');
   };
 
   if (!data.hasData) {
@@ -196,6 +224,63 @@ export function DashboardScreen() {
             </Text>
           </Pressable>
         ) : null}
+        {featuredGoal ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t('goals.dashboard.cardTitle')}
+            onPress={goToGoals}
+            style={({ pressed }) => ({
+              marginHorizontal: spacing.lg,
+              marginTop: spacing.md,
+              padding: spacing.md,
+              borderRadius: 16,
+              backgroundColor: colors.surfaceElevated,
+              opacity: pressed ? 0.85 : 1,
+            })}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: spacing.xs }}>
+              <Ionicons name={iconNameFor(featuredGoal.goal.icon)} size={18} color={colors.brand} />
+              <Text style={[typography.headline, { color: colors.text, flex: 1 }]} numberOfLines={1}>
+                {featuredGoal.goal.title}
+              </Text>
+              <Ionicons name="chevron-forward" size={18} color={colors.textSecondary} />
+            </View>
+            <Text style={[typography.title3, { color: colors.brand, fontWeight: '800' }]}>
+              {featuredGoal.percent}%
+            </Text>
+            <Text style={[typography.caption, { color: colors.textSecondary, marginTop: 2 }]}>
+              {t('goals.dashboard.cardSubtitle', {
+                percent: featuredGoal.percent,
+                remaining: formatCurrency(featuredGoal.remaining),
+              })}
+            </Text>
+          </Pressable>
+        ) : (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t('goals.dashboard.openHub')}
+            onPress={goToGoals}
+            style={({ pressed }) => ({
+              marginHorizontal: spacing.lg,
+              marginTop: spacing.md,
+              padding: spacing.md,
+              borderRadius: 16,
+              backgroundColor: colors.surfaceElevated,
+              opacity: pressed ? 0.85 : 1,
+            })}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}>
+              <Ionicons name="flag-outline" size={18} color={colors.brand} />
+              <Text style={[typography.headline, { color: colors.text, flex: 1 }]}>
+                {t('goals.empty.title')}
+              </Text>
+              <Ionicons name="chevron-forward" size={18} color={colors.textSecondary} />
+            </View>
+            <Text style={[typography.caption, { color: colors.textSecondary, marginTop: spacing.xs }]}>
+              {t('goals.empty.body')}
+            </Text>
+          </Pressable>
+        )}
         <MonthlyTrendChart />
         <UpcomingEventsCard reminders={data.upcomingReminders} />
 

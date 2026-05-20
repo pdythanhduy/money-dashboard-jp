@@ -749,5 +749,85 @@
       "body": "最初の寄付を追加 — 自己負担は¥2,000のみ、残りは所得税と住民税から控除されます。",
       "cta": "寄付を追加"
     }
+  },
+  "goals": {
+    "title": "貯金目標",
+    "subtitle": "目標を設定 · 進捗を確認 · 月々いくら貯めるべきかが分かる",
+    "sections": {
+      "active": "進行中",
+      "completed": "達成済み"
+    },
+    "fields": {
+      "title": "目標名",
+      "titlePlaceholder": "例: iPhone 15購入、年末帰省",
+      "targetAmount": "目標金額",
+      "deadline": "期限 (任意)",
+      "deadlineHint": "期限が無ければ空欄でOK",
+      "icon": "アイコン",
+      "note": "メモ",
+      "notePlaceholder": "詳細、理由、プラン..."
+    },
+    "icons": {
+      "piggy": "貯金",
+      "airplane": "旅行",
+      "home": "住居",
+      "gift": "ギフト",
+      "school": "学業",
+      "phone": "スマホ",
+      "car": "車",
+      "heart": "健康",
+      "star": "その他"
+    },
+    "progress": {
+      "savedOfTarget": "{{saved}} / {{target}}",
+      "remaining": "残り {{amount}}",
+      "completed": "達成！🎉",
+      "noDeadline": "期限なし — マイペースで",
+      "monthsRemaining": "残り {{months}} ヶ月",
+      "monthlyTarget": "月々 {{amount}} 貯める必要",
+      "savingsRateRequired": "= 現在の手取りの {{percent}}%",
+      "atDefaultPace": "手取り20%ペースで: 約 {{months}} ヶ月",
+      "deadlinePast": "期限超過",
+      "deadlineToday": "今日が期限"
+    },
+    "actions": {
+      "addGoal": "目標を追加",
+      "addSavings": "貯金を追加",
+      "edit": "目標を編集",
+      "delete": "目標を削除",
+      "deleteConfirmTitle": "この目標を削除しますか？",
+      "deleteConfirmBody": "記録した全ての貯金履歴も失われます。元に戻せません。",
+      "removeSavings": "この記録を削除",
+      "save": "保存"
+    },
+    "addSavings": {
+      "title": "貯金を追加",
+      "amountLabel": "金額",
+      "dateLabel": "日付",
+      "noteLabel": "メモ (任意)",
+      "quickChips": "クイック入力",
+      "history": "貯金履歴",
+      "historyEmpty": "まだ記録なし — 上から最初の貯金を追加"
+    },
+    "list": {
+      "limitReached": "目標は{{max}}件までです。削除してから追加してください。"
+    },
+    "errors": {
+      "titleRequired": "目標名を入力してください",
+      "targetPositive": "目標金額は0より大きい必要があります",
+      "amountPositive": "金額は0より大きい必要があります",
+      "dateInvalid": "日付が無効です"
+    },
+    "dashboard": {
+      "cardTitle": "もうすぐ達成",
+      "cardSubtitle": "{{percent}}% — 残り {{remaining}}",
+      "viewAll": "全ての目標を見る",
+      "openHub": "貯金目標を開く"
+    },
+    "empty": {
+      "title": "まだ目標がありません",
+      "body": "目標を立てれば (iPhone、帰省、車...)、月々いくら貯めるべきかをアプリが計算します。",
+      "cta": "最初の目標を追加"
+    }
   }
 }
