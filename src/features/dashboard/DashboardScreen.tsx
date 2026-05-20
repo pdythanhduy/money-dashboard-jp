@@ -16,11 +16,13 @@ import { iconNameFor } from '@/features/goals/components/IconPicker';
 import { useMedicalSummary } from '@/features/medical/hooks/useMedicalSummary';
 import { formatCurrency } from '@/lib/format';
 import { computeGoalProjection } from '@/lib/goals-math';
+import { buildMonthlyReport } from '@/lib/kakeibo-math';
 import { activeWalls } from '@/lib/wall-warnings';
 import type { MainTabParamList } from '@/navigation/MainTabs';
 import type { RootStackParamList } from '@/navigation/RootNavigator';
 import { useCalculatorStore } from '@/store/calculatorStore';
 import { getSavedTotal, isGoalCompleted, useGoalsStore } from '@/store/goalsStore';
+import { useKakeiboStore } from '@/store/kakeiboStore';
 import { useTheme } from '@/theme';
 
 type DashboardNavigationProp = BottomTabNavigationProp<MainTabParamList, 'Dashboard'>;
@@ -36,6 +38,19 @@ export function DashboardScreen() {
   const medical = useMedicalSummary();
   const furusato = useFurusatoSummary();
   const goals = useGoalsStore((s) => s.goals);
+  const kakeiboEntries = useKakeiboStore((s) => s.entries);
+  const takeHomeMonthly = useCalculatorStore((s) => s.lastResult?.takeHomeMonthly ?? 0);
+
+  // Current-month kakeibo: only render the card if user has at least one
+  // entry this month. Previous months are reachable from KakeiboScreen.
+  const kakeiboThisMonth = (() => {
+    const d = new Date();
+    const ym = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+    const r = buildMonthlyReport(kakeiboEntries, ym);
+    if (r.entryCount === 0) return null;
+    const percentOfIncome = takeHomeMonthly > 0 ? Math.round((r.totalSpent / takeHomeMonthly) * 100) : null;
+    return { totalSpent: r.totalSpent, percentOfIncome };
+  })();
 
   // Pick the active goal closest to completion (highest progressPercent).
   // We don't compute monthly figures here — the dashboard card only needs
@@ -71,6 +86,10 @@ export function DashboardScreen() {
   const goToGoals = () => {
     const parent = navigation.getParent<{ navigate: (route: keyof RootStackParamList) => void }>();
     parent?.navigate('Goals');
+  };
+  const goToKakeibo = () => {
+    const parent = navigation.getParent<{ navigate: (route: keyof RootStackParamList) => void }>();
+    parent?.navigate('Kakeibo');
   };
 
   if (!data.hasData) {
@@ -281,6 +300,37 @@ export function DashboardScreen() {
             </Text>
           </Pressable>
         )}
+        {kakeiboThisMonth ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t('kakeibo.dashboard.cardTitle')}
+            onPress={goToKakeibo}
+            style={({ pressed }) => ({
+              marginHorizontal: spacing.lg,
+              marginTop: spacing.md,
+              padding: spacing.md,
+              borderRadius: 16,
+              backgroundColor: colors.surfaceElevated,
+              opacity: pressed ? 0.85 : 1,
+            })}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: spacing.xs }}>
+              <Ionicons name="book-outline" size={18} color={colors.brand} />
+              <Text style={[typography.headline, { color: colors.text, flex: 1 }]}>
+                {t('kakeibo.dashboard.cardTitle')}
+              </Text>
+              <Ionicons name="chevron-forward" size={18} color={colors.textSecondary} />
+            </View>
+            <Text style={[typography.title3, { color: colors.brand, fontWeight: '800' }]}>
+              {formatCurrency(kakeiboThisMonth.totalSpent)}
+            </Text>
+            <Text style={[typography.caption, { color: colors.textSecondary, marginTop: 2 }]}>
+              {kakeiboThisMonth.percentOfIncome !== null
+                ? t('kakeibo.dashboard.percentOfIncome', { percent: kakeiboThisMonth.percentOfIncome })
+                : t('kakeibo.dashboard.noIncome')}
+            </Text>
+          </Pressable>
+        ) : null}
         <MonthlyTrendChart />
         <UpcomingEventsCard reminders={data.upcomingReminders} />
 

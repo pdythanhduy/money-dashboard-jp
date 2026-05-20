@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { FurusatoScreen } from '@/features/furusato/FurusatoScreen';
 import { GoalsScreen } from '@/features/goals/GoalsScreen';
+import { KakeiboScreen } from '@/features/kakeibo/KakeiboScreen';
 import { MedicalScreen } from '@/features/medical/MedicalScreen';
 import { OnboardingNavigator } from '@/features/onboarding/OnboardingNavigator';
 import { useOnboardingStore } from '@/store/onboardingStore';
@@ -15,6 +16,7 @@ export type RootStackParamList = {
   Medical: undefined;
   Furusato: undefined;
   Goals: undefined;
+  Kakeibo: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -30,6 +32,7 @@ export function RootNavigator() {
           <Stack.Screen name="Medical" component={MedicalScreen} />
           <Stack.Screen name="Furusato" component={FurusatoScreen} />
           <Stack.Screen name="Goals" component={GoalsScreen} />
+          <Stack.Screen name="Kakeibo" component={KakeiboScreen} />
         </>
       ) : (
         <Stack.Screen name="Onboarding" component={OnboardingNavigator} />

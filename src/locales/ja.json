@@ -829,5 +829,109 @@
       "body": "目標を立てれば (iPhone、帰省、車...)、月々いくら貯めるべきかをアプリが計算します。",
       "cta": "最初の目標を追加"
     }
+  },
+  "kakeibo": {
+    "title": "家計簿",
+    "subtitle": "手入力で記録 · 予算と比較",
+    "categories": {
+      "rent": "家賃",
+      "food": "食費",
+      "utilities": "光熱費",
+      "communication": "通信費",
+      "transport": "交通費",
+      "entertainment": "交際・娯楽",
+      "health": "医療費",
+      "shopping": "買い物",
+      "education": "学費・書籍",
+      "savings": "貯金 (自動振替)",
+      "remittance": "仕送り",
+      "other": "その他"
+    },
+    "summary": {
+      "totalSpent": "今月の合計",
+      "surplus": "残り {{amount}}",
+      "deficit": "収入超過 {{amount}}",
+      "noIncomeContext": "Calculatorの結果なし — 支出のみ表示",
+      "entriesCount": "{{count}} 件"
+    },
+    "month": {
+      "prev": "前月",
+      "next": "翌月",
+      "currentLabel": "{{year}}年{{month}}月"
+    },
+    "budget": {
+      "title": "月の予算を設定",
+      "subtitle": "カテゴリ別に上限を設定 — 近づくと警告します",
+      "autoSuggest": "自動設定 (50/30/20)",
+      "autoSuggestHint": "Calculatorの結果をベースに提案 — 各行は手動編集可能",
+      "noIncomeYet": "先にCalculatorで給与を計算するか、各行を手動入力",
+      "severity": {
+        "safe": "安全",
+        "warning": "もうすぐ上限",
+        "over": "予算超過"
+      },
+      "label": "{{category}}の予算",
+      "limit": "月の上限",
+      "save": "予算を保存",
+      "remove": "上限なし",
+      "warningsTitle": "予算アラート",
+      "spentOfLimit": "{{spent}} / {{limit}}"
+    },
+    "comparison": {
+      "title": "前月との比較",
+      "increase": "{{amount}}増 ({{percent}}%)",
+      "decrease": "{{amount}}減 ({{percent}}%)",
+      "unchanged": "変化なし",
+      "noPrev": "前月のデータがありません",
+      "topCategories": "変化の大きいカテゴリ"
+    },
+    "entries": {
+      "title": "支出一覧",
+      "filterAll": "全て",
+      "empty": "この期間の記録はありません"
+    },
+    "add": {
+      "title": "支出を追加"
+    },
+    "edit": {
+      "title": "支出を編集"
+    },
+    "fields": {
+      "amount": "金額",
+      "date": "日付",
+      "category": "カテゴリ",
+      "label": "メモ",
+      "labelPlaceholder": "例: ローソン、JR定期、5月ガス",
+      "note": "備考",
+      "notePlaceholder": "補足情報 (任意)",
+      "recurring": "定期支出 (翌月も提案)"
+    },
+    "errors": {
+      "amountRequired": "金額を入力してください",
+      "amountPositive": "金額は0より大きい必要があります",
+      "dateRequired": "日付が無効です",
+      "categoryRequired": "カテゴリを選択してください"
+    },
+    "actions": {
+      "save": "保存",
+      "delete": "この記録を削除",
+      "deleteConfirmTitle": "この支出を削除しますか？",
+      "deleteConfirmBody": "元に戻せません。",
+      "deleteConfirmOk": "削除"
+    },
+    "list": {
+      "limitReached": "記録は{{max}}件までです。削除してから追加してください。"
+    },
+    "empty": {
+      "title": "まだ支出記録がありません",
+      "body": "最初の支出を追加してください。カテゴリ別に集計し、予算と比較します。",
+      "cta": "最初の支出を追加"
+    },
+    "dashboard": {
+      "cardTitle": "今月の支出",
+      "percentOfIncome": "月収の {{percent}}%",
+      "noIncome": "Calculatorの結果なし",
+      "viewDetails": "詳細を見る"
+    }
   }
 }

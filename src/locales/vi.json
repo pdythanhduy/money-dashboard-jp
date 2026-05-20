@@ -829,5 +829,109 @@
       "body": "Đặt một mục tiêu (mua iPhone, về Tết, mua xe...) để app tính giúp bạn nên để dành bao nhiêu mỗi tháng.",
       "cta": "Thêm mục tiêu đầu tiên"
     }
+  },
+  "kakeibo": {
+    "title": "Sổ chi tiêu",
+    "subtitle": "家計簿 · nhập tay từng khoản · so sánh với budget",
+    "categories": {
+      "rent": "Tiền nhà",
+      "food": "Ăn uống",
+      "utilities": "Điện · nước · gas",
+      "communication": "Mobile · Internet",
+      "transport": "Đi lại",
+      "entertainment": "Giải trí",
+      "health": "Y tế",
+      "shopping": "Mua sắm",
+      "education": "Học hành",
+      "savings": "Tiết kiệm tự động",
+      "remittance": "Gửi gia đình",
+      "other": "Khác"
+    },
+    "summary": {
+      "totalSpent": "Tổng chi tháng này",
+      "surplus": "Còn dư {{amount}}",
+      "deficit": "Vượt thu nhập {{amount}}",
+      "noIncomeContext": "Chưa có thu nhập từ Calculator — chỉ hiện chi tiêu",
+      "entriesCount": "{{count}} khoản"
+    },
+    "month": {
+      "prev": "Tháng trước",
+      "next": "Tháng sau",
+      "currentLabel": "Tháng {{month}}/{{year}}"
+    },
+    "budget": {
+      "title": "Đặt budget tháng",
+      "subtitle": "Đặt giới hạn cho từng nhóm để app cảnh báo khi sắp vượt",
+      "autoSuggest": "Đặt budget tự động (50/30/20)",
+      "autoSuggestHint": "Dùng kết quả Calculator để gợi ý — bạn vẫn sửa từng dòng được",
+      "noIncomeYet": "Tính lương trước để app gợi ý — hoặc nhập tay từng dòng",
+      "severity": {
+        "safe": "An toàn",
+        "warning": "Sắp vượt",
+        "over": "Đã vượt"
+      },
+      "label": "Budget {{category}}",
+      "limit": "Giới hạn / tháng",
+      "save": "Lưu budget",
+      "remove": "Bỏ giới hạn",
+      "warningsTitle": "Cảnh báo budget",
+      "spentOfLimit": "{{spent}} / {{limit}}"
+    },
+    "comparison": {
+      "title": "So với tháng trước",
+      "increase": "Tăng {{amount}} ({{percent}}%)",
+      "decrease": "Giảm {{amount}} ({{percent}}%)",
+      "unchanged": "Không đổi",
+      "noPrev": "Chưa có dữ liệu tháng trước",
+      "topCategories": "Nhóm thay đổi nhiều nhất"
+    },
+    "entries": {
+      "title": "Danh sách chi tiêu",
+      "filterAll": "Tất cả",
+      "empty": "Không có khoản nào trong giai đoạn này"
+    },
+    "add": {
+      "title": "Thêm khoản chi"
+    },
+    "edit": {
+      "title": "Sửa khoản chi"
+    },
+    "fields": {
+      "amount": "Số tiền",
+      "date": "Ngày",
+      "category": "Nhóm",
+      "label": "Mô tả",
+      "labelPlaceholder": "VD: Lawson, JR pass, gas tháng 5",
+      "note": "Ghi chú",
+      "notePlaceholder": "Thông tin thêm (tuỳ chọn)",
+      "recurring": "Khoản định kỳ (gợi ý lại tháng sau)"
+    },
+    "errors": {
+      "amountRequired": "Cần nhập số tiền",
+      "amountPositive": "Số tiền phải > 0",
+      "dateRequired": "Ngày không hợp lệ",
+      "categoryRequired": "Chọn một nhóm"
+    },
+    "actions": {
+      "save": "Lưu",
+      "delete": "Xoá khoản này",
+      "deleteConfirmTitle": "Xoá khoản chi này?",
+      "deleteConfirmBody": "Hành động không thể hoàn tác.",
+      "deleteConfirmOk": "Xoá"
+    },
+    "list": {
+      "limitReached": "Đã đạt giới hạn {{max}} khoản. Xoá bớt để thêm."
+    },
+    "empty": {
+      "title": "Chưa có khoản chi nào",
+      "body": "Thêm khoản đầu tiên để bắt đầu theo dõi. App tự tính theo nhóm + so với budget.",
+      "cta": "Thêm khoản chi đầu tiên"
+    },
+    "dashboard": {
+      "cardTitle": "Chi tiêu tháng này",
+      "percentOfIncome": "{{percent}}% thu nhập tháng",
+      "noIncome": "Chưa có thu nhập từ Calculator",
+      "viewDetails": "Xem chi tiết"
+    }
   }
 }
