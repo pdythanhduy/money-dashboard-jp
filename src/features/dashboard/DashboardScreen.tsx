@@ -106,6 +106,25 @@ export function DashboardScreen() {
     const parent = navigation.getParent<{ navigate: (route: keyof RootStackParamList) => void }>();
     parent?.navigate('Remittance');
   };
+  const goToKakutei = () => {
+    const parent = navigation.getParent<{ navigate: (route: keyof RootStackParamList) => void }>();
+    parent?.navigate('Kakutei');
+  };
+
+  // 確定申告 deadline is March 15. Surface a card when within 90 days of
+  // the next March 15 — that's a meaningful planning window. Outside the
+  // window we don't push it; user can still open via the (future) Settings
+  // entry or by tapping the card if surfaced explicitly elsewhere.
+  const kakuteiDeadline = (() => {
+    const now = new Date();
+    const year = now.getFullYear();
+    let deadline = new Date(year, 2, 15);
+    if (now.getTime() > deadline.getTime()) deadline = new Date(year + 1, 2, 15);
+    const msDay = 24 * 60 * 60 * 1000;
+    const days = Math.ceil((deadline.getTime() - now.getTime()) / msDay);
+    if (days < 0 || days > 90) return null;
+    return { days, year: deadline.getFullYear() };
+  })();
 
   if (!data.hasData) {
     return <EmptyState onPressCta={goToCalculator} />;
@@ -374,6 +393,37 @@ export function DashboardScreen() {
               {remittanceThisYear.goalJPY > 0
                 ? `${t('remittance.dashboard.sentLabel', { amount: formatCurrency(remittanceThisYear.totalSentJPY) })} ${t('remittance.dashboard.goalLabel', { amount: formatCurrency(remittanceThisYear.goalJPY) })}`
                 : t('remittance.dashboard.noGoal')}
+            </Text>
+          </Pressable>
+        ) : null}
+        {kakuteiDeadline ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t('kakutei.dashboard.cardTitle')}
+            onPress={goToKakutei}
+            style={({ pressed }) => ({
+              marginHorizontal: spacing.lg,
+              marginTop: spacing.md,
+              padding: spacing.md,
+              borderRadius: 16,
+              borderLeftWidth: 4,
+              borderLeftColor: kakuteiDeadline.days <= 30 ? colors.warning : colors.brand,
+              backgroundColor: colors.surfaceElevated,
+              opacity: pressed ? 0.85 : 1,
+            })}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: spacing.xs }}>
+              <Ionicons name="document-text-outline" size={18} color={colors.brand} />
+              <Text style={[typography.headline, { color: colors.text, flex: 1 }]}>
+                {t('kakutei.dashboard.cardTitle')}
+              </Text>
+              <Ionicons name="chevron-forward" size={18} color={colors.textSecondary} />
+            </View>
+            <Text style={[typography.title3, { color: kakuteiDeadline.days <= 30 ? colors.warning : colors.brand, fontWeight: '800' }]}>
+              {t('kakutei.dashboard.daysToDeadline', { days: kakuteiDeadline.days })}
+            </Text>
+            <Text style={[typography.caption, { color: colors.textSecondary, marginTop: 2 }]}>
+              {t('kakutei.dashboard.deadlineLabel', { year: kakuteiDeadline.year })}
             </Text>
           </Pressable>
         ) : null}

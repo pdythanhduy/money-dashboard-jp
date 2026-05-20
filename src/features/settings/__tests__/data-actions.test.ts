@@ -37,6 +37,7 @@ import { useFurusatoStore } from '@/store/furusatoStore';
 import { useGoalsStore } from '@/store/goalsStore';
 import { useHistoryStore } from '@/store/historyStore';
 import { useKakeiboStore } from '@/store/kakeiboStore';
+import { useKakuteiStore } from '@/store/kakuteiStore';
 import { useRemittanceStore } from '@/store/remittanceStore';
 import { useMedicalExpensesStore } from '@/store/medicalExpensesStore';
 import { useMultiJobStore } from '@/store/multiJobStore';
@@ -180,6 +181,7 @@ describe('wipeAllAppData', () => {
       recipient: 'Mẹ',
     });
     useRemittanceStore.getState().setAnnualGoal(1_000_000);
+    useKakuteiStore.getState().updateDraftField('lifeInsurancePremium', 60_000);
 
     await wipeAllAppData();
 
@@ -200,5 +202,7 @@ describe('wipeAllAppData', () => {
     expect(useKakeiboStore.getState().budgets).toEqual([]);
     expect(useRemittanceStore.getState().entries).toEqual([]);
     expect(useRemittanceStore.getState().annualGoalJPY).toBe(0);
+    expect(useKakuteiStore.getState().draft.lifeInsurancePremium).toBe(0);
+    expect(useKakuteiStore.getState().draft.lastSummary).toBeUndefined();
   });
 });
