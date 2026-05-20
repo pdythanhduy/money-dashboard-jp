@@ -749,5 +749,85 @@
       "body": "Thêm donation đầu tiên — chỉ ¥2,000 self-burden, còn lại được khấu trừ 所得税 + 住民税.",
       "cta": "Thêm donation"
     }
+  },
+  "goals": {
+    "title": "Mục tiêu tiết kiệm",
+    "subtitle": "Đặt mục tiêu · theo dõi tiến độ · biết phải để dành bao nhiêu mỗi tháng",
+    "sections": {
+      "active": "Đang tiến hành",
+      "completed": "Đã hoàn thành"
+    },
+    "fields": {
+      "title": "Tên mục tiêu",
+      "titlePlaceholder": "VD: Mua iPhone 15, Về Việt Nam Tết",
+      "targetAmount": "Số tiền mục tiêu",
+      "deadline": "Hạn chót (tuỳ chọn)",
+      "deadlineHint": "Để trống nếu chưa có hạn cụ thể",
+      "icon": "Biểu tượng",
+      "note": "Ghi chú",
+      "notePlaceholder": "Chi tiết, lý do, kế hoạch..."
+    },
+    "icons": {
+      "piggy": "Tiết kiệm",
+      "airplane": "Du lịch",
+      "home": "Nhà cửa",
+      "gift": "Quà tặng",
+      "school": "Học hành",
+      "phone": "Điện thoại",
+      "car": "Xe cộ",
+      "heart": "Sức khoẻ",
+      "star": "Khác"
+    },
+    "progress": {
+      "savedOfTarget": "{{saved}} / {{target}}",
+      "remaining": "Còn thiếu {{amount}}",
+      "completed": "Đã hoàn thành! 🎉",
+      "noDeadline": "Không có hạn — tiến độ tuỳ ý",
+      "monthsRemaining": "Còn {{months}} tháng",
+      "monthlyTarget": "Cần để dành {{amount}} / tháng",
+      "savingsRateRequired": "= {{percent}}% take-home hiện tại",
+      "atDefaultPace": "Theo nhịp 20% take-home: ~{{months}} tháng",
+      "deadlinePast": "Đã quá hạn",
+      "deadlineToday": "Hôm nay là hạn chót"
+    },
+    "actions": {
+      "addGoal": "Thêm mục tiêu",
+      "addSavings": "Thêm khoản tiết kiệm",
+      "edit": "Sửa mục tiêu",
+      "delete": "Xoá mục tiêu",
+      "deleteConfirmTitle": "Xoá mục tiêu này?",
+      "deleteConfirmBody": "Tất cả khoản tiết kiệm đã ghi sẽ mất theo. Hành động không thể hoàn tác.",
+      "removeSavings": "Xoá khoản này",
+      "save": "Lưu"
+    },
+    "addSavings": {
+      "title": "Thêm khoản tiết kiệm",
+      "amountLabel": "Số tiền",
+      "dateLabel": "Ngày",
+      "noteLabel": "Ghi chú (tuỳ chọn)",
+      "quickChips": "Nhập nhanh",
+      "history": "Lịch sử đóng góp",
+      "historyEmpty": "Chưa có khoản nào — thêm khoản đầu tiên ở trên"
+    },
+    "list": {
+      "limitReached": "Đã đạt giới hạn {{max}} mục tiêu. Xoá bớt để thêm."
+    },
+    "errors": {
+      "titleRequired": "Cần đặt tên cho mục tiêu",
+      "targetPositive": "Số tiền mục tiêu phải > 0",
+      "amountPositive": "Số tiền phải > 0",
+      "dateInvalid": "Ngày không hợp lệ"
+    },
+    "dashboard": {
+      "cardTitle": "Mục tiêu sắp đạt",
+      "cardSubtitle": "{{percent}}% — còn {{remaining}}",
+      "viewAll": "Xem tất cả mục tiêu",
+      "openHub": "Mở Mục tiêu tiết kiệm"
+    },
+    "empty": {
+      "title": "Chưa có mục tiêu nào",
+      "body": "Đặt một mục tiêu (mua iPhone, về Tết, mua xe...) để app tính giúp bạn nên để dành bao nhiêu mỗi tháng.",
+      "cta": "Thêm mục tiêu đầu tiên"
+    }
   }
 }

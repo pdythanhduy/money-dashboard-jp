@@ -34,6 +34,7 @@ import { buildExportPayload, wipeAllAppData } from '@/features/settings/data-act
 import { useCalculatorStore } from '@/store/calculatorStore';
 import { useDocumentsStore } from '@/store/documentsStore';
 import { useFurusatoStore } from '@/store/furusatoStore';
+import { useGoalsStore } from '@/store/goalsStore';
 import { useHistoryStore } from '@/store/historyStore';
 import { useMedicalExpensesStore } from '@/store/medicalExpensesStore';
 import { useMultiJobStore } from '@/store/multiJobStore';
@@ -156,6 +157,11 @@ describe('wipeAllAppData', () => {
       amount: 10_000,
       targetMunicipality: '大阪市',
     });
+    useGoalsStore.getState().addGoal({
+      title: 'Mua iPhone',
+      icon: 'phone',
+      targetAmount: 150_000,
+    });
 
     await wipeAllAppData();
 
@@ -171,5 +177,6 @@ describe('wipeAllAppData', () => {
     expect(useDocumentsStore.getState().documents).toEqual([]);
     expect(useMedicalExpensesStore.getState().expenses).toEqual([]);
     expect(useFurusatoStore.getState().donations).toEqual([]);
+    expect(useGoalsStore.getState().goals).toEqual([]);
   });
 });
