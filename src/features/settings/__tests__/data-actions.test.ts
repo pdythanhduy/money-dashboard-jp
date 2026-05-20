@@ -37,6 +37,7 @@ import { useFurusatoStore } from '@/store/furusatoStore';
 import { useGoalsStore } from '@/store/goalsStore';
 import { useHistoryStore } from '@/store/historyStore';
 import { useKakeiboStore } from '@/store/kakeiboStore';
+import { useRemittanceStore } from '@/store/remittanceStore';
 import { useMedicalExpensesStore } from '@/store/medicalExpensesStore';
 import { useMultiJobStore } from '@/store/multiJobStore';
 import { useOnboardingStore } from '@/store/onboardingStore';
@@ -170,6 +171,15 @@ describe('wipeAllAppData', () => {
       label: 'Lawson',
     });
     useKakeiboStore.getState().setBudget('food', 30_000);
+    useRemittanceStore.getState().addEntry({
+      date: '2026-05-10',
+      amountJPY: 50_000,
+      feeJPY: 500,
+      exchangeRate: 169.5,
+      provider: 'wise',
+      recipient: 'Mẹ',
+    });
+    useRemittanceStore.getState().setAnnualGoal(1_000_000);
 
     await wipeAllAppData();
 
@@ -188,5 +198,7 @@ describe('wipeAllAppData', () => {
     expect(useGoalsStore.getState().goals).toEqual([]);
     expect(useKakeiboStore.getState().entries).toEqual([]);
     expect(useKakeiboStore.getState().budgets).toEqual([]);
+    expect(useRemittanceStore.getState().entries).toEqual([]);
+    expect(useRemittanceStore.getState().annualGoalJPY).toBe(0);
   });
 });

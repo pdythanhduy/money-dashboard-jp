@@ -21,6 +21,7 @@ import { useKakeiboStore } from '@/store/kakeiboStore';
 import { useMedicalExpensesStore } from '@/store/medicalExpensesStore';
 import { useMultiJobStore } from '@/store/multiJobStore';
 import { useOnboardingStore } from '@/store/onboardingStore';
+import { useRemittanceStore } from '@/store/remittanceStore';
 import { DEFAULT_SETTINGS, useSettingsStore, type AppSettings } from '@/store/settingsStore';
 import type { HistoryEntry } from '@/types/history';
 
@@ -74,4 +75,5 @@ export async function wipeAllAppData(): Promise<void> {
   useFurusatoStore.getState().clearAll();
   useGoalsStore.getState().clearAll();
   useKakeiboStore.getState().clearAll();
+  useRemittanceStore.getState().clearAll();
 }

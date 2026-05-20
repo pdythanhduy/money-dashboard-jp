@@ -5,6 +5,7 @@ import { GoalsScreen } from '@/features/goals/GoalsScreen';
 import { KakeiboScreen } from '@/features/kakeibo/KakeiboScreen';
 import { MedicalScreen } from '@/features/medical/MedicalScreen';
 import { OnboardingNavigator } from '@/features/onboarding/OnboardingNavigator';
+import { RemittanceScreen } from '@/features/remittance/RemittanceScreen';
 import { useOnboardingStore } from '@/store/onboardingStore';
 
 import { MainTabs } from './MainTabs';
@@ -17,6 +18,7 @@ export type RootStackParamList = {
   Furusato: undefined;
   Goals: undefined;
   Kakeibo: undefined;
+  Remittance: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -33,6 +35,7 @@ export function RootNavigator() {
           <Stack.Screen name="Furusato" component={FurusatoScreen} />
           <Stack.Screen name="Goals" component={GoalsScreen} />
           <Stack.Screen name="Kakeibo" component={KakeiboScreen} />
+          <Stack.Screen name="Remittance" component={RemittanceScreen} />
         </>
       ) : (
         <Stack.Screen name="Onboarding" component={OnboardingNavigator} />

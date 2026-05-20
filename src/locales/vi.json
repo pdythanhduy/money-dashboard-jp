@@ -933,5 +933,108 @@
       "noIncome": "Chưa có thu nhập từ Calculator",
       "viewDetails": "Xem chi tiết"
     }
+  },
+  "remittance": {
+    "title": "Gửi tiền về VN",
+    "subtitle": "仕送り · theo dõi rate + phí + tổng năm · 100% nhập tay",
+    "providers": {
+      "wise": "Wise",
+      "remitly": "Remitly",
+      "sbi": "SBI Remit",
+      "seven": "セブン銀行",
+      "western_union": "Western Union",
+      "shinhan": "Shinhan",
+      "other": "Khác"
+    },
+    "summary": {
+      "totalJPY": "Đã gửi năm {{year}}",
+      "totalVND": "≈ {{amount}} ₫",
+      "avgRate": "Rate trung bình: {{rate}} ₫/¥",
+      "bestRate": "Rate tốt nhất: {{rate}} ₫/¥",
+      "worstRate": "Rate xấu nhất: {{rate}} ₫/¥",
+      "totalFees": "Tổng phí: {{amount}}",
+      "entryCount": "{{count}} lần gửi",
+      "year": "Năm {{year}}"
+    },
+    "goal": {
+      "title": "Mục tiêu năm",
+      "set": "Đặt mục tiêu năm",
+      "target": "Mục tiêu",
+      "progress": "{{sent}} / {{target}}",
+      "percentLabel": "{{percent}}% mục tiêu",
+      "monthlyTargetRemaining": "Cần gửi ~{{amount}} / tháng tới cuối năm",
+      "daysLeft": "{{days}} ngày còn lại",
+      "suggestion": {
+        "500k": "¥500K",
+        "1m": "¥1,000K",
+        "2m": "¥2,000K"
+      },
+      "noGoalYet": "Chưa đặt mục tiêu năm",
+      "noGoalCta": "Đặt mục tiêu"
+    },
+    "providersCompare": {
+      "title": "So sánh provider",
+      "sortedNote": "Sắp xếp theo effective rate (rate – phí). Cao = lợi hơn.",
+      "effectiveRate": "Rate thực: {{rate}}",
+      "avgRateLabel": "Rate TB",
+      "avgFeeLabel": "Phí TB",
+      "countLabel": "{{count}} lần"
+    },
+    "entries": {
+      "title": "Lịch sử gửi",
+      "empty": "Chưa có lần gửi nào trong năm"
+    },
+    "add": {
+      "title": "Thêm lần gửi"
+    },
+    "edit": {
+      "title": "Sửa lần gửi"
+    },
+    "fields": {
+      "date": "Ngày",
+      "amountJPY": "Số tiền gửi (¥)",
+      "feeJPY": "Phí (¥)",
+      "exchangeRate": "Tỷ giá",
+      "exchangeRateHelper": "VND / 1 ¥ (vd 169.5)",
+      "livePreviewLabel": "Người nhận được",
+      "provider": "Provider",
+      "recipient": "Người nhận",
+      "recipientPlaceholder": "Mẹ, em trai...",
+      "note": "Ghi chú",
+      "notePlaceholder": "Tracking number, lý do..."
+    },
+    "errors": {
+      "amountRequired": "Cần nhập số tiền",
+      "amountPositive": "Số tiền phải > 0",
+      "feeNegative": "Phí không thể âm",
+      "rateRequired": "Cần nhập tỷ giá",
+      "ratePositive": "Tỷ giá phải > 0",
+      "dateRequired": "Ngày không hợp lệ"
+    },
+    "actions": {
+      "save": "Lưu",
+      "delete": "Xoá lần gửi",
+      "deleteConfirmTitle": "Xoá lần gửi này?",
+      "deleteConfirmBody": "Hành động không thể hoàn tác."
+    },
+    "list": {
+      "limitReached": "Đã đạt giới hạn {{max}} lần gửi. Xoá bớt để thêm."
+    },
+    "empty": {
+      "title": "Chưa có lần gửi nào",
+      "body": "Thêm lần gửi đầu tiên với rate + phí từ confirmation email. App tính tổng năm, so provider, và cảnh báo ngưỡng thuế quà tặng ¥110万.",
+      "cta": "Thêm lần gửi đầu tiên"
+    },
+    "dashboard": {
+      "cardTitle": "Gửi VN năm nay",
+      "sentLabel": "Đã gửi {{amount}}",
+      "goalLabel": "/ mục tiêu {{amount}}",
+      "noGoal": "Chưa đặt mục tiêu năm",
+      "viewDetails": "Xem chi tiết"
+    },
+    "taxWarning": {
+      "title": "Cảnh báo 暦年贈与 (¥110万 / năm)",
+      "body": "{{recipient}}: đã gửi {{sent}} năm nay. Vượt ¥1,100,000 / người / năm có thể phát sinh 贈与税 (gift tax) bên Nhật."
+    }
   }
 }

@@ -17,12 +17,14 @@ import { useMedicalSummary } from '@/features/medical/hooks/useMedicalSummary';
 import { formatCurrency } from '@/lib/format';
 import { computeGoalProjection } from '@/lib/goals-math';
 import { buildMonthlyReport } from '@/lib/kakeibo-math';
+import { buildYearlySummary } from '@/lib/remittance-math';
 import { activeWalls } from '@/lib/wall-warnings';
 import type { MainTabParamList } from '@/navigation/MainTabs';
 import type { RootStackParamList } from '@/navigation/RootNavigator';
 import { useCalculatorStore } from '@/store/calculatorStore';
 import { getSavedTotal, isGoalCompleted, useGoalsStore } from '@/store/goalsStore';
 import { useKakeiboStore } from '@/store/kakeiboStore';
+import { useRemittanceStore } from '@/store/remittanceStore';
 import { useTheme } from '@/theme';
 
 type DashboardNavigationProp = BottomTabNavigationProp<MainTabParamList, 'Dashboard'>;
@@ -39,7 +41,16 @@ export function DashboardScreen() {
   const furusato = useFurusatoSummary();
   const goals = useGoalsStore((s) => s.goals);
   const kakeiboEntries = useKakeiboStore((s) => s.entries);
+  const remittanceEntries = useRemittanceStore((s) => s.entries);
+  const remittanceGoal = useRemittanceStore((s) => s.annualGoalJPY);
   const takeHomeMonthly = useCalculatorStore((s) => s.lastResult?.takeHomeMonthly ?? 0);
+
+  const remittanceThisYear = (() => {
+    if (remittanceEntries.length === 0) return null;
+    const r = buildYearlySummary(remittanceEntries, new Date().getFullYear());
+    if (r.entryCount === 0) return null;
+    return { totalSentJPY: r.totalSentJPY, goalJPY: remittanceGoal };
+  })();
 
   // Current-month kakeibo: only render the card if user has at least one
   // entry this month. Previous months are reachable from KakeiboScreen.
@@ -90,6 +101,10 @@ export function DashboardScreen() {
   const goToKakeibo = () => {
     const parent = navigation.getParent<{ navigate: (route: keyof RootStackParamList) => void }>();
     parent?.navigate('Kakeibo');
+  };
+  const goToRemittance = () => {
+    const parent = navigation.getParent<{ navigate: (route: keyof RootStackParamList) => void }>();
+    parent?.navigate('Remittance');
   };
 
   if (!data.hasData) {
@@ -328,6 +343,37 @@ export function DashboardScreen() {
               {kakeiboThisMonth.percentOfIncome !== null
                 ? t('kakeibo.dashboard.percentOfIncome', { percent: kakeiboThisMonth.percentOfIncome })
                 : t('kakeibo.dashboard.noIncome')}
+            </Text>
+          </Pressable>
+        ) : null}
+        {remittanceThisYear ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t('remittance.dashboard.cardTitle')}
+            onPress={goToRemittance}
+            style={({ pressed }) => ({
+              marginHorizontal: spacing.lg,
+              marginTop: spacing.md,
+              padding: spacing.md,
+              borderRadius: 16,
+              backgroundColor: colors.surfaceElevated,
+              opacity: pressed ? 0.85 : 1,
+            })}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: spacing.xs }}>
+              <Ionicons name="paper-plane-outline" size={18} color={colors.brand} />
+              <Text style={[typography.headline, { color: colors.text, flex: 1 }]}>
+                {t('remittance.dashboard.cardTitle')}
+              </Text>
+              <Ionicons name="chevron-forward" size={18} color={colors.textSecondary} />
+            </View>
+            <Text style={[typography.title3, { color: colors.brand, fontWeight: '800' }]}>
+              {formatCurrency(remittanceThisYear.totalSentJPY)}
+            </Text>
+            <Text style={[typography.caption, { color: colors.textSecondary, marginTop: 2 }]}>
+              {remittanceThisYear.goalJPY > 0
+                ? `${t('remittance.dashboard.sentLabel', { amount: formatCurrency(remittanceThisYear.totalSentJPY) })} ${t('remittance.dashboard.goalLabel', { amount: formatCurrency(remittanceThisYear.goalJPY) })}`
+                : t('remittance.dashboard.noGoal')}
             </Text>
           </Pressable>
         ) : null}
