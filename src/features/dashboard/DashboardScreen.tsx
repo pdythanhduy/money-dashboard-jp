@@ -11,6 +11,7 @@ import { QuickStatsRow } from '@/features/dashboard/components/QuickStatsRow';
 import { TakeHomeProgressCard } from '@/features/dashboard/components/TakeHomeProgressCard';
 import { UpcomingEventsCard } from '@/features/dashboard/components/UpcomingEventsCard';
 import { useDashboardData } from '@/features/dashboard/hooks/useDashboardData';
+import { useFurusatoSummary } from '@/features/furusato/hooks/useFurusatoSummary';
 import { useMedicalSummary } from '@/features/medical/hooks/useMedicalSummary';
 import { formatCurrency } from '@/lib/format';
 import { activeWalls } from '@/lib/wall-warnings';
@@ -30,6 +31,7 @@ export function DashboardScreen() {
   const walls = activeWalls(lastInputAnnual);
   const topWall = walls[0];
   const medical = useMedicalSummary();
+  const furusato = useFurusatoSummary();
 
   const goToCalculator = () => navigation.navigate('Calculator');
   const goToMedical = () => {
@@ -37,6 +39,10 @@ export function DashboardScreen() {
     // root-typed parent navigator.
     const parent = navigation.getParent<{ navigate: (route: keyof RootStackParamList) => void }>();
     parent?.navigate('Medical');
+  };
+  const goToFurusato = () => {
+    const parent = navigation.getParent<{ navigate: (route: keyof RootStackParamList) => void }>();
+    parent?.navigate('Furusato');
   };
 
   if (!data.hasData) {
@@ -155,6 +161,38 @@ export function DashboardScreen() {
                 : t('medical.dashboard.belowThreshold', {
                     remaining: formatCurrency(medical.remainingToThreshold),
                   })}
+            </Text>
+          </Pressable>
+        ) : null}
+        {furusato.hasCalculatorResult ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t('furusato.dashboard.cardTitle')}
+            onPress={goToFurusato}
+            style={({ pressed }) => ({
+              marginHorizontal: spacing.lg,
+              marginTop: spacing.md,
+              padding: spacing.md,
+              borderRadius: 16,
+              backgroundColor: colors.surfaceElevated,
+              opacity: pressed ? 0.85 : 1,
+            })}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: spacing.xs }}>
+              <Ionicons name="gift-outline" size={18} color={colors.brand} />
+              <Text style={[typography.headline, { color: colors.text, flex: 1 }]}>
+                {t('furusato.dashboard.cardTitle')}
+              </Text>
+              <Ionicons name="chevron-forward" size={18} color={colors.textSecondary} />
+            </View>
+            <Text style={[typography.title3, { color: colors.brand, fontWeight: '800' }]}>
+              {formatCurrency(furusato.remainingCapacity)}
+            </Text>
+            <Text style={[typography.caption, { color: colors.textSecondary, marginTop: 2 }]}>
+              {t('furusato.dashboard.remaining', {
+                remaining: formatCurrency(furusato.remainingCapacity),
+                max: formatCurrency(furusato.limit.maxDonation),
+              })}
             </Text>
           </Pressable>
         ) : null}

@@ -1,5 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import { FurusatoScreen } from '@/features/furusato/FurusatoScreen';
 import { MedicalScreen } from '@/features/medical/MedicalScreen';
 import { OnboardingNavigator } from '@/features/onboarding/OnboardingNavigator';
 import { useOnboardingStore } from '@/store/onboardingStore';
@@ -11,6 +12,7 @@ export type RootStackParamList = {
   Main: undefined;
   /** Push from any tab; back goes to whichever tab pushed it. */
   Medical: undefined;
+  Furusato: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -24,6 +26,7 @@ export function RootNavigator() {
         <>
           <Stack.Screen name="Main" component={MainTabs} />
           <Stack.Screen name="Medical" component={MedicalScreen} />
+          <Stack.Screen name="Furusato" component={FurusatoScreen} />
         </>
       ) : (
         <Stack.Screen name="Onboarding" component={OnboardingNavigator} />

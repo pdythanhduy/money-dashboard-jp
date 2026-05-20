@@ -679,5 +679,75 @@
       "belowThreshold": "あと{{remaining}}で控除ラインに到達。",
       "aboveThreshold": "控除ライン突破 — 控除{{deductible}}、還付見込み~{{refund}}。"
     }
+  },
+  "furusato": {
+    "title": "ふるさと納税",
+    "subtitle": "自己負担¥2,000で寄付の上限を計算",
+    "calculator": {
+      "title": "最適寄付額",
+      "subtitle": "課税所得＋限界税率から計算",
+      "useCalculatorResult": "給与計算の結果を使用中",
+      "manualInput": "手動入力（給与計算結果なし）",
+      "taxableIncome": "課税所得（住民税）",
+      "marginalRate": "限界税率（所得税）",
+      "maxDonationLabel": "寄付上限",
+      "breakdown": {
+        "incomeTax": "所得税控除",
+        "residentBasic": "住民税（基本10%）",
+        "residentSpecial": "住民税（特例分）",
+        "selfBurden": "自己負担"
+      },
+      "disclaimer": "参考値。実際の上限は配偶者控除や扶養家族の状況で変動します。"
+    },
+    "history": {
+      "title": "今年の寄付",
+      "sumLabel": "寄付済み: {{total}}",
+      "remainingLabel": "残り枠: {{remaining}}",
+      "emptyForFilter": "この期間の寄付記録はありません。"
+    },
+    "add": { "title": "寄付を追加" },
+    "edit": { "title": "寄付を編集" },
+    "fields": {
+      "date": "寄付日",
+      "amount": "金額",
+      "municipality": "自治体",
+      "municipalityPlaceholder": "例：大阪市、京都府",
+      "gift": "返礼品（任意）",
+      "giftPlaceholder": "例：和牛500g、お米10kg",
+      "portal": "利用ポータル",
+      "portalOptions": {
+        "satofuru": "さとふる",
+        "rakuten": "楽天ふるさと",
+        "furunavi": "ふるなび",
+        "other": "その他"
+      },
+      "note": "メモ",
+      "notePlaceholder": "受付番号など"
+    },
+    "errors": {
+      "amountRequired": "金額を入力してください。",
+      "amountPositive": "金額は0円より大きい必要があります。",
+      "municipalityRequired": "自治体名を入力してください。",
+      "dateRequired": "日付が無効です。"
+    },
+    "actions": {
+      "save": "保存",
+      "delete": "寄付を削除",
+      "deleteConfirmTitle": "この寄付を削除しますか？",
+      "deleteConfirmBody": "この操作は元に戻せません。"
+    },
+    "list": {
+      "limitReached": "上限{{max}}件に達しました。削除してから追加してください。"
+    },
+    "dashboard": {
+      "cardTitle": "ふるさと納税 残り枠",
+      "remaining": "{{remaining}} / {{max}} 今年寄付可能",
+      "viewDetails": "詳細を見る"
+    },
+    "empty": {
+      "title": "寄付記録がありません",
+      "body": "最初の寄付を追加 — 自己負担は¥2,000のみ、残りは所得税と住民税から控除されます。",
+      "cta": "寄付を追加"
+    }
   }
 }

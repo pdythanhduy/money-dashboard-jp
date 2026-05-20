@@ -33,6 +33,7 @@ jest.mock('@/lib/notifications', () => ({
 import { buildExportPayload, wipeAllAppData } from '@/features/settings/data-actions';
 import { useCalculatorStore } from '@/store/calculatorStore';
 import { useDocumentsStore } from '@/store/documentsStore';
+import { useFurusatoStore } from '@/store/furusatoStore';
 import { useHistoryStore } from '@/store/historyStore';
 import { useMedicalExpensesStore } from '@/store/medicalExpensesStore';
 import { useMultiJobStore } from '@/store/multiJobStore';
@@ -150,6 +151,11 @@ describe('wipeAllAppData', () => {
       amount: 12_000,
       category: 'doctor_visit',
     });
+    useFurusatoStore.getState().addDonation({
+      date: '2026-05-10',
+      amount: 10_000,
+      targetMunicipality: '大阪市',
+    });
 
     await wipeAllAppData();
 
@@ -164,5 +170,6 @@ describe('wipeAllAppData', () => {
     expect(useMultiJobStore.getState().jobs).toEqual([]);
     expect(useDocumentsStore.getState().documents).toEqual([]);
     expect(useMedicalExpensesStore.getState().expenses).toEqual([]);
+    expect(useFurusatoStore.getState().donations).toEqual([]);
   });
 });

@@ -14,6 +14,7 @@ import { APP_VERSION } from '@/lib/app-info';
 import { cancelAllReminders } from '@/lib/notifications';
 import { useCalculatorStore } from '@/store/calculatorStore';
 import { useDocumentsStore } from '@/store/documentsStore';
+import { useFurusatoStore } from '@/store/furusatoStore';
 import { useHistoryStore } from '@/store/historyStore';
 import { useMedicalExpensesStore } from '@/store/medicalExpensesStore';
 import { useMultiJobStore } from '@/store/multiJobStore';
@@ -68,4 +69,5 @@ export async function wipeAllAppData(): Promise<void> {
   useMultiJobStore.getState().clearAll();
   useDocumentsStore.getState().clearAll();
   useMedicalExpensesStore.getState().clearAll();
+  useFurusatoStore.getState().clearAll();
 }
