@@ -933,5 +933,108 @@
       "noIncome": "Calculatorの結果なし",
       "viewDetails": "詳細を見る"
     }
+  },
+  "remittance": {
+    "title": "ベトナム送金",
+    "subtitle": "仕送り · レート + 手数料 + 年間合計を追跡 · 全て手入力",
+    "providers": {
+      "wise": "Wise",
+      "remitly": "Remitly",
+      "sbi": "SBIレミット",
+      "seven": "セブン銀行",
+      "western_union": "Western Union",
+      "shinhan": "シンハン",
+      "other": "その他"
+    },
+    "summary": {
+      "totalJPY": "{{year}}年送金合計",
+      "totalVND": "≈ {{amount}} ₫",
+      "avgRate": "平均レート: {{rate}} ₫/¥",
+      "bestRate": "最高レート: {{rate}} ₫/¥",
+      "worstRate": "最低レート: {{rate}} ₫/¥",
+      "totalFees": "手数料合計: {{amount}}",
+      "entryCount": "{{count}}回",
+      "year": "{{year}}年"
+    },
+    "goal": {
+      "title": "年間目標",
+      "set": "年間目標を設定",
+      "target": "目標",
+      "progress": "{{sent}} / {{target}}",
+      "percentLabel": "目標の {{percent}}%",
+      "monthlyTargetRemaining": "残り月平均 ~{{amount}} 必要",
+      "daysLeft": "残り {{days}} 日",
+      "suggestion": {
+        "500k": "¥500K",
+        "1m": "¥1,000K",
+        "2m": "¥2,000K"
+      },
+      "noGoalYet": "年間目標未設定",
+      "noGoalCta": "目標を設定"
+    },
+    "providersCompare": {
+      "title": "プロバイダー比較",
+      "sortedNote": "実効レート (レート − 手数料) でソート。高い方がお得。",
+      "effectiveRate": "実効レート: {{rate}}",
+      "avgRateLabel": "平均レート",
+      "avgFeeLabel": "平均手数料",
+      "countLabel": "{{count}}回"
+    },
+    "entries": {
+      "title": "送金履歴",
+      "empty": "今年の送金記録はまだありません"
+    },
+    "add": {
+      "title": "送金を追加"
+    },
+    "edit": {
+      "title": "送金を編集"
+    },
+    "fields": {
+      "date": "日付",
+      "amountJPY": "送金額 (¥)",
+      "feeJPY": "手数料 (¥)",
+      "exchangeRate": "レート",
+      "exchangeRateHelper": "VND / 1¥ (例 169.5)",
+      "livePreviewLabel": "受取額",
+      "provider": "プロバイダー",
+      "recipient": "受取人",
+      "recipientPlaceholder": "母、弟...",
+      "note": "メモ",
+      "notePlaceholder": "追跡番号、理由..."
+    },
+    "errors": {
+      "amountRequired": "金額を入力してください",
+      "amountPositive": "金額は0より大きい必要があります",
+      "feeNegative": "手数料は負の値にできません",
+      "rateRequired": "レートを入力してください",
+      "ratePositive": "レートは0より大きい必要があります",
+      "dateRequired": "日付が無効です"
+    },
+    "actions": {
+      "save": "保存",
+      "delete": "送金を削除",
+      "deleteConfirmTitle": "この送金を削除しますか？",
+      "deleteConfirmBody": "元に戻せません。"
+    },
+    "list": {
+      "limitReached": "送金記録は{{max}}件までです。削除してから追加してください。"
+    },
+    "empty": {
+      "title": "まだ送金記録がありません",
+      "body": "確認メールからレートと手数料を入力。年間合計、プロバイダー比較、贈与税の閾値¥110万を自動チェック。",
+      "cta": "最初の送金を追加"
+    },
+    "dashboard": {
+      "cardTitle": "今年のVN送金",
+      "sentLabel": "送金済 {{amount}}",
+      "goalLabel": "/ 目標 {{amount}}",
+      "noGoal": "年間目標未設定",
+      "viewDetails": "詳細を見る"
+    },
+    "taxWarning": {
+      "title": "暦年贈与の警告 (¥110万/年)",
+      "body": "{{recipient}}: 今年の送金額 {{sent}}。1人につき年¥1,100,000を超えると贈与税の対象となる可能性があります。"
+    }
   }
 }
