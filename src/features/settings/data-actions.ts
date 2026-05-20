@@ -17,6 +17,7 @@ import { useDocumentsStore } from '@/store/documentsStore';
 import { useFurusatoStore } from '@/store/furusatoStore';
 import { useGoalsStore } from '@/store/goalsStore';
 import { useHistoryStore } from '@/store/historyStore';
+import { useKakeiboStore } from '@/store/kakeiboStore';
 import { useMedicalExpensesStore } from '@/store/medicalExpensesStore';
 import { useMultiJobStore } from '@/store/multiJobStore';
 import { useOnboardingStore } from '@/store/onboardingStore';
@@ -72,4 +73,5 @@ export async function wipeAllAppData(): Promise<void> {
   useMedicalExpensesStore.getState().clearAll();
   useFurusatoStore.getState().clearAll();
   useGoalsStore.getState().clearAll();
+  useKakeiboStore.getState().clearAll();
 }

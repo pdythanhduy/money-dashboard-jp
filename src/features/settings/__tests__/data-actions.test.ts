@@ -36,6 +36,7 @@ import { useDocumentsStore } from '@/store/documentsStore';
 import { useFurusatoStore } from '@/store/furusatoStore';
 import { useGoalsStore } from '@/store/goalsStore';
 import { useHistoryStore } from '@/store/historyStore';
+import { useKakeiboStore } from '@/store/kakeiboStore';
 import { useMedicalExpensesStore } from '@/store/medicalExpensesStore';
 import { useMultiJobStore } from '@/store/multiJobStore';
 import { useOnboardingStore } from '@/store/onboardingStore';
@@ -162,6 +163,13 @@ describe('wipeAllAppData', () => {
       icon: 'phone',
       targetAmount: 150_000,
     });
+    useKakeiboStore.getState().addEntry({
+      date: '2026-05-01',
+      amount: 1_200,
+      category: 'food',
+      label: 'Lawson',
+    });
+    useKakeiboStore.getState().setBudget('food', 30_000);
 
     await wipeAllAppData();
 
@@ -178,5 +186,7 @@ describe('wipeAllAppData', () => {
     expect(useMedicalExpensesStore.getState().expenses).toEqual([]);
     expect(useFurusatoStore.getState().donations).toEqual([]);
     expect(useGoalsStore.getState().goals).toEqual([]);
+    expect(useKakeiboStore.getState().entries).toEqual([]);
+    expect(useKakeiboStore.getState().budgets).toEqual([]);
   });
 });
