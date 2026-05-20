@@ -679,5 +679,75 @@
       "belowThreshold": "Còn {{remaining}} nữa đạt ngưỡng khấu trừ.",
       "aboveThreshold": "Đã vượt ngưỡng — khấu trừ {{deductible}}, hoàn thuế ~{{refund}}."
     }
+  },
+  "furusato": {
+    "title": "ふるさと納税",
+    "subtitle": "Quỹ địa phương · chỉ trả ¥2,000 self-burden",
+    "calculator": {
+      "title": "Giới hạn donation tối ưu",
+      "subtitle": "Tính dựa trên 課税所得 + thuế suất biên",
+      "useCalculatorResult": "Đang dùng kết quả từ Calculator",
+      "manualInput": "Nhập tay (chưa có Calculator result)",
+      "taxableIncome": "課税所得 (住民税)",
+      "marginalRate": "Thuế suất biên (所得税)",
+      "maxDonationLabel": "Donate tối đa",
+      "breakdown": {
+        "incomeTax": "Giảm 所得税",
+        "residentBasic": "住民税 (basic 10%)",
+        "residentSpecial": "住民税 (special — phần lớn nhất)",
+        "selfBurden": "Tự gánh"
+      },
+      "disclaimer": "Số liệu tham khảo. Kết quả thực tế phụ thuộc tình hình gia đình + 配偶者控除/扶養 áp dụng."
+    },
+    "history": {
+      "title": "Năm nay đã donate",
+      "sumLabel": "Đã donate: {{total}}",
+      "remainingLabel": "Còn lại: {{remaining}}",
+      "emptyForFilter": "Chưa có donation nào trong giai đoạn này."
+    },
+    "add": { "title": "Thêm donation" },
+    "edit": { "title": "Sửa donation" },
+    "fields": {
+      "date": "Ngày donate",
+      "amount": "Số tiền",
+      "municipality": "Tỉnh / thành phố",
+      "municipalityPlaceholder": "VD: 大阪市, 京都府",
+      "gift": "Quà cảm ơn (tuỳ chọn)",
+      "giftPlaceholder": "VD: 和牛 500g, お米 10kg",
+      "portal": "Cổng portal",
+      "portalOptions": {
+        "satofuru": "さとふる",
+        "rakuten": "楽天ふるさと",
+        "furunavi": "ふるなび",
+        "other": "Khác"
+      },
+      "note": "Ghi chú",
+      "notePlaceholder": "Số tracking, mã đơn..."
+    },
+    "errors": {
+      "amountRequired": "Hãy nhập số tiền donate.",
+      "amountPositive": "Số tiền phải lớn hơn 0.",
+      "municipalityRequired": "Hãy nhập tên 自治体.",
+      "dateRequired": "Ngày không hợp lệ."
+    },
+    "actions": {
+      "save": "Lưu",
+      "delete": "Xoá donation",
+      "deleteConfirmTitle": "Xoá donation này?",
+      "deleteConfirmBody": "Hành động không thể hoàn tác."
+    },
+    "list": {
+      "limitReached": "Đã đạt giới hạn {{max}} donation. Xoá bớt để thêm."
+    },
+    "dashboard": {
+      "cardTitle": "ふるさと納税 còn lại",
+      "remaining": "{{remaining}} / {{max}} có thể donate năm nay",
+      "viewDetails": "Xem chi tiết"
+    },
+    "empty": {
+      "title": "Chưa có donation nào",
+      "body": "Thêm donation đầu tiên — chỉ ¥2,000 self-burden, còn lại được khấu trừ 所得税 + 住民税.",
+      "cta": "Thêm donation"
+    }
   }
 }
