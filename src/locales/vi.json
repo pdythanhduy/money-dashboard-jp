@@ -1036,5 +1036,104 @@
       "title": "Cảnh báo 暦年贈与 (¥110万 / năm)",
       "body": "{{recipient}}: đã gửi {{sent}} năm nay. Vượt ¥1,100,000 / người / năm có thể phát sinh 贈与税 (gift tax) bên Nhật."
     }
+  },
+  "kakutei": {
+    "title": "確定申告",
+    "subtitle": "Tổng hợp thu nhập + khấu trừ cả năm · ước tính hoàn thuế",
+    "disclaimer": "Kết quả ước tính cho mục đích lập kế hoạch — không thay thế e-Tax / 税理士. Mục báo cáo chính thức vẫn cần upload đúng template NTA.",
+    "deadlineMarch15": "15/3",
+    "steps": {
+      "fiscalYear": "Năm",
+      "income": "Thu nhập",
+      "autoDeductions": "Tự động",
+      "manualDeductions": "Thêm",
+      "summary": "Tổng kết",
+      "indicator": "Bước {{current}} / {{total}}",
+      "next": "Tiếp",
+      "back": "Quay lại",
+      "1": {
+        "title": "Năm khai báo",
+        "body": "Chọn năm tài chính bạn đang khai. Khai tháng 2-3/{{nextYear}} → cho năm {{currentYear}}."
+      },
+      "2": {
+        "title": "Thu nhập từ Calculator",
+        "body": "Sử dụng kết quả tính lương gần nhất. Nếu chưa có, mở Calculator để chạy trước.",
+        "useLastResult": "Đang dùng kết quả Calculator gần nhất",
+        "noResult": "Chưa có kết quả Calculator",
+        "openCalculator": "Mở Calculator"
+      },
+      "3": {
+        "title": "Khấu trừ tự động",
+        "body": "App tự lấy số liệu từ các phase trước. Sửa bằng cách cập nhật bên trong phase tương ứng.",
+        "fromMedical": "Tự động từ 医療費 (Phase 5L)",
+        "fromFurusato": "Tự động từ ふるさと納税 (Phase 5M)",
+        "fromCalculator": "Tự động từ Calculator"
+      },
+      "4": {
+        "title": "Khấu trừ thủ công",
+        "body": "Nhập tiền premium đã đóng cả năm. App tính ra số được khấu trừ theo bậc 新制度.",
+        "livePreview": "Khấu trừ được tính: {{amount}}"
+      },
+      "5": {
+        "title": "Tổng kết",
+        "body": "Kết quả ước tính. Lưu lại để xem sau hoặc xuất file cho lưu trữ."
+      }
+    },
+    "fields": {
+      "fiscalYear": "Năm khai báo",
+      "lifeInsurance": "Bảo hiểm nhân thọ premium (cả năm)",
+      "lifeInsuranceHint": "新制度 (hợp đồng từ 2012). Tối đa khấu trừ ¥40,000.",
+      "earthquakeInsurance": "Bảo hiểm động đất premium (cả năm)",
+      "earthquakeInsuranceHint": "Khấu trừ 100% premium, tối đa ¥50,000.",
+      "publicPension": "国民年金 đóng thêm (ngoài lương)",
+      "publicPensionHint": "Chỉ cần nếu bạn đóng 国民年金 ngoài 厚生年金 từ lương."
+    },
+    "deductions": {
+      "basic": "Khấu trừ cơ bản",
+      "social_insurance": "Bảo hiểm xã hội",
+      "life_insurance": "Bảo hiểm nhân thọ (新制度)",
+      "earthquake_insurance": "Bảo hiểm động đất",
+      "medical": "医療費控除",
+      "furusato": "ふるさと納税 (− tự gánh ¥2K)",
+      "spouse": "配偶者控除",
+      "dependent": "扶養控除",
+      "working_student": "勤労学生控除"
+    },
+    "summary": {
+      "year": "Năm khai báo: {{year}}",
+      "gross": "Thu nhập gross",
+      "employmentIncome": "給与所得 (sau 給与所得控除)",
+      "deductionsTitle": "Tổng các khấu trừ",
+      "totalDeductions": "Tổng khấu trừ",
+      "taxableIncome": "課税所得",
+      "estimatedTax": "所得税 ước tính (đã gồm 復興税)",
+      "withheldTax": "源泉徴収 (đã trừ trong lương)",
+      "refund": "Hoàn thuế ước tính",
+      "due": "Cần nộp thêm",
+      "residentTaxNextYear": "住民税 năm sau (ước tính)"
+    },
+    "export": {
+      "json": "Xuất JSON",
+      "csv": "Xuất CSV",
+      "jsonTitle": "確定申告 {{year}} — JSON",
+      "csvTitle": "確定申告 {{year}} — CSV",
+      "success": "Đã chia sẻ",
+      "error": "Không xuất được dữ liệu"
+    },
+    "save": {
+      "button": "Lưu kết quả ước tính",
+      "success": "Đã lưu — bạn có thể xem lại sau"
+    },
+    "dashboard": {
+      "cardTitle": "確定申告",
+      "daysToDeadline": "Còn {{days}} ngày",
+      "deadlineLabel": "Hạn nộp 15/3/{{year}}",
+      "startButton": "Bắt đầu wizard",
+      "noDeadlineSoon": "Mở wizard"
+    },
+    "empty": {
+      "noSalaryResult": "Chưa có kết quả từ Calculator — wizard cần income trước.",
+      "openCalculator": "Mở Calculator"
+    }
   }
 }

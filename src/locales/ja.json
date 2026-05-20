@@ -1036,5 +1036,104 @@
       "title": "暦年贈与の警告 (¥110万/年)",
       "body": "{{recipient}}: 今年の送金額 {{sent}}。1人につき年¥1,100,000を超えると贈与税の対象となる可能性があります。"
     }
+  },
+  "kakutei": {
+    "title": "確定申告",
+    "subtitle": "1年分の収入と控除を集計 · 還付額を見積もり",
+    "disclaimer": "計画用の見積もりです — e-Taxや税理士の代わりにはなりません。公式提出はNTAの正規フォーマットが必要。",
+    "deadlineMarch15": "3/15",
+    "steps": {
+      "fiscalYear": "年度",
+      "income": "収入",
+      "autoDeductions": "自動",
+      "manualDeductions": "追加",
+      "summary": "サマリー",
+      "indicator": "ステップ {{current}} / {{total}}",
+      "next": "次へ",
+      "back": "戻る",
+      "1": {
+        "title": "申告する年度",
+        "body": "申告する会計年度を選択。{{nextYear}}年2-3月の申告 → {{currentYear}}年分。"
+      },
+      "2": {
+        "title": "Calculatorからの収入",
+        "body": "最新の給与計算結果を使用。未計算ならCalculatorで先に計算してください。",
+        "useLastResult": "最新のCalculator結果を使用中",
+        "noResult": "Calculator結果なし",
+        "openCalculator": "Calculatorを開く"
+      },
+      "3": {
+        "title": "自動控除",
+        "body": "他フェーズから自動取得。修正は元のフェーズで行ってください。",
+        "fromMedical": "医療費 (Phase 5L)から自動取得",
+        "fromFurusato": "ふるさと納税 (Phase 5M)から自動取得",
+        "fromCalculator": "Calculatorから自動取得"
+      },
+      "4": {
+        "title": "手動控除",
+        "body": "年間の支払保険料を入力。新制度の段階で控除額を計算します。",
+        "livePreview": "計算された控除: {{amount}}"
+      },
+      "5": {
+        "title": "サマリー",
+        "body": "見積もり結果。保存またはファイルとして出力できます。"
+      }
+    },
+    "fields": {
+      "fiscalYear": "申告年度",
+      "lifeInsurance": "生命保険料 (年間)",
+      "lifeInsuranceHint": "新制度 (2012年以降の契約)。控除最大¥40,000。",
+      "earthquakeInsurance": "地震保険料 (年間)",
+      "earthquakeInsuranceHint": "保険料100%控除、上限¥50,000。",
+      "publicPension": "国民年金追加 (給与外)",
+      "publicPensionHint": "厚生年金以外で国民年金を支払った場合のみ。"
+    },
+    "deductions": {
+      "basic": "基礎控除",
+      "social_insurance": "社会保険料",
+      "life_insurance": "生命保険 (新制度)",
+      "earthquake_insurance": "地震保険",
+      "medical": "医療費控除",
+      "furusato": "ふるさと納税 (自己負担¥2K差引)",
+      "spouse": "配偶者控除",
+      "dependent": "扶養控除",
+      "working_student": "勤労学生控除"
+    },
+    "summary": {
+      "year": "申告年度: {{year}}",
+      "gross": "総収入",
+      "employmentIncome": "給与所得 (給与所得控除後)",
+      "deductionsTitle": "控除合計",
+      "totalDeductions": "控除合計",
+      "taxableIncome": "課税所得",
+      "estimatedTax": "所得税 (復興税込)",
+      "withheldTax": "源泉徴収 (給与から控除済)",
+      "refund": "還付見込み",
+      "due": "追加納付",
+      "residentTaxNextYear": "来年の住民税 (見積もり)"
+    },
+    "export": {
+      "json": "JSON出力",
+      "csv": "CSV出力",
+      "jsonTitle": "確定申告 {{year}} — JSON",
+      "csvTitle": "確定申告 {{year}} — CSV",
+      "success": "共有しました",
+      "error": "データを出力できませんでした"
+    },
+    "save": {
+      "button": "見積もり結果を保存",
+      "success": "保存しました — 後で再表示できます"
+    },
+    "dashboard": {
+      "cardTitle": "確定申告",
+      "daysToDeadline": "残り {{days}} 日",
+      "deadlineLabel": "{{year}}年3月15日締切",
+      "startButton": "ウィザードを開始",
+      "noDeadlineSoon": "ウィザードを開く"
+    },
+    "empty": {
+      "noSalaryResult": "Calculator結果が必要です — まず計算してください。",
+      "openCalculator": "Calculatorを開く"
+    }
   }
 }
