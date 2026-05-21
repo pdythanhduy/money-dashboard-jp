@@ -55,7 +55,7 @@ export function OptionPickerModal<T extends string>({
         <Pressable
           accessibilityRole="none"
           style={{
-            maxHeight: '72%',
+            maxHeight: '80%',
             backgroundColor: colors.surface,
             borderTopLeftRadius: radius.lg,
             borderTopRightRadius: radius.lg,
@@ -114,16 +114,22 @@ export function OptionPickerModal<T extends string>({
                       onChange(option.value);
                       onClose();
                     }}
-                    style={{
-                      minHeight: 58,
+                    android_ripple={{ color: colors.brandSubtle }}
+                    style={({ pressed }) => ({
+                      minHeight: 72,
                       paddingHorizontal: spacing.lg,
-                      paddingVertical: spacing.sm,
+                      paddingVertical: spacing.md,
                       borderTopWidth: 1,
                       borderTopColor: colors.border,
                       flexDirection: 'row',
                       alignItems: 'center',
                       justifyContent: 'space-between',
-                    }}
+                      backgroundColor: pressed
+                        ? colors.brandSubtle
+                        : isSelected
+                        ? colors.brandSubtle
+                        : 'transparent',
+                    })}
                   >
                     <View style={{ flex: 1, paddingRight: spacing.md }}>
                       <Text style={[typography.body, { color: colors.text }]}>{option.label}</Text>
