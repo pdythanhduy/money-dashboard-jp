@@ -53,18 +53,10 @@ export function EmptyState({ onPressCta, title, subtitle }: EmptyStateProps) {
         <Text
           style={[
             typography.body,
-            { color: colors.textSecondary, textAlign: 'center', marginBottom: spacing.xs },
+            { color: colors.textSecondary, textAlign: 'center', marginBottom: spacing.xl },
           ]}
         >
           {subtitleText}
-        </Text>
-        <Text
-          style={[
-            typography.footnote,
-            { color: colors.textSecondary, textAlign: 'center', marginBottom: spacing.xl, opacity: 0.7 },
-          ]}
-        >
-          {t('dashboard.empty.subtitleJa')}
         </Text>
         <Pressable
           accessibilityRole="button"

@@ -25,7 +25,6 @@
     },
     "settings": {
       "title": "Cài đặt",
-      "subtitle": "設定",
       "placeholder": "Coming soon"
     }
   },
@@ -369,7 +368,6 @@
     },
     "takeHomeCard": {
       "title": "Take-home tháng này",
-      "subtitle": "今月の手取り",
       "earned": "đã kiếm được",
       "asOfToday": "tính đến hôm nay",
       "expected": "Dự kiến cuối tháng",
@@ -386,7 +384,7 @@
     },
     "trend": {
       "title": "Xu hướng 6 tháng",
-      "placeholder": "Tính năng đang phát triển — sẽ ra mắt phase sau"
+      "needsTwoPoints": "Cần ít nhất 2 lần tính để xem xu hướng 6 tháng"
     },
     "upcoming": {
       "title": "Sắp tới hạn",
@@ -404,7 +402,6 @@
     "empty": {
       "title": "Bắt đầu hành trình tài chính",
       "subtitle": "Nhập thông tin lương để xem dashboard cập nhật real-time",
-      "subtitleJa": "給与情報を入力してダッシュボードを表示",
       "cta": "Tính lương ngay",
       "zeroIncomeTitle": "Thu nhập quá thấp để tính",
       "zeroIncomeBody": "Lần tính gần nhất ra take-home ¥0 — chưa đạt ngưỡng tối thiểu. Hãy điều chỉnh số liệu rồi tính lại."
@@ -412,7 +409,7 @@
   },
   "settings": {
     "title": "Cài đặt",
-    "subtitle": "設定",
+    "subtitle": "Tuỳ chỉnh ứng dụng",
     "sections": {
       "personalize": "Cá nhân hóa",
       "salary": "Thông tin lương",
@@ -458,11 +455,11 @@
     },
     "language": {
       "title": "Chọn ngôn ngữ",
-      "subtitle": "言語を選択"
+      "subtitle": "Áp dụng ngay lập tức cho toàn bộ ứng dụng"
     },
     "theme": {
       "title": "Chọn giao diện",
-      "subtitle": "テーマを選択"
+      "subtitle": "Sáng / tối / theo hệ thống"
     },
     "payday": {
       "title": "Ngày lương hàng tháng",
@@ -494,8 +491,8 @@
     },
     "about": {
       "title": "Về Kakei",
-      "subtitle": "アプリ情報",
-      "description": "Kakei (家計) là app tính lương Nhật miễn phí, mã nguồn mở, dành cho người Việt sống tại Nhật. Mọi dữ liệu lưu hoàn toàn trên thiết bị của bạn.",
+      "subtitle": "Thông tin ứng dụng",
+      "description": "Kakei là app tính lương Nhật miễn phí, mã nguồn mở, dành cho người Việt sống tại Nhật. Mọi dữ liệu lưu hoàn toàn trên thiết bị của bạn.",
       "licensesTitle": "Mã nguồn mở",
       "licensesBody": "App này sử dụng nhiều thư viện mã nguồn mở. Cảm ơn các tác giả: React Native, Expo, Zustand, i18next, date-fns, react-native-svg, react-navigation và nhiều thư viện khác.",
       "close": "Đóng"
@@ -515,7 +512,6 @@
     "slide1": {
       "title": "Chào mừng đến Kakei",
       "subtitle": "App tính lương Nhật chính xác cho người Việt",
-      "subtitleJa": "日本での給与計算アプリ",
       "logoText": "家計"
     },
     "slide2": {
@@ -748,6 +744,9 @@
       "title": "Chưa có donation nào",
       "body": "Thêm donation đầu tiên — chỉ ¥2,000 self-burden, còn lại được khấu trừ 所得税 + 住民税.",
       "cta": "Thêm donation"
+    },
+    "eligibility": {
+      "hint": "ふるさと納税 sẽ xuất hiện khi take-home tháng ≥ ¥200K. Tính lương trước."
     }
   },
   "goals": {

@@ -25,7 +25,6 @@
     },
     "settings": {
       "title": "設定",
-      "subtitle": "Cài đặt",
       "placeholder": "近日公開"
     }
   },
@@ -369,7 +368,6 @@
     },
     "takeHomeCard": {
       "title": "今月の手取り",
-      "subtitle": "Take-home tháng này",
       "earned": "獲得済み",
       "asOfToday": "本日時点",
       "expected": "月末予想",
@@ -386,7 +384,7 @@
     },
     "trend": {
       "title": "6ヶ月のトレンド",
-      "placeholder": "開発中 — 次のフェーズで公開予定"
+      "needsTwoPoints": "6ヶ月のトレンドを表示するには2回以上の計算が必要です"
     },
     "upcoming": {
       "title": "もうすぐ期限",
@@ -404,7 +402,6 @@
     "empty": {
       "title": "家計管理を始めよう",
       "subtitle": "給与情報を入力するとダッシュボードがリアルタイムで更新されます",
-      "subtitleJa": "Nhập thông tin lương để xem dashboard cập nhật real-time",
       "cta": "今すぐ計算",
       "zeroIncomeTitle": "計算結果が¥0です",
       "zeroIncomeBody": "直近の計算で手取りが¥0になりました（課税ラインに達していません）。数値を見直して再計算してください。"
@@ -412,7 +409,7 @@
   },
   "settings": {
     "title": "設定",
-    "subtitle": "Cài đặt",
+    "subtitle": "アプリの設定",
     "sections": {
       "personalize": "パーソナライズ",
       "salary": "給与情報",
@@ -458,11 +455,11 @@
     },
     "language": {
       "title": "言語を選択",
-      "subtitle": "Chọn ngôn ngữ"
+      "subtitle": "アプリ全体に即座に反映されます"
     },
     "theme": {
       "title": "テーマを選択",
-      "subtitle": "Chọn giao diện"
+      "subtitle": "ライト / ダーク / システム連動"
     },
     "payday": {
       "title": "毎月の給料日",
@@ -494,7 +491,7 @@
     },
     "about": {
       "title": "Kakeiについて",
-      "subtitle": "Về Kakei",
+      "subtitle": "アプリ情報",
       "description": "Kakei（家計）は、日本在住のベトナム人向けの無料・オープンソースの給与計算アプリです。すべてのデータは端末内に保存されます。",
       "licensesTitle": "オープンソース",
       "licensesBody": "このアプリは多くのオープンソースライブラリを利用しています。React Native, Expo, Zustand, i18next, date-fns, react-native-svg, react-navigation など、作者の皆様に感謝します。",
@@ -515,7 +512,6 @@
     "slide1": {
       "title": "Kakeiへようこそ",
       "subtitle": "日本での給与計算アプリ",
-      "subtitleJa": "App tính lương Nhật chính xác cho người Việt",
       "logoText": "家計"
     },
     "slide2": {
@@ -541,7 +537,7 @@
       "subtitle": "後で設定から変更できます",
       "fields": {
         "prefecture": "お住まいの都道府県",
-        "prefectureSub": "Tỉnh đang ở",
+        "prefectureSub": "現在お住まいの都道府県",
         "payday": "毎月の給料日",
         "paydaySub": "デフォルトは25日 — 多くの日本企業はこの日に支給",
         "language": "希望言語",
@@ -748,6 +744,9 @@
       "title": "寄付記録がありません",
       "body": "最初の寄付を追加 — 自己負担は¥2,000のみ、残りは所得税と住民税から控除されます。",
       "cta": "寄付を追加"
+    },
+    "eligibility": {
+      "hint": "手取り月20万円以上で表示。先に給与計算を。"
     }
   },
   "goals": {

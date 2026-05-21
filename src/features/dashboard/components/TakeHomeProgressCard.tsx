@@ -78,9 +78,6 @@ export function TakeHomeProgressCard({
       <Text style={[typography.headline, { color: colors.text }]}>
         {t('dashboard.takeHomeCard.title')}
       </Text>
-      <Text style={[typography.footnote, { color: colors.textSecondary, marginTop: 2 }]}>
-        {t('dashboard.takeHomeCard.subtitle')}
-      </Text>
 
       <View
         accessible

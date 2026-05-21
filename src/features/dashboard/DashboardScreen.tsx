@@ -11,6 +11,7 @@ import { QuickStatsRow } from '@/features/dashboard/components/QuickStatsRow';
 import { TakeHomeProgressCard } from '@/features/dashboard/components/TakeHomeProgressCard';
 import { UpcomingEventsCard } from '@/features/dashboard/components/UpcomingEventsCard';
 import { useDashboardData } from '@/features/dashboard/hooks/useDashboardData';
+import { isFurusatoUseful } from '@/features/furusato/furusato-eligibility';
 import { useFurusatoSummary } from '@/features/furusato/hooks/useFurusatoSummary';
 import { iconNameFor } from '@/features/goals/components/IconPicker';
 import { useMedicalSummary } from '@/features/medical/hooks/useMedicalSummary';
@@ -22,6 +23,7 @@ import { activeWalls } from '@/lib/wall-warnings';
 import type { MainTabParamList } from '@/navigation/MainTabs';
 import type { RootStackParamList } from '@/navigation/RootNavigator';
 import { useCalculatorStore } from '@/store/calculatorStore';
+import { useFurusatoStore } from '@/store/furusatoStore';
 import { getSavedTotal, isGoalCompleted, useGoalsStore } from '@/store/goalsStore';
 import { useKakeiboStore } from '@/store/kakeiboStore';
 import { useRemittanceStore } from '@/store/remittanceStore';
@@ -39,6 +41,7 @@ export function DashboardScreen() {
   const topWall = walls[0];
   const medical = useMedicalSummary();
   const furusato = useFurusatoSummary();
+  const furusatoDonations = useFurusatoStore((s) => s.donations);
   const goals = useGoalsStore((s) => s.goals);
   const kakeiboEntries = useKakeiboStore((s) => s.entries);
   const remittanceEntries = useRemittanceStore((s) => s.entries);
@@ -245,7 +248,8 @@ export function DashboardScreen() {
             </Text>
           </Pressable>
         ) : null}
-        {furusato.hasCalculatorResult ? (
+        {furusato.hasCalculatorResult &&
+        isFurusatoUseful(takeHomeMonthly, furusatoDonations.length > 0) ? (
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={t('furusato.dashboard.cardTitle')}
