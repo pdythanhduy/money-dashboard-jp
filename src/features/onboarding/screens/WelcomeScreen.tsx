@@ -44,14 +44,6 @@ export function WelcomeScreen({ onSkip }: WelcomeScreenProps) {
           >
             {t('onboarding.slide1.subtitle')}
           </Text>
-          <Text
-            style={[
-              typography.callout,
-              { color: 'rgba(255,255,255,0.6)', textAlign: 'center', marginTop: spacing.xs },
-            ]}
-          >
-            {t('onboarding.slide1.subtitleJa')}
-          </Text>
         </View>
       </View>
     </OnboardingSlide>
