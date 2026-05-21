@@ -851,8 +851,12 @@
       "totalSpent": "今月の合計",
       "surplus": "残り {{amount}}",
       "deficit": "収入超過 {{amount}}",
-      "noIncomeContext": "Calculatorの結果なし — 支出のみ表示",
-      "entriesCount": "{{count}} 件"
+      "noIncomeContext": "給与計算後に表示",
+      "entriesCount": "{{count}} 件",
+      "income": "今月の収入",
+      "surplusLabel": "残額",
+      "deficitLabel": "赤字",
+      "percentOfIncome": "収入の{{percent}}%を使用"
     },
     "month": {
       "prev": "前月",

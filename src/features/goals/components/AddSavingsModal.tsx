@@ -14,13 +14,17 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { isoFromYMD } from '@/features/documents/date-utils';
-import { useGoalsStore, type Goal } from '@/store/goalsStore';
+import { useGoalsStore } from '@/store/goalsStore';
 import { formatCurrency } from '@/lib/format';
 import { useTheme } from '@/theme';
 
 interface Props {
   visible: boolean;
-  goal: Goal | null;
+  /**
+   * ID-based lookup so the contribution history list re-renders after
+   * each addSavings without re-mounting the modal.
+   */
+  goalId: string | null;
   onClose: () => void;
 }
 
@@ -53,11 +57,14 @@ function parseYen(input: string): number {
   return Number.parseInt(digits, 10);
 }
 
-export function AddSavingsModal({ visible, goal, onClose }: Props) {
+export function AddSavingsModal({ visible, goalId, onClose }: Props) {
   const { t } = useTranslation();
   const { colors, typography, spacing, radius } = useTheme();
   const addSavings = useGoalsStore((s) => s.addSavings);
   const removeSavings = useGoalsStore((s) => s.removeSavings);
+  const goal = useGoalsStore((s) =>
+    goalId ? s.goals.find((g) => g.id === goalId) ?? null : null,
+  );
 
   const [amountInput, setAmountInput] = useState('');
   const [note, setNote] = useState('');

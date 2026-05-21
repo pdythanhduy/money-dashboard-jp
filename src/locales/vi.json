@@ -851,8 +851,12 @@
       "totalSpent": "Tổng chi tháng này",
       "surplus": "Còn dư {{amount}}",
       "deficit": "Vượt thu nhập {{amount}}",
-      "noIncomeContext": "Chưa có thu nhập từ Calculator — chỉ hiện chi tiêu",
-      "entriesCount": "{{count}} khoản"
+      "noIncomeContext": "Tính lương trước để xem so sánh",
+      "entriesCount": "{{count}} khoản",
+      "income": "Thu nhập tháng",
+      "surplusLabel": "Còn dư",
+      "deficitLabel": "Vượt chi",
+      "percentOfIncome": "Đã tiêu {{percent}}% thu nhập"
     },
     "month": {
       "prev": "Tháng trước",
