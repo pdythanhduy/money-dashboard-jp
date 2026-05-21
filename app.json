@@ -2,7 +2,7 @@
   "expo": {
     "name": "money-dashboard-jp",
     "slug": "money-dashboard-jp",
-    "version": "1.0.0",
+    "version": "0.2.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -13,7 +13,9 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "buildNumber": "2",
+      "bundleIdentifier": "com.kakei.moneydashboardjp"
     },
     "android": {
       "adaptiveIcon": {
@@ -21,7 +23,9 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "versionCode": 2,
+      "package": "com.kakei.moneydashboardjp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
