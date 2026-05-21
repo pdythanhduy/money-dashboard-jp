@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import i18n from '@/lib/i18n';
 import { formatDateJa, formatDateVi, type Greeting } from '@/lib/date-helpers';
 import { useTheme } from '@/theme';
 
@@ -56,12 +57,9 @@ export function GreetingHeader({ greeting, today, daysUntilPayday, isPayday }: G
             </View>
           </View>
 
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, marginBottom: spacing.sm }}>
+          <View style={{ marginBottom: spacing.sm }}>
             <Text style={[typography.footnote, { color: 'rgba(255,255,255,0.85)' }]}>
-              {formatDateVi(today)}
-            </Text>
-            <Text style={[typography.footnote, { color: 'rgba(255,255,255,0.65)' }]}>
-              {formatDateJa(today)}
+              {i18n.language === 'ja' ? formatDateJa(today) : formatDateVi(today)}
             </Text>
           </View>
 
