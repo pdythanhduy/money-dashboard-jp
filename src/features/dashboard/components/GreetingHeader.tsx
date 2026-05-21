@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import i18n from '@/lib/i18n';
 import { formatDateJa, formatDateVi, type Greeting } from '@/lib/date-helpers';
 import { useTheme } from '@/theme';
 
@@ -16,7 +15,11 @@ interface GreetingHeaderProps {
 }
 
 export function GreetingHeader({ greeting, today, daysUntilPayday, isPayday }: GreetingHeaderProps) {
-  const { t } = useTranslation();
+  // `i18n` from useTranslation() is reactive — component re-renders when
+  // i18n.changeLanguage fires. Reading from the bare `import i18n` module
+  // only captures a snapshot, so the date format wouldn't refresh after
+  // the user toggled the language in Settings.
+  const { t, i18n } = useTranslation();
   const { colors, typography, spacing, radius } = useTheme();
 
   // Navy gradient — slightly lighter at the top so the avatar pops.
