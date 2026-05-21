@@ -63,22 +63,25 @@ export function GoalsScreen() {
     if (!selectedGoal) return;
     setEditing(selectedGoal);
     setDetailOpen(false);
-    setEditModalOpen(true);
+    // Defer so Detail's slide-dismiss animation finishes before Edit mounts.
+    setTimeout(() => setEditModalOpen(true), 400);
   }, [selectedGoal]);
 
   const openAddSavingsFromDetail = useCallback(() => {
     if (!selectedGoal) return;
-    // RN renders only one <Modal> at a time. Close the detail sheet
-    // first, otherwise the AddSavings sheet stays invisible behind it.
+    // Both modals use animationType="slide" + presentationStyle="pageSheet".
+    // iOS animates slide dismiss ~350ms — if we open AddSavings synchronously
+    // it races with Detail's dismiss and the second sheet never appears.
+    // Wait one animation cycle, then mount.
     setDetailOpen(false);
-    setAddSavingsOpen(true);
+    setTimeout(() => setAddSavingsOpen(true), 400);
   }, [selectedGoal]);
 
   const closeAddSavingsBackToDetail = useCallback(() => {
     setAddSavingsOpen(false);
-    // Re-open detail if user came from there (selectedId still set)
-    // so the new saved amount surfaces immediately.
-    if (selectedId) setDetailOpen(true);
+    // Re-open detail after AddSavings finishes dismissing so the new
+    // savedAmount surfaces immediately. Same animation-race rationale.
+    if (selectedId) setTimeout(() => setDetailOpen(true), 400);
   }, [selectedId]);
 
   return (
