@@ -68,8 +68,18 @@ export function GoalsScreen() {
 
   const openAddSavingsFromDetail = useCallback(() => {
     if (!selectedGoal) return;
+    // RN renders only one <Modal> at a time. Close the detail sheet
+    // first, otherwise the AddSavings sheet stays invisible behind it.
+    setDetailOpen(false);
     setAddSavingsOpen(true);
   }, [selectedGoal]);
+
+  const closeAddSavingsBackToDetail = useCallback(() => {
+    setAddSavingsOpen(false);
+    // Re-open detail if user came from there (selectedId still set)
+    // so the new saved amount surfaces immediately.
+    if (selectedId) setDetailOpen(true);
+  }, [selectedId]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }} edges={['top']}>
@@ -154,7 +164,7 @@ export function GoalsScreen() {
       <AddSavingsModal
         visible={addSavingsOpen}
         goalId={selectedId}
-        onClose={() => setAddSavingsOpen(false)}
+        onClose={closeAddSavingsBackToDetail}
       />
     </SafeAreaView>
   );
