@@ -71,7 +71,47 @@ src/
 
 All FY2026 rates verified against official sources on 2026-05-18. See
 [`src/lib/tax-data/RATES_VERSION.md`](src/lib/tax-data/RATES_VERSION.md)
-for the full manifest of source URLs + fetched dates per rate.
+for the full manifest of source URLs + fetched dates per rate. Every
+file under `src/lib/tax-data/*.ts` carries an `@see` JSDoc link to the
+upstream NTA / 協会けんぽ / 厚労省 page it was sourced from.
+
+## Building for production
+
+[EAS Build](https://docs.expo.dev/build/introduction/) handles iOS + Android
+binaries from the same managed workflow.
+
+```bash
+npm install -g eas-cli
+eas login
+eas build --profile production --platform all
+```
+
+After the build finishes, submit to the stores:
+
+```bash
+eas submit --platform ios       # uses ascAppId from eas.json
+eas submit --platform android   # uses serviceAccountKeyPath
+```
+
+Edit [`eas.json`](eas.json) and replace the `REPLACE_WITH_*` placeholders
+(Apple Team ID, App Store Connect App ID, Play service-account JSON path)
+before the first submit.
+
+Bump the version in three places — they must agree:
+
+- `package.json` → `version`
+- `app.json` → `expo.version`, `expo.ios.buildNumber`, `expo.android.versionCode`
+- `src/lib/app-info.ts` → `APP_VERSION`, `APP_BUILD`
+
+Then update [`CHANGELOG.md`](CHANGELOG.md) and run
+[`docs/MANUAL_TEST_CHECKLIST.md`](docs/MANUAL_TEST_CHECKLIST.md) end-to-end.
+
+## Legal
+
+- [Privacy Policy](docs/PRIVACY_POLICY.md) — trilingual (vi / ja / en).
+  No PII leaves the device.
+- [Terms of Service](docs/TERMS_OF_SERVICE.md) — estimates only, not
+  professional tax advice.
 
 ## License
 
@@ -79,6 +119,8 @@ MIT — see [`LICENSE`](LICENSE).
 
 ## Status
 
-Pre-1.0. Feature-complete for the four primary tabs. Pending before App
-Store / Play submission: real Privacy Policy & Terms URLs, app icon polish,
-optional EAS Build for production binaries.
+v0.2.0. Feature-complete for 17 phases (5A–5Q): Foundation → Calculator →
+Dashboard → History → Settings → Onboarding → Multi-job → Documents →
+Medical → ふるさと納税 → Goals → Kakeibo → Remittance → 確定申告.
+Pending real Privacy / Terms hosting URLs and final icon polish before
+App Store / Play submission.
