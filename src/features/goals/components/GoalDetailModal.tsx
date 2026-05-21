@@ -7,12 +7,17 @@ import { iconNameFor } from '@/features/goals/components/IconPicker';
 import { formatCurrency } from '@/lib/format';
 import { computeGoalProjection } from '@/lib/goals-math';
 import { useCalculatorStore } from '@/store/calculatorStore';
-import { getSavedTotal, isGoalCompleted, type Goal } from '@/store/goalsStore';
+import { getSavedTotal, isGoalCompleted, useGoalsStore } from '@/store/goalsStore';
 import { useTheme } from '@/theme';
 
 interface Props {
   visible: boolean;
-  goal: Goal | null;
+  /**
+   * ID-based lookup (not a snapshot prop) so contributions added from
+   * AddSavingsModal flow through to the displayed savedTotal + progress
+   * bar without forcing a remount.
+   */
+  goalId: string | null;
   onClose: () => void;
   onEdit: () => void;
   onAddSavings: () => void;
@@ -28,10 +33,13 @@ function ProgressBar({ percent, color }: { percent: number; color: string }) {
   );
 }
 
-export function GoalDetailModal({ visible, goal, onClose, onEdit, onAddSavings }: Props) {
+export function GoalDetailModal({ visible, goalId, onClose, onEdit, onAddSavings }: Props) {
   const { t } = useTranslation();
   const { colors, typography, spacing, radius } = useTheme();
   const takeHomeMonthly = useCalculatorStore((s) => s.lastResult?.takeHomeMonthly);
+  const goal = useGoalsStore((s) =>
+    goalId ? s.goals.find((g) => g.id === goalId) ?? null : null,
+  );
 
   if (!goal) {
     return (

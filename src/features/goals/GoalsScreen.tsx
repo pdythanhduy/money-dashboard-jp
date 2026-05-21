@@ -141,7 +141,7 @@ export function GoalsScreen() {
 
       <GoalDetailModal
         visible={detailOpen}
-        goal={selectedGoal}
+        goalId={selectedId}
         onClose={() => setDetailOpen(false)}
         onEdit={openEditFromDetail}
         onAddSavings={openAddSavingsFromDetail}
@@ -153,7 +153,7 @@ export function GoalsScreen() {
       />
       <AddSavingsModal
         visible={addSavingsOpen}
-        goal={selectedGoal}
+        goalId={selectedId}
         onClose={() => setAddSavingsOpen(false)}
       />
     </SafeAreaView>
