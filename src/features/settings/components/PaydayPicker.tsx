@@ -43,10 +43,11 @@ export function PaydayPicker({ visible, value, onChange, onClose }: PaydayPicker
         <Pressable
           accessibilityRole="none"
           style={{
-            maxHeight: '72%',
+            maxHeight: '80%',
+            marginBottom: spacing.xl,
+            marginHorizontal: spacing.sm,
             backgroundColor: colors.surface,
-            borderTopLeftRadius: radius.lg,
-            borderTopRightRadius: radius.lg,
+            borderRadius: radius.lg,
             paddingTop: spacing.md,
           }}
           onPress={(e) => e.stopPropagation()}
