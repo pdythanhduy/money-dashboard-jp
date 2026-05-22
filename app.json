@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "money-dashboard-jp",
+    "name": "Kakei",
     "slug": "money-dashboard-jp",
     "version": "0.2.0",
     "orientation": "portrait",
@@ -15,7 +15,10 @@
     "ios": {
       "supportsTablet": true,
       "buildNumber": "2",
-      "bundleIdentifier": "com.kakei.moneydashboardjp"
+      "bundleIdentifier": "com.kakei.moneydashboardjp",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -43,6 +46,12 @@
           "enableBackgroundRemoteNotifications": false
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "618e2cd5-6cba-4d4d-8769-1e53c2aa81d1"
+      }
+    },
+    "owner": "tt-duy"
   }
 }
