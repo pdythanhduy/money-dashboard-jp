@@ -76,10 +76,11 @@ export function PrefecturePicker<T extends string>({
           <Pressable
             accessibilityRole="none"
             style={{
-              maxHeight: '72%',
+              maxHeight: '80%',
+              marginBottom: spacing.xl,
+              marginHorizontal: spacing.sm,
               backgroundColor: colors.surface,
-              borderTopLeftRadius: radius.lg,
-              borderTopRightRadius: radius.lg,
+              borderRadius: radius.lg,
               paddingTop: spacing.md,
             }}
             onPress={(event) => event.stopPropagation()}

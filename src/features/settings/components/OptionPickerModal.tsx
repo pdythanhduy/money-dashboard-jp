@@ -56,9 +56,10 @@ export function OptionPickerModal<T extends string>({
           accessibilityRole="none"
           style={{
             maxHeight: '80%',
+            marginBottom: spacing.xl,
+            marginHorizontal: spacing.sm,
             backgroundColor: colors.surface,
-            borderTopLeftRadius: radius.lg,
-            borderTopRightRadius: radius.lg,
+            borderRadius: radius.lg,
             paddingTop: spacing.md,
           }}
           onPress={(event) => event.stopPropagation()}
