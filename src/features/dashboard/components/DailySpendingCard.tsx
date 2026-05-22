@@ -3,8 +3,10 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, Text, View } from 'react-native';
 
+import { MiniSevenDaySpendingChart } from '@/features/kakeibo/components/charts/MiniSevenDaySpendingChart';
 import { computeDailySpending } from '@/lib/daily-spending';
 import { formatCurrency } from '@/lib/format';
+import { buildLastNDaysSpendingSeries } from '@/lib/kakeibo-charts';
 import { computeLivingCost, type LivingCostStatus } from '@/lib/living-cost-math';
 import { useCalculatorStore } from '@/store/calculatorStore';
 import { useKakeiboStore } from '@/store/kakeiboStore';
@@ -82,6 +84,13 @@ export function DailySpendingCard({ onPress }: Props) {
         })
       : t('dashboard.dailySpending.noBudget');
 
+  // 7-day mini chart only when there's at least one entry to plot.
+  const miniSeries = useMemo(
+    () => (entries.length > 0 ? buildLastNDaysSpendingSeries(entries, 7, new Date()) : []),
+    [entries],
+  );
+  const showMini = miniSeries.some((p) => p.amount > 0);
+
   return (
     <Pressable
       accessibilityRole="button"
@@ -128,6 +137,11 @@ export function DailySpendingCard({ onPress }: Props) {
             amount: formatCurrency(Math.max(0, salary.remainingThisMonth)),
           })}
         </Text>
+      ) : null}
+      {showMini ? (
+        <View style={{ marginTop: spacing.sm, alignItems: 'flex-end' }}>
+          <MiniSevenDaySpendingChart series={miniSeries} />
+        </View>
       ) : null}
       {statusLabel ? (
         <View

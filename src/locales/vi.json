@@ -969,6 +969,50 @@
       "noIncome": "Chưa có thu nhập từ Calculator",
       "viewDetails": "Xem chi tiết"
     },
+    "charts": {
+      "tabs": {
+        "overview": "Tổng quan",
+        "charts": "Biểu đồ",
+        "list": "Danh sách"
+      },
+      "daily": {
+        "title": "Chi tiêu từng ngày"
+      },
+      "monthly": {
+        "title": "Xu hướng theo tháng"
+      },
+      "category": {
+        "title": "Chi tiêu theo nhóm"
+      },
+      "empty": "Chưa có dữ liệu để vẽ biểu đồ"
+    },
+    "insights": {
+      "title": "Nhận xét tháng này",
+      "topCategory": {
+        "title": "Nhóm chi nhiều nhất",
+        "body": "Bạn tiêu nhiều nhất cho {{category}}: {{amount}}."
+      },
+      "monthIncrease": {
+        "title": "Chi tiêu tăng so với tháng trước",
+        "body": "Tháng này cao hơn tháng trước {{amount}}."
+      },
+      "monthDecrease": {
+        "title": "Chi tiêu giảm so với tháng trước",
+        "body": "Tháng này thấp hơn tháng trước {{amount}}."
+      },
+      "todayOver": {
+        "title": "Hôm nay hơi quá tay",
+        "body": "Bạn đã tiêu vượt mức an toàn hôm nay {{amount}}."
+      },
+      "highFood": {
+        "title": "Ăn uống đang chiếm tỷ lệ cao",
+        "body": "Ăn uống chiếm {{percent}}% tổng chi tiêu tháng này."
+      },
+      "safeMonth": {
+        "title": "Tháng này đang khá an toàn",
+        "body": "Tổng chi hiện vẫn dưới 70% lương thực nhận."
+      }
+    },
     "recurring": {
       "title": "Chi cố định định kỳ",
       "addButton": "Thêm khoản định kỳ",

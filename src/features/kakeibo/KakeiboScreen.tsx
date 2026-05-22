@@ -13,22 +13,35 @@ import { EmptyState } from '@/features/kakeibo/components/EmptyState';
 import { EntryCard } from '@/features/kakeibo/components/EntryCard';
 import { EntryEditModal } from '@/features/kakeibo/components/EntryEditModal';
 import { MonthComparisonCard } from '@/features/kakeibo/components/MonthComparisonCard';
+import { CategorySpendingChart } from '@/features/kakeibo/components/charts/CategorySpendingChart';
+import { DailySpendingBarChart } from '@/features/kakeibo/components/charts/DailySpendingBarChart';
+import { MonthlySpendingTrendChart } from '@/features/kakeibo/components/charts/MonthlySpendingTrendChart';
+import { SpendingInsightCard } from '@/features/kakeibo/components/charts/SpendingInsightCard';
 import { MonthSelector, shiftMonth } from '@/features/kakeibo/components/MonthSelector';
 import { RecurringEditModal } from '@/features/kakeibo/components/RecurringEditModal';
 import { SummaryCard } from '@/features/kakeibo/components/SummaryCard';
 import { useRecurringSync } from '@/features/kakeibo/hooks/useRecurringSync';
 import { formatCurrency } from '@/lib/format';
 import {
+  buildCategorySpendingSeries,
+  buildDailySpendingSeries,
+  buildMonthlySpendingSeries,
+  buildSpendingInsights,
+} from '@/lib/kakeibo-charts';
+import {
   buildMonthlyReport,
   computeAllBudgetStatuses,
   filterEntriesByMonth,
   type KakeiboEntry,
 } from '@/lib/kakeibo-math';
+import { computeLivingCost } from '@/lib/living-cost-math';
 import { findDueRecurrings, isoFromDayOfMonth } from '@/lib/recurring-expenses';
 import { useCalculatorStore } from '@/store/calculatorStore';
 import { useKakeiboStore } from '@/store/kakeiboStore';
 import { useTheme } from '@/theme';
 import type { RecurringExpense } from '@/types/recurring-expense';
+
+type KakeiboTab = 'overview' | 'charts' | 'list';
 
 function currentYearMonth(): string {
   const d = new Date();
@@ -74,6 +87,7 @@ export function KakeiboScreen() {
   // Materialize due recurrings into entries on mount / date change.
   useRecurringSync();
 
+  const [tab, setTab] = useState<KakeiboTab>('overview');
   const [yearMonth, setYearMonth] = useState<string>(currentYearMonth);
   const [filter, setFilter] = useState<CategoryFilterValue>('all');
   const [editing, setEditing] = useState<KakeiboEntry | null>(null);
@@ -103,6 +117,39 @@ export function KakeiboScreen() {
     if (filter === 'all') return inMonth;
     return inMonth.filter((e) => e.category === filter);
   }, [entries, yearMonth, filter]);
+
+  // Charts-tab data (only built when needed).
+  const dailySeries = useMemo(
+    () => (tab === 'charts' ? buildDailySpendingSeries(entries, yearMonth, new Date()) : []),
+    [tab, entries, yearMonth],
+  );
+  const monthlySeries = useMemo(
+    () => (tab === 'charts' ? buildMonthlySpendingSeries(entries, 6, new Date()) : []),
+    [tab, entries],
+  );
+  const categorySeries = useMemo(
+    () => (tab === 'charts' ? buildCategorySpendingSeries(entries, yearMonth) : []),
+    [tab, entries, yearMonth],
+  );
+  const insights = useMemo(() => {
+    if (tab !== 'charts') return [];
+    const dailyAllowance =
+      takeHomeMonthly && takeHomeMonthly > 0
+        ? computeLivingCost({
+            takeHomeMonthly,
+            entries,
+            recurrings,
+            now: new Date(),
+          }).dailyAllowance
+        : undefined;
+    return buildSpendingInsights({
+      entries,
+      yearMonth,
+      ...(takeHomeMonthly && takeHomeMonthly > 0 ? { takeHomeMonthly } : {}),
+      ...(dailyAllowance !== undefined ? { dailyAllowance } : {}),
+      now: new Date(),
+    });
+  }, [tab, entries, yearMonth, takeHomeMonthly, recurrings]);
 
   const openAdd = useCallback(() => {
     setEditing(null);
@@ -152,12 +199,38 @@ export function KakeiboScreen() {
       </View>
 
       <FlatList
-        data={filteredEntries}
+        data={tab === 'charts' ? [] : filteredEntries}
         keyExtractor={(e) => e.id}
         renderItem={({ item }) => <EntryCard entry={item} onPress={openEdit} />}
         ListHeaderComponent={
           <>
+            <TabBar tab={tab} onChange={setTab} />
             <MonthSelector yearMonth={yearMonth} onChange={setYearMonth} />
+            {tab === 'charts' ? (
+              <View style={{ marginHorizontal: spacing.lg, marginTop: spacing.md, gap: spacing.md }}>
+                <View>
+                  <Text style={[typography.headline, { color: colors.text, marginBottom: spacing.xs }]}>
+                    {t('kakeibo.charts.daily.title')}
+                  </Text>
+                  <DailySpendingBarChart series={dailySeries} />
+                </View>
+                <View>
+                  <Text style={[typography.headline, { color: colors.text, marginBottom: spacing.xs }]}>
+                    {t('kakeibo.charts.monthly.title')}
+                  </Text>
+                  <MonthlySpendingTrendChart series={monthlySeries} />
+                </View>
+                <View>
+                  <Text style={[typography.headline, { color: colors.text, marginBottom: spacing.xs }]}>
+                    {t('kakeibo.charts.category.title')}
+                  </Text>
+                  <CategorySpendingChart series={categorySeries} />
+                </View>
+                <SpendingInsightCard insights={insights} />
+              </View>
+            ) : null}
+            {tab === 'overview' ? (
+              <>
             <SummaryCard
               totalSpent={report.totalSpent}
               entryCount={report.entryCount}
@@ -355,24 +428,30 @@ export function KakeiboScreen() {
                 })}
               </View>
             )}
+              </>
+            ) : null}
 
-            <View style={{ marginTop: spacing.md, paddingHorizontal: spacing.lg }}>
-              <Text style={[typography.headline, { color: colors.text }]}>{t('kakeibo.entries.title')}</Text>
-            </View>
-            <CategoryFilter value={filter} onChange={setFilter} />
-            {filteredEntries.length === 0 && entries.length > 0 ? (
-              <Text
-                style={[
-                  typography.caption,
-                  { color: colors.textSecondary, textAlign: 'center', paddingVertical: spacing.md },
-                ]}
-              >
-                {t('kakeibo.entries.empty')}
-              </Text>
+            {tab !== 'charts' ? (
+              <>
+                <View style={{ marginTop: spacing.md, paddingHorizontal: spacing.lg }}>
+                  <Text style={[typography.headline, { color: colors.text }]}>{t('kakeibo.entries.title')}</Text>
+                </View>
+                <CategoryFilter value={filter} onChange={setFilter} />
+                {filteredEntries.length === 0 && entries.length > 0 ? (
+                  <Text
+                    style={[
+                      typography.caption,
+                      { color: colors.textSecondary, textAlign: 'center', paddingVertical: spacing.md },
+                    ]}
+                  >
+                    {t('kakeibo.entries.empty')}
+                  </Text>
+                ) : null}
+              </>
             ) : null}
           </>
         }
-        ListEmptyComponent={entries.length === 0 ? <EmptyState onPressCta={openAdd} /> : null}
+        ListEmptyComponent={tab !== 'charts' && entries.length === 0 ? <EmptyState onPressCta={openAdd} /> : null}
         contentContainerStyle={{ paddingBottom: 96 }}
         showsVerticalScrollIndicator={false}
       />
@@ -415,5 +494,58 @@ export function KakeiboScreen() {
         onClose={() => setRecurringModalOpen(false)}
       />
     </SafeAreaView>
+  );
+}
+
+function TabBar({ tab, onChange }: { tab: KakeiboTab; onChange: (next: KakeiboTab) => void }) {
+  const { t } = useTranslation();
+  const { colors, typography, spacing, radius } = useTheme();
+  const tabs: Array<{ id: KakeiboTab; label: string }> = [
+    { id: 'overview', label: t('kakeibo.charts.tabs.overview') },
+    { id: 'charts', label: t('kakeibo.charts.tabs.charts') },
+    { id: 'list', label: t('kakeibo.charts.tabs.list') },
+  ];
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        marginHorizontal: spacing.lg,
+        marginTop: spacing.sm,
+        backgroundColor: colors.surface,
+        borderRadius: radius.pill,
+        padding: 4,
+        gap: 4,
+      }}
+    >
+      {tabs.map((tb) => {
+        const selected = tab === tb.id;
+        return (
+          <Pressable
+            key={tb.id}
+            accessibilityRole="button"
+            accessibilityState={{ selected }}
+            accessibilityLabel={tb.label}
+            onPress={() => onChange(tb.id)}
+            style={({ pressed }) => ({
+              flex: 1,
+              paddingVertical: 8,
+              borderRadius: radius.pill,
+              backgroundColor: selected ? colors.brand : 'transparent',
+              alignItems: 'center',
+              opacity: pressed ? 0.85 : 1,
+            })}
+          >
+            <Text
+              style={[
+                typography.caption,
+                { color: selected ? colors.textInverse : colors.text, fontWeight: '600' },
+              ]}
+            >
+              {tb.label}
+            </Text>
+          </Pressable>
+        );
+      })}
+    </View>
   );
 }

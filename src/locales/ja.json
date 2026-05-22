@@ -969,6 +969,50 @@
       "noIncome": "Calculatorの結果なし",
       "viewDetails": "詳細を見る"
     },
+    "charts": {
+      "tabs": {
+        "overview": "概要",
+        "charts": "グラフ",
+        "list": "明細"
+      },
+      "daily": {
+        "title": "日別支出"
+      },
+      "monthly": {
+        "title": "月別推移"
+      },
+      "category": {
+        "title": "カテゴリ別支出"
+      },
+      "empty": "グラフを表示するデータがありません"
+    },
+    "insights": {
+      "title": "今月の気づき",
+      "topCategory": {
+        "title": "一番多い支出カテゴリ",
+        "body": "{{category}}に最も多く使っています：{{amount}}。"
+      },
+      "monthIncrease": {
+        "title": "先月より支出が増えています",
+        "body": "今月は先月より{{amount}}多く使っています。"
+      },
+      "monthDecrease": {
+        "title": "先月より支出が減っています",
+        "body": "今月は先月より{{amount}}少なく使っています。"
+      },
+      "todayOver": {
+        "title": "今日は少し使いすぎです",
+        "body": "今日の安全ラインを{{amount}}超えています。"
+      },
+      "highFood": {
+        "title": "食費の割合が高めです",
+        "body": "食費が今月の支出の{{percent}}%を占めています。"
+      },
+      "safeMonth": {
+        "title": "今月は比較的安全です",
+        "body": "現在の支出は手取り月収の70%未満です。"
+      }
+    },
     "recurring": {
       "title": "定期支出",
       "addButton": "定期支出を追加",
