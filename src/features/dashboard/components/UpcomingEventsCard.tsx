@@ -41,13 +41,20 @@ export function UpcomingEventsCard({ reminders }: UpcomingEventsCardProps) {
         </Text>
       </View>
       {reminders.map((r) => {
-        // Per-document reminders are keyed as `doc:<kind>:<id>`. The label
-        // comes from `documents.kinds.<kind>`. System reminders (e.g.
-        // `kakuteiShinkoku`) use `dashboard.upcoming.items.<key>`.
+        // Per-document reminders use either:
+        //   `doc:<type>:<id>:<title>` — Phase 5V. Render the title verbatim.
+        //   `doc:<kind>:<id>`         — legacy Phase 5K. Look up i18n label.
+        // System reminders (e.g. `kakuteiShinkoku`) use
+        // `dashboard.upcoming.items.<key>`.
         let label: string;
         if (r.i18nKey.startsWith('doc:')) {
-          const kind = r.i18nKey.slice('doc:'.length).split(':')[0] ?? 'other';
-          label = t(`documents.kinds.${kind}`);
+          const parts = r.i18nKey.slice('doc:'.length).split(':');
+          if (parts.length >= 3) {
+            label = parts.slice(2).join(':');
+          } else {
+            const kind = parts[0] ?? 'other';
+            label = t(`documents.kinds.${kind}`);
+          }
         } else {
           label = t(`dashboard.upcoming.items.${r.i18nKey}`);
         }

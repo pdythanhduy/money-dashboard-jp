@@ -14,8 +14,11 @@
 
 import { daysBetween } from '@/lib/date-helpers';
 import type { DocumentKind, DocumentReminder } from '@/types/document';
+import type { DocumentDeadline, DocumentType } from '@/types/document-deadline';
 
 export type ReminderSeverity = 'normal' | 'warning' | 'danger';
+
+const DASHBOARD_REMINDER_LIMIT = 5;
 
 export interface DashboardDocumentReminder {
   id: string;
@@ -58,6 +61,50 @@ export function computeDocumentReminders(
       id: d.id,
       kind: d.kind,
       ...(d.customName ? { customName: d.customName } : {}),
+      expiryDate: d.expiryDate,
+      daysLeft,
+      severity: severityFor(daysLeft),
+    });
+  }
+  out.sort((a, b) => a.daysLeft - b.daysLeft);
+  return out.slice(0, limit);
+}
+
+// ---------------------------------------------------------------------------
+// New canonical model: DocumentDeadline (Phase 5V)
+// ---------------------------------------------------------------------------
+
+export interface DashboardDeadlineReminder {
+  id: string;
+  type: DocumentType;
+  title: string;
+  expiryDate: string;
+  daysLeft: number;
+  severity: ReminderSeverity;
+}
+
+/**
+ * Pure transform: persisted `DocumentDeadline`s → Dashboard reminder rows.
+ *
+ *   Show if 0 ≤ daysLeft ≤ remindBeforeDays.
+ *   Sort ascending by daysLeft, cap at `limit` (default 5).
+ *   Severity buckets: danger ≤7, warning ≤30, normal otherwise.
+ */
+export function computeDocumentDeadlineReminders(
+  documents: readonly DocumentDeadline[],
+  now: Date,
+  limit: number = DASHBOARD_REMINDER_LIMIT,
+): DashboardDeadlineReminder[] {
+  const out: DashboardDeadlineReminder[] = [];
+  for (const d of documents) {
+    const daysLeft = daysBetween(now, new Date(d.expiryDate));
+    if (!Number.isFinite(daysLeft)) continue;
+    if (daysLeft < 0) continue;
+    if (daysLeft > d.remindBeforeDays) continue;
+    out.push({
+      id: d.id,
+      type: d.type,
+      title: d.title,
       expiryDate: d.expiryDate,
       daysLeft,
       severity: severityFor(daysLeft),

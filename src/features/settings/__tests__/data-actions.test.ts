@@ -32,6 +32,7 @@ jest.mock('@/lib/notifications', () => ({
 
 import { buildExportPayload, wipeAllAppData } from '@/features/settings/data-actions';
 import { useCalculatorStore } from '@/store/calculatorStore';
+import { useDocumentDeadlineStore } from '@/store/documentDeadlineStore';
 import { useDocumentsStore } from '@/store/documentsStore';
 import { useFurusatoStore } from '@/store/furusatoStore';
 import { useGoalsStore } from '@/store/goalsStore';
@@ -150,6 +151,12 @@ describe('wipeAllAppData', () => {
       kind: 'zairyu_card',
       expiryDate: '2027-03-15',
     });
+    useDocumentDeadlineStore.getState().addDocumentDeadline({
+      type: 'residence_card',
+      title: 'My residence card',
+      expiryDate: '2027-03-15',
+      remindBeforeDays: 30,
+    });
     useMedicalExpensesStore.getState().addExpense({
       date: '2026-05-01',
       amount: 12_000,
@@ -201,6 +208,7 @@ describe('wipeAllAppData', () => {
     expect(useOnboardingStore.getState().currentSlide).toBe(0);
     expect(useMultiJobStore.getState().jobs).toEqual([]);
     expect(useDocumentsStore.getState().documents).toEqual([]);
+    expect(useDocumentDeadlineStore.getState().documents).toEqual([]);
     expect(useMedicalExpensesStore.getState().expenses).toEqual([]);
     expect(useFurusatoStore.getState().donations).toEqual([]);
     expect(useGoalsStore.getState().goals).toEqual([]);

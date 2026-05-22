@@ -8,9 +8,10 @@
  * Payday flows from `settingsStore` so a Settings change re-renders the
  * countdown badge immediately.
  *
- * Upcoming reminders: real documents from `useDocumentsStore` are mapped
- * through the pure `computeDocumentReminders` lib. 確定申告 system reminder
- * is gated on `hasKakuteiContext` (a Calculator result exists). No stubs.
+ * Upcoming reminders: real user-added `DocumentDeadline`s (Phase 5V) are
+ * mapped via the pure `computeDocumentDeadlineReminders` lib. The
+ * 確定申告 system reminder is gated on `hasKakuteiContext` (Calculator
+ * result exists). No stubs.
  */
 
 import { useCallback, useMemo, useState } from 'react';
@@ -20,9 +21,9 @@ import {
   type DashboardData,
 } from '@/features/dashboard/dashboard-logic';
 import { getTokyoNow } from '@/lib/date-helpers';
-import { computeDocumentReminders } from '@/lib/document-reminders';
+import { computeDocumentDeadlineReminders } from '@/lib/document-reminders';
 import { useCalculatorStore } from '@/store/calculatorStore';
-import { useDocumentsStore } from '@/store/documentsStore';
+import { useDocumentDeadlineStore } from '@/store/documentDeadlineStore';
 import { useSettingsStore } from '@/store/settingsStore';
 
 export interface UseDashboardDataReturn extends DashboardData {
@@ -30,13 +31,15 @@ export interface UseDashboardDataReturn extends DashboardData {
 }
 
 /** Prefix used by the dashboard `UpcomingEventsCard` to distinguish per-doc
- *  reminders from system ones (e.g. `kakuteiShinkoku`). */
+ *  reminders from system ones (e.g. `kakuteiShinkoku`).
+ *  Format: `doc:<type>:<id>:<title>` so the card can render the user-typed
+ *  title without an extra lookup. */
 export const DOCUMENT_REMINDER_PREFIX = 'doc:';
 
 export function useDashboardData(): UseDashboardDataReturn {
   const lastResult = useCalculatorStore((state) => state.lastResult);
   const payday = useSettingsStore((s) => s.settings.payday);
-  const documents = useDocumentsStore((s) => s.documents);
+  const documents = useDocumentDeadlineStore((s) => s.documents);
   const [now, setNow] = useState<Date>(() => getTokyoNow());
 
   const refresh = useCallback(() => {
@@ -44,11 +47,10 @@ export function useDashboardData(): UseDashboardDataReturn {
   }, []);
 
   const documentReminders = useMemo(() => {
-    return computeDocumentReminders(documents, now).map((d) => ({
-      // Encode the doc id + kind so UpcomingEventsCard can render an
-      // appropriate label (Custom name or i18n fallback). Format:
-      //   "doc:<kind>:<id>" — the card splits on the second ":" if present.
-      i18nKey: `${DOCUMENT_REMINDER_PREFIX}${d.kind}:${d.id}`,
+    return computeDocumentDeadlineReminders(documents, now).map((d) => ({
+      // `doc:<type>:<id>:<title>` — UpcomingEventsCard parses out the title
+      // segment for direct render (avoids re-reading the store).
+      i18nKey: `${DOCUMENT_REMINDER_PREFIX}${d.type}:${d.id}:${d.title}`,
       date: new Date(d.expiryDate),
       daysLeft: d.daysLeft,
     }));
