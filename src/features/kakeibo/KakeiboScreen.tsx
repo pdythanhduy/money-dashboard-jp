@@ -14,7 +14,9 @@ import { EntryCard } from '@/features/kakeibo/components/EntryCard';
 import { EntryEditModal } from '@/features/kakeibo/components/EntryEditModal';
 import { MonthComparisonCard } from '@/features/kakeibo/components/MonthComparisonCard';
 import { MonthSelector, shiftMonth } from '@/features/kakeibo/components/MonthSelector';
+import { RecurringEditModal } from '@/features/kakeibo/components/RecurringEditModal';
 import { SummaryCard } from '@/features/kakeibo/components/SummaryCard';
+import { useRecurringSync } from '@/features/kakeibo/hooks/useRecurringSync';
 import { formatCurrency } from '@/lib/format';
 import {
   buildMonthlyReport,
@@ -25,6 +27,7 @@ import {
 import { useCalculatorStore } from '@/store/calculatorStore';
 import { useKakeiboStore } from '@/store/kakeiboStore';
 import { useTheme } from '@/theme';
+import type { RecurringExpense } from '@/types/recurring-expense';
 
 function currentYearMonth(): string {
   const d = new Date();
@@ -37,13 +40,20 @@ export function KakeiboScreen() {
   const navigation = useNavigation();
   const entries = useKakeiboStore((s) => s.entries);
   const budgets = useKakeiboStore((s) => s.budgets);
+  const recurrings = useKakeiboStore((s) => s.recurrings);
+  const toggleRecurringActive = useKakeiboStore((s) => s.toggleRecurringActive);
   const takeHomeMonthly = useCalculatorStore((s) => s.lastResult?.takeHomeMonthly);
+
+  // Materialize due recurrings into entries on mount / date change.
+  useRecurringSync();
 
   const [yearMonth, setYearMonth] = useState<string>(currentYearMonth);
   const [filter, setFilter] = useState<CategoryFilterValue>('all');
   const [editing, setEditing] = useState<KakeiboEntry | null>(null);
   const [entryModalOpen, setEntryModalOpen] = useState(false);
   const [budgetOpen, setBudgetOpen] = useState(false);
+  const [editingRecurring, setEditingRecurring] = useState<RecurringExpense | null>(null);
+  const [recurringModalOpen, setRecurringModalOpen] = useState(false);
 
   const report = useMemo(
     () => buildMonthlyReport(entries, yearMonth, takeHomeMonthly && takeHomeMonthly > 0 ? takeHomeMonthly : undefined),
@@ -172,6 +182,116 @@ export function KakeiboScreen() {
             {prevReport.totalSpent > 0 || report.totalSpent > 0 ? (
               <MonthComparisonCard prev={prevReport} current={report} />
             ) : null}
+            <View
+              style={{
+                marginTop: spacing.md,
+                paddingHorizontal: spacing.lg,
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: spacing.sm,
+              }}
+            >
+              <Text style={[typography.headline, { color: colors.text, flex: 1 }]}>
+                {t('kakeibo.recurring.title')}
+              </Text>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={t('kakeibo.recurring.addButton')}
+                onPress={() => {
+                  setEditingRecurring(null);
+                  setRecurringModalOpen(true);
+                }}
+                hitSlop={6}
+                style={({ pressed }) => ({
+                  paddingHorizontal: spacing.sm,
+                  paddingVertical: spacing.xs,
+                  borderRadius: radius.pill,
+                  borderWidth: 1,
+                  borderColor: colors.brand,
+                  opacity: pressed ? 0.85 : 1,
+                })}
+              >
+                <Text style={[typography.caption, { color: colors.brand, fontWeight: '600' }]}>
+                  + {t('kakeibo.recurring.addButton')}
+                </Text>
+              </Pressable>
+            </View>
+            {recurrings.length === 0 ? (
+              <Text
+                style={[
+                  typography.caption,
+                  {
+                    color: colors.textSecondary,
+                    paddingHorizontal: spacing.lg,
+                    paddingTop: spacing.xs,
+                  },
+                ]}
+              >
+                {t('kakeibo.recurring.emptyState')}
+              </Text>
+            ) : (
+              <View style={{ paddingHorizontal: spacing.lg, paddingTop: spacing.xs, gap: spacing.xs }}>
+                {recurrings.map((r) => (
+                  <Pressable
+                    key={r.id}
+                    accessibilityRole="button"
+                    accessibilityLabel={`${r.name} ¥${r.amount}`}
+                    onPress={() => {
+                      setEditingRecurring(r);
+                      setRecurringModalOpen(true);
+                    }}
+                    style={({ pressed }) => ({
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: spacing.sm,
+                      padding: spacing.sm,
+                      borderRadius: radius.sm,
+                      backgroundColor: colors.surfaceElevated,
+                      opacity: pressed ? 0.85 : r.active ? 1 : 0.55,
+                    })}
+                  >
+                    <Ionicons
+                      name={CATEGORY_ICONS[r.category]}
+                      size={16}
+                      color={r.active ? colors.brand : colors.textSecondary}
+                    />
+                    <View style={{ flex: 1 }}>
+                      <Text style={[typography.body, { color: colors.text, fontWeight: '600' }]} numberOfLines={1}>
+                        {r.name}
+                      </Text>
+                      <Text style={[typography.caption, { color: colors.textSecondary }]} numberOfLines={1}>
+                        {t('kakeibo.recurring.dayLabel', { day: r.dayOfMonth })} ·{' '}
+                        {formatCurrency(r.amount)}
+                      </Text>
+                    </View>
+                    <Pressable
+                      accessibilityRole="switch"
+                      accessibilityLabel={t('kakeibo.recurring.activeLabel')}
+                      accessibilityState={{ checked: r.active }}
+                      onPress={() => toggleRecurringActive(r.id)}
+                      hitSlop={8}
+                      style={({ pressed }) => ({
+                        paddingHorizontal: spacing.sm,
+                        paddingVertical: 2,
+                        borderRadius: radius.pill,
+                        backgroundColor: r.active ? colors.brand : colors.border,
+                        opacity: pressed ? 0.85 : 1,
+                      })}
+                    >
+                      <Text
+                        style={[
+                          typography.caption,
+                          { color: r.active ? colors.textInverse : colors.textSecondary, fontWeight: '600' },
+                        ]}
+                      >
+                        {r.active ? 'ON' : 'OFF'}
+                      </Text>
+                    </Pressable>
+                  </Pressable>
+                ))}
+              </View>
+            )}
+
             <View style={{ marginTop: spacing.md, paddingHorizontal: spacing.lg }}>
               <Text style={[typography.headline, { color: colors.text }]}>{t('kakeibo.entries.title')}</Text>
             </View>
@@ -225,6 +345,11 @@ export function KakeiboScreen() {
         onClose={closeEntryModal}
       />
       <BudgetEditScreen visible={budgetOpen} onClose={() => setBudgetOpen(false)} />
+      <RecurringEditModal
+        visible={recurringModalOpen}
+        editing={editingRecurring}
+        onClose={() => setRecurringModalOpen(false)}
+      />
     </SafeAreaView>
   );
 }

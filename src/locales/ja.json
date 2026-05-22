@@ -386,6 +386,16 @@
       "title": "6ヶ月のトレンド",
       "needsTwoPoints": "6ヶ月のトレンドを表示するには2回以上の計算が必要です"
     },
+    "dailySpending": {
+      "title": "今日の支出",
+      "today": "今日は {{amount}} 使用",
+      "dailyRemaining": "今月残り {{amount}}/日",
+      "underBudget": "予算内",
+      "overBudget": "平均を超過",
+      "noBudget": "予算未設定 — 家計簿で設定してください",
+      "viewAll": "詳細を見る",
+      "quickAddFab": "簡単に追加"
+    },
     "upcoming": {
       "title": "もうすぐ期限",
       "daysLeft": "あと{{days}}日",
@@ -935,6 +945,25 @@
       "percentOfIncome": "月収の {{percent}}%",
       "noIncome": "Calculatorの結果なし",
       "viewDetails": "詳細を見る"
+    },
+    "recurring": {
+      "title": "定期支出",
+      "addButton": "定期支出を追加",
+      "emptyState": "定期支出はまだありません。家賃、Wi-Fi、電気代などを追加すると毎月自動記録します。",
+      "dayLabel": "毎月 {{day}} 日",
+      "nameLabel": "項目名",
+      "namePlaceholder": "例: 電気代、ソフトバンクWi-Fi",
+      "addTitle": "定期支出を追加",
+      "editTitle": "定期支出を編集",
+      "activeLabel": "有効",
+      "autoNote": "毎月この日に自動でエントリ作成",
+      "limitReached": "定期支出は{{max}}件までです"
+    },
+    "quickAdd": {
+      "title": "簡単に追加",
+      "recentAmounts": "クイック金額",
+      "success": "記録しました",
+      "todayDate": "今日"
     }
   },
   "remittance": {

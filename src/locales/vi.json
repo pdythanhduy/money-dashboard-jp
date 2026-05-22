@@ -386,6 +386,16 @@
       "title": "Xu hướng 6 tháng",
       "needsTwoPoints": "Cần ít nhất 2 lần tính để xem xu hướng 6 tháng"
     },
+    "dailySpending": {
+      "title": "Chi tiêu hôm nay",
+      "today": "Hôm nay đã tiêu {{amount}}",
+      "dailyRemaining": "Còn {{amount}}/ngày cho hết tháng",
+      "underBudget": "Trong ngân sách",
+      "overBudget": "Vượt trung bình",
+      "noBudget": "Chưa đặt budget — vào Kakeibo để thiết lập",
+      "viewAll": "Xem chi tiết",
+      "quickAddFab": "Thêm chi nhanh"
+    },
     "upcoming": {
       "title": "Sắp tới hạn",
       "daysLeft": "còn {{days}} ngày",
@@ -935,6 +945,25 @@
       "percentOfIncome": "{{percent}}% thu nhập tháng",
       "noIncome": "Chưa có thu nhập từ Calculator",
       "viewDetails": "Xem chi tiết"
+    },
+    "recurring": {
+      "title": "Chi cố định định kỳ",
+      "addButton": "Thêm khoản định kỳ",
+      "emptyState": "Chưa có khoản định kỳ nào. Thêm tiền nhà, wifi, điện... để app tự ghi mỗi tháng.",
+      "dayLabel": "Ngày {{day}} hàng tháng",
+      "nameLabel": "Tên khoản",
+      "namePlaceholder": "VD: Tiền điện, Wifi Softbank",
+      "addTitle": "Thêm khoản định kỳ",
+      "editTitle": "Sửa khoản định kỳ",
+      "activeLabel": "Đang bật",
+      "autoNote": "Tự động tạo entry vào ngày này mỗi tháng",
+      "limitReached": "Đã đạt giới hạn {{max}} khoản định kỳ"
+    },
+    "quickAdd": {
+      "title": "Thêm chi nhanh",
+      "recentAmounts": "Số tiền nhanh",
+      "success": "Đã ghi",
+      "todayDate": "Hôm nay"
     }
   },
   "remittance": {

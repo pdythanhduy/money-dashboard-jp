@@ -172,6 +172,12 @@ describe('wipeAllAppData', () => {
       label: 'Lawson',
     });
     useKakeiboStore.getState().setBudget('food', 30_000);
+    useKakeiboStore.getState().addRecurring({
+      name: 'Wifi',
+      amount: 4_500,
+      category: 'communication',
+      dayOfMonth: 1,
+    });
     useRemittanceStore.getState().addEntry({
       date: '2026-05-10',
       amountJPY: 50_000,
@@ -200,6 +206,7 @@ describe('wipeAllAppData', () => {
     expect(useGoalsStore.getState().goals).toEqual([]);
     expect(useKakeiboStore.getState().entries).toEqual([]);
     expect(useKakeiboStore.getState().budgets).toEqual([]);
+    expect(useKakeiboStore.getState().recurrings).toEqual([]);
     expect(useRemittanceStore.getState().entries).toEqual([]);
     expect(useRemittanceStore.getState().annualGoalJPY).toBe(0);
     expect(useKakuteiStore.getState().draft.lifeInsurancePremium).toBe(0);
