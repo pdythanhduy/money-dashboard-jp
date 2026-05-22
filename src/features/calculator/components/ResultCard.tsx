@@ -1,6 +1,7 @@
 import { Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import Svg, { Circle, Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
+import { LinearGradient } from 'expo-linear-gradient';
+import Svg, { Circle } from 'react-native-svg';
 
 import { useTheme } from '@/theme';
 import type { TakeHomeResult } from '@/types/tax';
@@ -19,7 +20,10 @@ export function ResultCard({ result }: ResultCardProps) {
 
   return (
     <View style={{ gap: spacing.lg }}>
-      <View
+      <LinearGradient
+        colors={[colors.brand, colors.brandStrong]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
         style={{
           minHeight: 190,
           borderRadius: radius.lg,
@@ -33,15 +37,6 @@ export function ResultCard({ result }: ResultCardProps) {
           elevation: 5,
         }}
       >
-        <Svg style={{ position: 'absolute', inset: 0 }} width="100%" height="100%">
-          <Defs>
-            <LinearGradient id="takeHomeGradient" x1="0" y1="0" x2="1" y2="1">
-              <Stop offset="0" stopColor={colors.brand} />
-              <Stop offset="1" stopColor={colors.brandStrong} />
-            </LinearGradient>
-          </Defs>
-          <Rect width="100%" height="100%" fill="url(#takeHomeGradient)" />
-        </Svg>
         <View>
           <Text style={[typography.callout, { color: colors.textInverse }]}>
             {t('calculator.result.takeHomeMonthly')}
@@ -64,7 +59,7 @@ export function ResultCard({ result }: ResultCardProps) {
             {t('calculator.result.takeHomeJapanese')}
           </Text>
         </View>
-      </View>
+      </LinearGradient>
 
       <View
         style={{
