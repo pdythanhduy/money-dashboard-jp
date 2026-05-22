@@ -40,33 +40,45 @@ export function UpcomingEventsCard({ reminders }: UpcomingEventsCardProps) {
           {t('dashboard.upcoming.title')}
         </Text>
       </View>
-      {reminders.map((r) => (
-        <View
-          key={r.i18nKey}
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            paddingVertical: spacing.sm,
-            borderTopWidth: 1,
-            borderTopColor: colors.border,
-          }}
-        >
-          <Text style={[typography.body, { color: colors.text, flex: 1 }]} numberOfLines={1}>
-            {t(`dashboard.upcoming.items.${r.i18nKey}`)}
-          </Text>
-          <Text
-            style={[
-              typography.caption,
-              { color: r.daysLeft <= 14 ? colors.warning : colors.textSecondary, fontWeight: '600' },
-            ]}
+      {reminders.map((r) => {
+        // Per-document reminders are keyed as `doc:<kind>:<id>`. The label
+        // comes from `documents.kinds.<kind>`. System reminders (e.g.
+        // `kakuteiShinkoku`) use `dashboard.upcoming.items.<key>`.
+        let label: string;
+        if (r.i18nKey.startsWith('doc:')) {
+          const kind = r.i18nKey.slice('doc:'.length).split(':')[0] ?? 'other';
+          label = t(`documents.kinds.${kind}`);
+        } else {
+          label = t(`dashboard.upcoming.items.${r.i18nKey}`);
+        }
+        return (
+          <View
+            key={r.i18nKey}
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              paddingVertical: spacing.sm,
+              borderTopWidth: 1,
+              borderTopColor: colors.border,
+            }}
           >
-            {r.daysLeft === 0
-              ? t('dashboard.upcoming.today')
-              : t('dashboard.upcoming.daysLeft', { days: r.daysLeft })}
-          </Text>
-        </View>
-      ))}
+            <Text style={[typography.body, { color: colors.text, flex: 1 }]} numberOfLines={1}>
+              {label}
+            </Text>
+            <Text
+              style={[
+                typography.caption,
+                { color: r.daysLeft <= 14 ? colors.warning : colors.textSecondary, fontWeight: '600' },
+              ]}
+            >
+              {r.daysLeft === 0
+                ? t('dashboard.upcoming.today')
+                : t('dashboard.upcoming.daysLeft', { days: r.daysLeft })}
+            </Text>
+          </View>
+        );
+      })}
     </View>
   );
 }

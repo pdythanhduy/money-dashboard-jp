@@ -53,17 +53,29 @@ const EMPTY: Omit<DashboardData, 'today' | 'greeting' | 'daysUntilPayday' | 'isP
   averageDaily: 0,
 };
 
+/**
+ * Real reminder inputs the dashboard hook resolves from stores.
+ * Pure logic — no store reads here — so tests can drive both paths.
+ */
+export interface ReminderSources {
+  /** Pre-mapped real document reminders from useDocumentsStore + document-reminders lib. */
+  documentReminders?: readonly { i18nKey: string; date: Date; daysLeft: number }[];
+  /** True if user has a Calculator result on file — gates the 確定申告 system reminder. */
+  hasKakuteiContext?: boolean;
+}
+
 export function computeDashboardData(
   now: Date,
   result: TakeHomeResult | null,
   payday: number = DEFAULT_PAYDAY,
+  reminders: ReminderSources = {},
 ): DashboardData {
   const greeting = getGreeting(now);
   const daysUntilPayday = getDaysUntilPayday(now, payday);
   const isPayday = daysUntilPayday === 0;
   const daysInMonth = getDaysInMonth(now);
   const daysPassed = getDayOfMonth(now);
-  const upcomingReminders = computeUpcomingReminders(now);
+  const upcomingReminders = computeUpcomingReminders(now, reminders);
 
   if (!result) {
     return {
@@ -116,20 +128,44 @@ export function computeDashboardData(
   };
 }
 
+const KAKUTEI_WINDOW_DAYS = 90;
+
 /**
- * Stub upcoming reminders. Replace with a real reminder source (SQLite
- * table + user-added events) in a later phase. Filters past dates.
+ * Surfaced reminders are 100% real:
+ *
+ *   1. Document reminders — pre-mapped from `useDocumentsStore` via
+ *      `computeDocumentReminders` (separate pure lib in `@/lib/document-reminders`).
+ *      Empty list when the user has no documents.
+ *
+ *   2. 確定申告 — system-level "annual tax filing deadline" cue. Surfaced
+ *      ONLY when (a) user has a Calculator result on file (`hasKakuteiContext`)
+ *      AND (b) the next March 15 is within 90 days. Outside that window it's
+ *      noise — kept out of the list intentionally.
+ *
+ * No placeholder zairyuCard / Dec 31 — those required user data which we
+ * pull through the documents path.
  */
-function computeUpcomingReminders(now: Date): readonly UpcomingReminder[] {
-  const candidates: Array<{ i18nKey: string; date: Date }> = [
-    { i18nKey: 'kakuteiShinkoku', date: nextKakuteiShinkokuDeadline(now) },
-    // Real impl reads user's renewal date from profile; placeholder is Dec 31.
-    { i18nKey: 'zairyuCard', date: new Date(now.getFullYear(), 11, 31) },
-  ];
-  return candidates
-    .map((c) => ({ ...c, daysLeft: daysBetween(now, c.date) }))
-    .filter((r) => r.daysLeft >= 0)
-    .sort((a, b) => a.daysLeft - b.daysLeft);
+function computeUpcomingReminders(
+  now: Date,
+  reminders: ReminderSources,
+): readonly UpcomingReminder[] {
+  const out: UpcomingReminder[] = [];
+
+  if (reminders.documentReminders && reminders.documentReminders.length > 0) {
+    for (const r of reminders.documentReminders) {
+      out.push({ i18nKey: r.i18nKey, date: r.date, daysLeft: r.daysLeft });
+    }
+  }
+
+  if (reminders.hasKakuteiContext) {
+    const date = nextKakuteiShinkokuDeadline(now);
+    const daysLeft = daysBetween(now, date);
+    if (daysLeft >= 0 && daysLeft <= KAKUTEI_WINDOW_DAYS) {
+      out.push({ i18nKey: 'kakuteiShinkoku', date, daysLeft });
+    }
+  }
+
+  return out.sort((a, b) => a.daysLeft - b.daysLeft);
 }
 
 function nextKakuteiShinkokuDeadline(now: Date): Date {
