@@ -25,7 +25,15 @@ export interface RecurringExpense {
   note?: string;
   /** User can pause without deleting (e.g. cancelled subscription temp). */
   active: boolean;
+  /**
+   * Default false. When false, `useRecurringSync` does NOT auto-create
+   * entries — instead the Kakeibo screen surfaces the row as "pending"
+   * with a manual "Thêm vào tháng này" button. Use this for charges
+   * whose amounts fluctuate (utility bills) and reserve `autoPost=true`
+   * for fixed-amount recurring (rent, subscriptions).
+   */
+  autoPost: boolean;
   createdAt: string;
-  /** "YYYY-MM" of the month an auto-entry was last generated from this row. */
+  /** "YYYY-MM" of the month an entry was last generated from this row. */
   lastGeneratedYearMonth?: string;
 }

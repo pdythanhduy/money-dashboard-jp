@@ -394,7 +394,12 @@
       "overBudget": "Vượt trung bình",
       "noBudget": "Chưa đặt budget — vào Kakeibo để thiết lập",
       "viewAll": "Xem chi tiết",
-      "quickAddFab": "Thêm chi nhanh"
+      "quickAddFab": "Thêm chi nhanh",
+      "fixedCostTotal": "Chi cố định {{amount}}",
+      "remainingMonth": "Còn {{amount}} đến cuối tháng",
+      "statusSafe": "An toàn",
+      "statusWarning": "Cảnh báo",
+      "statusDanger": "Nguy hiểm"
     },
     "upcoming": {
       "title": "Sắp tới hạn",
@@ -957,6 +962,10 @@
       "editTitle": "Sửa khoản định kỳ",
       "activeLabel": "Đang bật",
       "autoNote": "Tự động tạo entry vào ngày này mỗi tháng",
+      "autoPostLabel": "Tự động ghi",
+      "autoPostHint": "Nếu bật, app sẽ tự ghi khoản này mỗi tháng khi đến ngày.",
+      "pendingThisMonth": "Tới hạn — chờ xác nhận",
+      "addThisMonth": "Thêm vào tháng này",
       "limitReached": "Đã đạt giới hạn {{max}} khoản định kỳ"
     },
     "quickAdd": {

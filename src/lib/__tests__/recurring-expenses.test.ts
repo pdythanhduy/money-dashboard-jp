@@ -12,6 +12,7 @@ function rec(overrides: Partial<RecurringExpense> = {}): RecurringExpense {
     category: overrides.category ?? 'utilities',
     dayOfMonth: overrides.dayOfMonth ?? 15,
     active: overrides.active ?? true,
+    autoPost: overrides.autoPost ?? false,
     createdAt: overrides.createdAt ?? '2026-01-01T00:00:00.000Z',
     ...(overrides.lastGeneratedYearMonth !== undefined
       ? { lastGeneratedYearMonth: overrides.lastGeneratedYearMonth }

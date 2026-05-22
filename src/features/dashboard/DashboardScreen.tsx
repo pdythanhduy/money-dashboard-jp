@@ -48,9 +48,16 @@ export function DashboardScreen() {
   const furusatoDonations = useFurusatoStore((s) => s.donations);
   const goals = useGoalsStore((s) => s.goals);
   const kakeiboEntries = useKakeiboStore((s) => s.entries);
+  const kakeiboRecurrings = useKakeiboStore((s) => s.recurrings);
   const remittanceEntries = useRemittanceStore((s) => s.entries);
   const remittanceGoal = useRemittanceStore((s) => s.annualGoalJPY);
   const takeHomeMonthly = useCalculatorStore((s) => s.lastResult?.takeHomeMonthly ?? 0);
+
+  // FAB only makes sense if the user has anything to budget AGAINST or
+  // any existing log activity. Otherwise the floating "+" lands on an
+  // empty dashboard with no context — confusing.
+  const showQuickAddFab =
+    takeHomeMonthly > 0 || kakeiboEntries.length > 0 || kakeiboRecurrings.length > 0;
 
   const remittanceThisYear = (() => {
     if (remittanceEntries.length === 0) return null;
@@ -461,30 +468,32 @@ export function DashboardScreen() {
         </View>
       </ScrollView>
 
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={t('dashboard.dailySpending.quickAddFab')}
-        onPress={() => setQuickAddOpen(true)}
-        style={({ pressed }) => ({
-          position: 'absolute',
-          right: spacing.lg,
-          bottom: spacing.lg,
-          width: 56,
-          height: 56,
-          borderRadius: 28,
-          backgroundColor: colors.brand,
-          alignItems: 'center',
-          justifyContent: 'center',
-          opacity: pressed ? 0.85 : 1,
-          shadowColor: '#000',
-          shadowOpacity: 0.25,
-          shadowRadius: 8,
-          shadowOffset: { width: 0, height: 2 },
-          elevation: 4,
-        })}
-      >
-        <Ionicons name="add" size={28} color={colors.textInverse} />
-      </Pressable>
+      {showQuickAddFab ? (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t('dashboard.dailySpending.quickAddFab')}
+          onPress={() => setQuickAddOpen(true)}
+          style={({ pressed }) => ({
+            position: 'absolute',
+            right: spacing.lg,
+            bottom: spacing.lg,
+            width: 56,
+            height: 56,
+            borderRadius: 28,
+            backgroundColor: colors.brand,
+            alignItems: 'center',
+            justifyContent: 'center',
+            opacity: pressed ? 0.85 : 1,
+            shadowColor: '#000',
+            shadowOpacity: 0.25,
+            shadowRadius: 8,
+            shadowOffset: { width: 0, height: 2 },
+            elevation: 4,
+          })}
+        >
+          <Ionicons name="add" size={28} color={colors.textInverse} />
+        </Pressable>
+      ) : null}
 
       <QuickAddExpenseModal visible={quickAddOpen} onClose={() => setQuickAddOpen(false)} />
     </View>

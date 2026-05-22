@@ -394,7 +394,12 @@
       "overBudget": "平均を超過",
       "noBudget": "予算未設定 — 家計簿で設定してください",
       "viewAll": "詳細を見る",
-      "quickAddFab": "簡単に追加"
+      "quickAddFab": "簡単に追加",
+      "fixedCostTotal": "固定費 {{amount}}",
+      "remainingMonth": "月末まで残り {{amount}}",
+      "statusSafe": "安全",
+      "statusWarning": "注意",
+      "statusDanger": "危険"
     },
     "upcoming": {
       "title": "もうすぐ期限",
@@ -957,6 +962,10 @@
       "editTitle": "定期支出を編集",
       "activeLabel": "有効",
       "autoNote": "毎月この日に自動でエントリ作成",
+      "autoPostLabel": "自動記録",
+      "autoPostHint": "オンにすると、毎月指定日に自動で記録します。",
+      "pendingThisMonth": "期限到来 — 承認待ち",
+      "addThisMonth": "今月に追加",
       "limitReached": "定期支出は{{max}}件までです"
     },
     "quickAdd": {

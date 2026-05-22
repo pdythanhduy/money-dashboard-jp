@@ -24,6 +24,7 @@ import {
   filterEntriesByMonth,
   type KakeiboEntry,
 } from '@/lib/kakeibo-math';
+import { findDueRecurrings, isoFromDayOfMonth } from '@/lib/recurring-expenses';
 import { useCalculatorStore } from '@/store/calculatorStore';
 import { useKakeiboStore } from '@/store/kakeiboStore';
 import { useTheme } from '@/theme';
@@ -42,7 +43,33 @@ export function KakeiboScreen() {
   const budgets = useKakeiboStore((s) => s.budgets);
   const recurrings = useKakeiboStore((s) => s.recurrings);
   const toggleRecurringActive = useKakeiboStore((s) => s.toggleRecurringActive);
+  const addEntry = useKakeiboStore((s) => s.addEntry);
+  const markRecurringGenerated = useKakeiboStore((s) => s.markRecurringGenerated);
   const takeHomeMonthly = useCalculatorStore((s) => s.lastResult?.takeHomeMonthly);
+
+  // IDs of recurrings that are due THIS month but haven't auto-posted
+  // (autoPost=false). They render with a "Thêm vào tháng này" button.
+  const pendingRecurringIds = useMemo(() => {
+    const due = findDueRecurrings(recurrings, new Date());
+    return new Set(due.filter((r) => !r.autoPost).map((r) => r.id));
+  }, [recurrings]);
+
+  const handlePostRecurring = useCallback(
+    (r: RecurringExpense) => {
+      const now = new Date();
+      const iso = isoFromDayOfMonth(now.getFullYear(), now.getMonth() + 1, r.dayOfMonth);
+      addEntry({
+        date: iso,
+        amount: r.amount,
+        category: r.category,
+        label: r.name,
+        isRecurring: true,
+        ...(r.note ? { note: r.note } : {}),
+      });
+      markRecurringGenerated(r.id, `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`);
+    },
+    [addEntry, markRecurringGenerated],
+  );
 
   // Materialize due recurrings into entries on mount / date change.
   useRecurringSync();
@@ -231,9 +258,20 @@ export function KakeiboScreen() {
               </Text>
             ) : (
               <View style={{ paddingHorizontal: spacing.lg, paddingTop: spacing.xs, gap: spacing.xs }}>
-                {recurrings.map((r) => (
-                  <Pressable
+                {recurrings.map((r) => {
+                  const isPending = pendingRecurringIds.has(r.id);
+                  return (
+                  <View
                     key={r.id}
+                    style={{
+                      borderRadius: radius.sm,
+                      backgroundColor: colors.surfaceElevated,
+                      borderLeftWidth: isPending ? 3 : 0,
+                      borderLeftColor: isPending ? colors.warning : 'transparent',
+                      opacity: r.active ? 1 : 0.55,
+                    }}
+                  >
+                  <Pressable
                     accessibilityRole="button"
                     accessibilityLabel={`${r.name} ¥${r.amount}`}
                     onPress={() => {
@@ -245,9 +283,7 @@ export function KakeiboScreen() {
                       alignItems: 'center',
                       gap: spacing.sm,
                       padding: spacing.sm,
-                      borderRadius: radius.sm,
-                      backgroundColor: colors.surfaceElevated,
-                      opacity: pressed ? 0.85 : r.active ? 1 : 0.55,
+                      opacity: pressed ? 0.85 : 1,
                     })}
                   >
                     <Ionicons
@@ -263,6 +299,11 @@ export function KakeiboScreen() {
                         {t('kakeibo.recurring.dayLabel', { day: r.dayOfMonth })} ·{' '}
                         {formatCurrency(r.amount)}
                       </Text>
+                      {isPending ? (
+                        <Text style={[typography.caption, { color: colors.warning, fontWeight: '600', marginTop: 2 }]}>
+                          {t('kakeibo.recurring.pendingThisMonth')}
+                        </Text>
+                      ) : null}
                     </View>
                     <Pressable
                       accessibilityRole="switch"
@@ -288,7 +329,30 @@ export function KakeiboScreen() {
                       </Text>
                     </Pressable>
                   </Pressable>
-                ))}
+                  {isPending ? (
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityLabel={t('kakeibo.recurring.addThisMonth')}
+                      onPress={() => handlePostRecurring(r)}
+                      style={({ pressed }) => ({
+                        alignSelf: 'flex-start',
+                        marginLeft: spacing.sm + 16 + spacing.sm,
+                        marginBottom: spacing.sm,
+                        paddingHorizontal: spacing.md,
+                        paddingVertical: spacing.xs,
+                        borderRadius: radius.pill,
+                        backgroundColor: colors.warning,
+                        opacity: pressed ? 0.85 : 1,
+                      })}
+                    >
+                      <Text style={[typography.caption, { color: colors.textInverse, fontWeight: '700' }]}>
+                        + {t('kakeibo.recurring.addThisMonth')}
+                      </Text>
+                    </Pressable>
+                  ) : null}
+                  </View>
+                  );
+                })}
               </View>
             )}
 

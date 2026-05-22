@@ -48,6 +48,8 @@ interface AddRecurringInput {
   dayOfMonth: number;
   note?: string;
   active?: boolean;
+  /** Defaults to false — see RecurringExpense.autoPost docs. */
+  autoPost?: boolean;
 }
 
 interface KakeiboStore {
@@ -69,6 +71,7 @@ interface KakeiboStore {
   updateRecurring: (id: string, partial: Partial<Omit<RecurringExpense, 'id' | 'createdAt'>>) => void;
   removeRecurring: (id: string) => void;
   toggleRecurringActive: (id: string) => void;
+  toggleRecurringAutoPost: (id: string) => void;
   markRecurringGenerated: (id: string, yearMonth: string) => void;
   clearRecurrings: () => void;
 
@@ -162,6 +165,7 @@ export const useKakeiboStore = create<KakeiboStore>()(
           category: input.category,
           dayOfMonth: Math.min(Math.max(1, Math.floor(input.dayOfMonth)), 31),
           active: input.active ?? true,
+          autoPost: input.autoPost ?? false,
           createdAt: new Date().toISOString(),
           ...(input.note ? { note: input.note } : {}),
         };
@@ -185,6 +189,14 @@ export const useKakeiboStore = create<KakeiboStore>()(
         set({
           recurrings: get().recurrings.map((r) =>
             r.id === id ? { ...r, active: !r.active } : r,
+          ),
+        });
+      },
+
+      toggleRecurringAutoPost: (id) => {
+        set({
+          recurrings: get().recurrings.map((r) =>
+            r.id === id ? { ...r, autoPost: !r.autoPost } : r,
           ),
         });
       },

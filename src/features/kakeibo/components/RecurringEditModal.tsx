@@ -34,6 +34,7 @@ interface DraftState {
   dayOfMonth: number;
   note: string;
   active: boolean;
+  autoPost: boolean;
 }
 
 function emptyDraft(): DraftState {
@@ -44,6 +45,7 @@ function emptyDraft(): DraftState {
     dayOfMonth: 1,
     note: '',
     active: true,
+    autoPost: false,
   };
 }
 
@@ -55,6 +57,7 @@ function fromRecurring(r: RecurringExpense): DraftState {
     dayOfMonth: r.dayOfMonth,
     note: r.note ?? '',
     active: r.active,
+    autoPost: r.autoPost,
   };
 }
 
@@ -93,6 +96,7 @@ export function RecurringEditModal({ visible, editing, onClose }: Props) {
       category: draft.category,
       dayOfMonth: draft.dayOfMonth,
       active: draft.active,
+      autoPost: draft.autoPost,
       ...(draft.note.trim() ? { note: draft.note.trim() } : {}),
     };
     if (editing) {
@@ -321,6 +325,32 @@ export function RecurringEditModal({ visible, editing, onClose }: Props) {
                 accessibilityLabel={t('kakeibo.recurring.activeLabel')}
                 value={draft.active}
                 onValueChange={(v) => setDraft((d) => ({ ...d, active: v }))}
+                trackColor={{ false: colors.border, true: colors.brand }}
+                thumbColor={colors.textInverse}
+              />
+            </View>
+
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'flex-start',
+                justifyContent: 'space-between',
+                gap: spacing.sm,
+                paddingVertical: spacing.xs,
+              }}
+            >
+              <View style={{ flex: 1 }}>
+                <Text style={[typography.body, { color: colors.text }]}>
+                  {t('kakeibo.recurring.autoPostLabel')}
+                </Text>
+                <Text style={[typography.caption, { color: colors.textSecondary, marginTop: 2 }]}>
+                  {t('kakeibo.recurring.autoPostHint')}
+                </Text>
+              </View>
+              <Switch
+                accessibilityLabel={t('kakeibo.recurring.autoPostLabel')}
+                value={draft.autoPost}
+                onValueChange={(v) => setDraft((d) => ({ ...d, autoPost: v }))}
                 trackColor={{ false: colors.border, true: colors.brand }}
                 thumbColor={colors.textInverse}
               />

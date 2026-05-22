@@ -34,7 +34,10 @@ export function useRecurringSync(): void {
 
   useEffect(() => {
     const now = new Date();
-    const due = findDueRecurrings(recurrings, now);
+    // Only auto-post the rows the user explicitly opted in. Pending (active
+    // + due + autoPost=false) rows are surfaced by KakeiboScreen with a
+    // "Thêm vào tháng này" button so the user can confirm the amount first.
+    const due = findDueRecurrings(recurrings, now).filter((r) => r.autoPost);
     if (due.length === 0) return;
 
     const ym = yearMonthOf(now);

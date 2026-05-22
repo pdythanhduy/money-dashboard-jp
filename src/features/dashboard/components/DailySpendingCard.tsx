@@ -5,6 +5,8 @@ import { Pressable, Text, View } from 'react-native';
 
 import { computeDailySpending } from '@/lib/daily-spending';
 import { formatCurrency } from '@/lib/format';
+import { computeLivingCost, type LivingCostStatus } from '@/lib/living-cost-math';
+import { useCalculatorStore } from '@/store/calculatorStore';
 import { useKakeiboStore } from '@/store/kakeiboStore';
 import { useTheme } from '@/theme';
 
@@ -18,22 +20,67 @@ export function DailySpendingCard({ onPress }: Props) {
   const { colors, typography, spacing, radius, isDark } = useTheme();
   const entries = useKakeiboStore((s) => s.entries);
   const budgets = useKakeiboStore((s) => s.budgets);
+  const recurrings = useKakeiboStore((s) => s.recurrings);
+  const takeHomeMonthly = useCalculatorStore((s) => s.lastResult?.takeHomeMonthly ?? 0);
 
-  const result = useMemo(() => computeDailySpending(entries, budgets, new Date()), [entries, budgets]);
+  // Prefer salary-based math when we have take-home from Calculator.
+  // Fall back to budget-sum math when only budgets are configured.
+  const mode: 'salary' | 'budget' = takeHomeMonthly > 0 ? 'salary' : 'budget';
+
+  const salary = useMemo(
+    () =>
+      mode === 'salary'
+        ? computeLivingCost({
+            takeHomeMonthly,
+            entries,
+            recurrings,
+            now: new Date(),
+          })
+        : null,
+    [mode, takeHomeMonthly, entries, recurrings],
+  );
+  const budget = useMemo(
+    () => (mode === 'budget' ? computeDailySpending(entries, budgets, new Date()) : null),
+    [mode, entries, budgets],
+  );
+
+  const todaySpent = salary?.todaySpent ?? budget?.todaySpent ?? 0;
+
+  const status: LivingCostStatus | 'no_budget' = salary
+    ? salary.status
+    : budget?.todayVsAvg === 'no_budget'
+      ? 'no_budget'
+      : budget?.todayVsAvg === 'over'
+        ? 'danger'
+        : 'safe';
 
   const heroColor =
-    result.todayVsAvg === 'over'
+    status === 'danger'
       ? colors.danger
-      : result.todayVsAvg === 'under'
-        ? colors.success
-        : colors.brand;
+      : status === 'warning'
+        ? colors.warning
+        : status === 'safe'
+          ? colors.success
+          : colors.brand;
 
-  const subline = (() => {
-    if (result.todayVsAvg === 'no_budget') return t('dashboard.dailySpending.noBudget');
-    return t('dashboard.dailySpending.dailyRemaining', {
-      amount: formatCurrency(Math.max(0, result.dailyRemainingAvg)),
-    });
-  })();
+  const statusLabel =
+    status === 'danger'
+      ? t('dashboard.dailySpending.statusDanger')
+      : status === 'warning'
+        ? t('dashboard.dailySpending.statusWarning')
+        : status === 'safe'
+          ? t('dashboard.dailySpending.statusSafe')
+          : null;
+
+  const dailyLine = salary
+    ? t('dashboard.dailySpending.dailyRemaining', {
+        amount: formatCurrency(Math.max(0, salary.dailyAllowance)),
+      })
+    : budget && budget.todayVsAvg !== 'no_budget'
+      ? t('dashboard.dailySpending.dailyRemaining', {
+          amount: formatCurrency(Math.max(0, budget.dailyRemainingAvg)),
+        })
+      : t('dashboard.dailySpending.noBudget');
 
   return (
     <Pressable
@@ -66,12 +113,23 @@ export function DailySpendingCard({ onPress }: Props) {
         <Ionicons name="chevron-forward" size={18} color={colors.textSecondary} />
       </View>
       <Text style={[typography.largeTitle, { color: heroColor, fontWeight: '800', marginTop: spacing.xs }]}>
-        {formatCurrency(result.todaySpent)}
+        {formatCurrency(todaySpent)}
       </Text>
       <Text style={[typography.caption, { color: colors.textSecondary, marginTop: 2 }]}>
-        {subline}
+        {dailyLine}
       </Text>
-      {result.todayVsAvg !== 'no_budget' ? (
+      {salary && salary.totalFixedCost > 0 ? (
+        <Text style={[typography.caption, { color: colors.textSecondary, marginTop: 2 }]}>
+          {t('dashboard.dailySpending.fixedCostTotal', {
+            amount: formatCurrency(salary.totalFixedCost),
+          })}
+          {' · '}
+          {t('dashboard.dailySpending.remainingMonth', {
+            amount: formatCurrency(Math.max(0, salary.remainingThisMonth)),
+          })}
+        </Text>
+      ) : null}
+      {statusLabel ? (
         <View
           style={{
             alignSelf: 'flex-start',
@@ -79,13 +137,11 @@ export function DailySpendingCard({ onPress }: Props) {
             paddingHorizontal: spacing.sm,
             paddingVertical: 2,
             borderRadius: radius.pill,
-            backgroundColor: result.todayVsAvg === 'over' ? colors.danger : colors.success,
+            backgroundColor: heroColor,
           }}
         >
           <Text style={[typography.caption, { color: colors.textInverse, fontWeight: '700' }]}>
-            {result.todayVsAvg === 'over'
-              ? t('dashboard.dailySpending.overBudget')
-              : t('dashboard.dailySpending.underBudget')}
+            {statusLabel}
           </Text>
         </View>
       ) : null}
