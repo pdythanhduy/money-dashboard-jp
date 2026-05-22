@@ -204,6 +204,20 @@ interface InsightInput {
 
 const HIGH_FOOD_RATIO_THRESHOLD = 0.35;
 const SAFE_MONTH_RATIO = 0.70;
+/** Avoid "high food" insight on near-empty months — needs a meaningful base. */
+const HIGH_FOOD_MIN_TOTAL = 10_000;
+/** Avoid "safe month" celebration on day 1 — wait until the month is at least
+ *  half-over OR the user has enough entries to make the average meaningful. */
+const SAFE_MONTH_MIN_MONTH_PROGRESS = 0.5;
+const SAFE_MONTH_MIN_ENTRY_COUNT = 7;
+
+function monthProgress(yearMonth: string, now: Date): number {
+  const { year, month } = ymToParts(yearMonth);
+  // Only meaningful if `now` is inside the same month.
+  if (year !== now.getFullYear() || month !== now.getMonth() + 1) return 1;
+  const daysInMonth = getDaysInMonth(year, month);
+  return now.getDate() / daysInMonth;
+}
 
 export function buildSpendingInsights(input: InsightInput): SpendingInsight[] {
   const now = input.now ?? new Date();
@@ -260,7 +274,7 @@ export function buildSpendingInsights(input: InsightInput): SpendingInsight[] {
     }
   }
 
-  if (report.totalSpent > 0) {
+  if (report.totalSpent >= HIGH_FOOD_MIN_TOTAL) {
     const food = report.byCategory.find((c) => c.category === 'food');
     if (food && food.percentOfMonth > HIGH_FOOD_RATIO_THRESHOLD) {
       insights.push({
@@ -276,7 +290,9 @@ export function buildSpendingInsights(input: InsightInput): SpendingInsight[] {
   if (
     input.takeHomeMonthly !== undefined &&
     input.takeHomeMonthly > 0 &&
-    report.totalSpent < input.takeHomeMonthly * SAFE_MONTH_RATIO
+    report.totalSpent < input.takeHomeMonthly * SAFE_MONTH_RATIO &&
+    (monthProgress(input.yearMonth, now) >= SAFE_MONTH_MIN_MONTH_PROGRESS ||
+      report.entryCount >= SAFE_MONTH_MIN_ENTRY_COUNT)
   ) {
     insights.push({
       type: 'safe_month',

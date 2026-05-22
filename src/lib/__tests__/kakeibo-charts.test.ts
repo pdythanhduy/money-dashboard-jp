@@ -155,8 +155,38 @@ describe('buildSpendingInsights', () => {
       entries: [e('a', '2026-05-10', 100_000, 'rent')],
       yearMonth: '2026-05',
       takeHomeMonthly: 200_000,
-      now: new Date(2026, 4, 22),
+      now: new Date(2026, 4, 22), // day 22/31 ≈ 71% → ≥ 50% month-progress gate passes
     });
     expect(out.find((i) => i.type === 'safe_month')).toBeDefined();
+  });
+
+  it('does NOT emit safe_month on day 1 with tiny spending (gate blocks)', () => {
+    const out = buildSpendingInsights({
+      entries: [e('a', '2026-05-01', 100, 'food')],
+      yearMonth: '2026-05',
+      takeHomeMonthly: 200_000,
+      now: new Date(2026, 4, 1),
+    });
+    expect(out.find((i) => i.type === 'safe_month')).toBeUndefined();
+  });
+
+  it('emits safe_month early in month when entry count ≥ 7 (entry-count gate)', () => {
+    const entries = Array.from({ length: 7 }, (_, i) => e(`e${i}`, '2026-05-03', 500, 'food'));
+    const out = buildSpendingInsights({
+      entries,
+      yearMonth: '2026-05',
+      takeHomeMonthly: 200_000,
+      now: new Date(2026, 4, 3),
+    });
+    expect(out.find((i) => i.type === 'safe_month')).toBeDefined();
+  });
+
+  it('does NOT emit high_food_ratio when total monthly spend < ¥10,000', () => {
+    const out = buildSpendingInsights({
+      entries: [e('a', '2026-05-10', 4_000, 'food'), e('b', '2026-05-10', 2_000, 'rent')],
+      yearMonth: '2026-05',
+      now: new Date(2026, 4, 22),
+    });
+    expect(out.find((i) => i.type === 'high_food_ratio')).toBeUndefined();
   });
 });

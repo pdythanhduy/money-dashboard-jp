@@ -436,7 +436,9 @@ export function KakeiboScreen() {
                 <View style={{ marginTop: spacing.md, paddingHorizontal: spacing.lg }}>
                   <Text style={[typography.headline, { color: colors.text }]}>{t('kakeibo.entries.title')}</Text>
                 </View>
-                <CategoryFilter value={filter} onChange={setFilter} />
+                {/* Category filter chips are only meaningful when the entry list is
+                    the primary view (List tab). Hide on Overview to reduce noise. */}
+                {tab === 'list' ? <CategoryFilter value={filter} onChange={setFilter} /> : null}
                 {filteredEntries.length === 0 && entries.length > 0 ? (
                   <Text
                     style={[
