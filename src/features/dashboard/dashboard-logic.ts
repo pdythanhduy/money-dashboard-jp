@@ -53,17 +53,25 @@ const EMPTY: Omit<DashboardData, 'today' | 'greeting' | 'daysUntilPayday' | 'isP
   averageDaily: 0,
 };
 
+export interface ReminderSources {
+  /** ISO date of user's zairyu card expiry; null if not added. */
+  zairyuCardExpiry?: string | null;
+  /** Whether user has any kakutei wizard draft in progress / has run Calculator. */
+  hasKakuteiContext?: boolean;
+}
+
 export function computeDashboardData(
   now: Date,
   result: TakeHomeResult | null,
   payday: number = DEFAULT_PAYDAY,
+  reminders: ReminderSources = {},
 ): DashboardData {
   const greeting = getGreeting(now);
   const daysUntilPayday = getDaysUntilPayday(now, payday);
   const isPayday = daysUntilPayday === 0;
   const daysInMonth = getDaysInMonth(now);
   const daysPassed = getDayOfMonth(now);
-  const upcomingReminders = computeUpcomingReminders(now);
+  const upcomingReminders = computeUpcomingReminders(now, reminders);
 
   if (!result) {
     return {
@@ -117,19 +125,41 @@ export function computeDashboardData(
 }
 
 /**
- * Stub upcoming reminders. Replace with a real reminder source (SQLite
- * table + user-added events) in a later phase. Filters past dates.
+ * Surface a reminder ONLY when the user has actual data backing it.
+ *
+ * - 確定申告 (kakuteiShinkoku): only within 90 days of next March 15 deadline,
+ *   AND only if the user has run the Calculator at least once (otherwise the
+ *   wizard has nothing to summarize).
+ * - 在留カード (zairyuCard): only if user added one via Documents tab with an
+ *   expiry date; surface when within 90 days of that expiry.
+ *
+ * Past-dated reminders are dropped.
  */
-function computeUpcomingReminders(now: Date): readonly UpcomingReminder[] {
-  const candidates: Array<{ i18nKey: string; date: Date }> = [
-    { i18nKey: 'kakuteiShinkoku', date: nextKakuteiShinkokuDeadline(now) },
-    // Real impl reads user's renewal date from profile; placeholder is Dec 31.
-    { i18nKey: 'zairyuCard', date: new Date(now.getFullYear(), 11, 31) },
-  ];
-  return candidates
-    .map((c) => ({ ...c, daysLeft: daysBetween(now, c.date) }))
-    .filter((r) => r.daysLeft >= 0)
-    .sort((a, b) => a.daysLeft - b.daysLeft);
+function computeUpcomingReminders(
+  now: Date,
+  reminders: ReminderSources,
+): readonly UpcomingReminder[] {
+  const out: Array<{ i18nKey: string; date: Date; daysLeft: number }> = [];
+
+  if (reminders.hasKakuteiContext) {
+    const date = nextKakuteiShinkokuDeadline(now);
+    const daysLeft = daysBetween(now, date);
+    if (daysLeft >= 0 && daysLeft <= 90) {
+      out.push({ i18nKey: 'kakuteiShinkoku', date, daysLeft });
+    }
+  }
+
+  if (reminders.zairyuCardExpiry) {
+    const date = new Date(reminders.zairyuCardExpiry);
+    if (!Number.isNaN(date.getTime())) {
+      const daysLeft = daysBetween(now, date);
+      if (daysLeft >= 0 && daysLeft <= 90) {
+        out.push({ i18nKey: 'zairyuCard', date, daysLeft });
+      }
+    }
+  }
+
+  return out.sort((a, b) => a.daysLeft - b.daysLeft);
 }
 
 function nextKakuteiShinkokuDeadline(now: Date): Date {

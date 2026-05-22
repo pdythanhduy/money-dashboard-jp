@@ -111,31 +111,62 @@ describe('computeDashboardData — with stored result', () => {
 describe('computeDashboardData — upcoming reminders', () => {
   const result = makeResult();
 
-  it('includes 確定申告 deadline before March 15', () => {
-    const data = computeDashboardData(new Date(2027, 1, 1), result);
+  it('returns no reminders when no inputs are provided (user has no data)', () => {
+    const data = computeDashboardData(new Date(2026, 4, 22), result);
+    expect(data.upcomingReminders).toEqual([]);
+  });
+
+  it('surfaces 確定申告 when hasKakuteiContext=true and within 90 days of March 15', () => {
+    const data = computeDashboardData(new Date(2027, 1, 1), result, undefined, {
+      hasKakuteiContext: true,
+    });
     const kakutei = data.upcomingReminders.find((r) => r.i18nKey === 'kakuteiShinkoku');
     expect(kakutei).toBeDefined();
     // Feb 1 → March 15 = 42 days
     expect(kakutei?.daysLeft).toBe(42);
   });
 
-  it('rolls forward 確定申告 after March 15 passes', () => {
-    const data = computeDashboardData(new Date(2026, 5, 1), result); // Jun 1 2026
+  it('rolls 確定申告 forward to NEXT year after March 15 passes', () => {
+    // Dec 16 2026 → March 15 2027 = 89 days (just inside 90-day window)
+    const data = computeDashboardData(new Date(2026, 11, 16), result, undefined, {
+      hasKakuteiContext: true,
+    });
     const kakutei = data.upcomingReminders.find((r) => r.i18nKey === 'kakuteiShinkoku');
     expect(kakutei).toBeDefined();
-    // Should point to 2027-03-15
     expect(kakutei?.date.getFullYear()).toBe(2027);
   });
 
-  it('filters out past dates', () => {
-    const data = computeDashboardData(new Date(2027, 0, 1), result); // Jan 1 2027
-    // Dec 31 2027 is in the future
-    const zairyu = data.upcomingReminders.find((r) => r.i18nKey === 'zairyuCard');
-    expect(zairyu?.daysLeft).toBeGreaterThanOrEqual(0);
+  it('hides 確定申告 when beyond 90-day window', () => {
+    // Jun 1 2026 → March 15 2027 = ~287 days → out of window
+    const data = computeDashboardData(new Date(2026, 5, 1), result, undefined, {
+      hasKakuteiContext: true,
+    });
+    expect(data.upcomingReminders.find((r) => r.i18nKey === 'kakuteiShinkoku')).toBeUndefined();
   });
 
-  it('sorted ascending by daysLeft', () => {
-    const data = computeDashboardData(new Date(2026, 4, 19), result);
+  it('surfaces 在留カード when expiry is set and within 90 days', () => {
+    // Today: May 22 2026; expiry July 22 2026 → 61 days
+    const data = computeDashboardData(new Date(2026, 4, 22), result, undefined, {
+      zairyuCardExpiry: '2026-07-22',
+    });
+    const zairyu = data.upcomingReminders.find((r) => r.i18nKey === 'zairyuCard');
+    expect(zairyu).toBeDefined();
+    expect(zairyu?.daysLeft).toBeGreaterThanOrEqual(0);
+    expect(zairyu?.daysLeft).toBeLessThanOrEqual(90);
+  });
+
+  it('hides 在留カード when expiry is null or far in the future', () => {
+    const data = computeDashboardData(new Date(2026, 4, 22), result, undefined, {
+      zairyuCardExpiry: '2028-01-01',
+    });
+    expect(data.upcomingReminders.find((r) => r.i18nKey === 'zairyuCard')).toBeUndefined();
+  });
+
+  it('sorts reminders ascending by daysLeft', () => {
+    const data = computeDashboardData(new Date(2026, 11, 16), result, undefined, {
+      hasKakuteiContext: true,
+      zairyuCardExpiry: '2026-12-25',
+    });
     const days = data.upcomingReminders.map((r) => r.daysLeft);
     expect(days).toEqual([...days].sort((a, b) => a - b));
   });

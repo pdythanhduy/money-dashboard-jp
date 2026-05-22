@@ -15,7 +15,7 @@ interface GreetingHeaderProps {
 }
 
 export function GreetingHeader({ greeting, today, daysUntilPayday, isPayday }: GreetingHeaderProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { colors, typography, spacing, radius } = useTheme();
 
   // Navy gradient — slightly lighter at the top so the avatar pops.
@@ -56,12 +56,9 @@ export function GreetingHeader({ greeting, today, daysUntilPayday, isPayday }: G
             </View>
           </View>
 
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, marginBottom: spacing.sm }}>
+          <View style={{ marginBottom: spacing.sm }}>
             <Text style={[typography.footnote, { color: 'rgba(255,255,255,0.85)' }]}>
-              {formatDateVi(today)}
-            </Text>
-            <Text style={[typography.footnote, { color: 'rgba(255,255,255,0.65)' }]}>
-              {formatDateJa(today)}
+              {i18n.language === 'ja' ? formatDateJa(today) : formatDateVi(today)}
             </Text>
           </View>
 
