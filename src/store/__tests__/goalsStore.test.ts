@@ -26,6 +26,8 @@ jest.mock('expo-crypto', () => {
 });
 
 import {
+  getGoalCategory,
+  getGoalStatus,
   getSavedTotal,
   isGoalCompleted,
   MAX_GOALS,
@@ -126,5 +128,104 @@ describe('goalsStore.updateGoal + removeGoal + removeSavings + clearAll', () => 
     addGoal({ title: 'X', icon: 'piggy', targetAmount: 10 });
     clearAll();
     expect(useGoalsStore.getState().goals).toEqual([]);
+  });
+});
+
+describe('goalsStore — category + monthlyContribution + status (CP2 extensions)', () => {
+  it('persists category and monthlyContribution from addGoal input', () => {
+    const r = useGoalsStore.getState().addGoal({
+      title: 'Về Tết',
+      icon: 'airplane',
+      targetAmount: 200_000,
+      category: 'home_visit',
+      monthlyContribution: 25_000,
+    });
+    expect(r.goal?.category).toBe('home_visit');
+    expect(r.goal?.monthlyContribution).toBe(25_000);
+    expect(r.goal?.updatedAt).toBeDefined();
+  });
+
+  it('getGoalCategory defaults to "other" for legacy goals lacking the field', () => {
+    useGoalsStore.setState({
+      goals: [
+        {
+          id: 'legacy',
+          title: 'Old',
+          icon: 'piggy',
+          targetAmount: 1_000,
+          createdAt: '2026-01-01T00:00:00.000Z',
+          contributions: [],
+        },
+      ],
+    });
+    const g = useGoalsStore.getState().getGoal('legacy')!;
+    expect(getGoalCategory(g)).toBe('other');
+  });
+
+  it('getGoalStatus derives "active" from contributions when status field is absent', () => {
+    useGoalsStore.setState({
+      goals: [
+        {
+          id: 'legacy-active',
+          title: 'Old',
+          icon: 'piggy',
+          targetAmount: 1_000,
+          createdAt: '2026-01-01T00:00:00.000Z',
+          contributions: [{ id: 'c', date: '2026-05-01', amount: 100 }],
+        },
+        {
+          id: 'legacy-done',
+          title: 'Old',
+          icon: 'piggy',
+          targetAmount: 100,
+          createdAt: '2026-01-01T00:00:00.000Z',
+          contributions: [{ id: 'c', date: '2026-05-01', amount: 100 }],
+        },
+      ],
+    });
+    expect(getGoalStatus(useGoalsStore.getState().getGoal('legacy-active')!)).toBe('active');
+    expect(getGoalStatus(useGoalsStore.getState().getGoal('legacy-done')!)).toBe('completed');
+  });
+});
+
+describe('goalsStore — lifecycle transitions', () => {
+  it('pauseGoal / resumeGoal / cancelGoal / markGoalCompleted flip status and bump updatedAt', () => {
+    const { addGoal, pauseGoal, resumeGoal, cancelGoal, markGoalCompleted, getGoal } =
+      useGoalsStore.getState();
+    const g = addGoal({ title: 'Q', icon: 'piggy', targetAmount: 1_000 }).goal!;
+    expect(getGoal(g.id)?.updatedAt).toBeDefined();
+
+    pauseGoal(g.id);
+    expect(getGoal(g.id)?.status).toBe('paused');
+    expect(getGoal(g.id)?.updatedAt).toBeDefined();
+
+    resumeGoal(g.id);
+    expect(getGoal(g.id)?.status).toBe('active');
+
+    cancelGoal(g.id);
+    expect(getGoal(g.id)?.status).toBe('cancelled');
+
+    markGoalCompleted(g.id);
+    expect(getGoal(g.id)?.status).toBe('completed');
+    expect(isGoalCompleted(getGoal(g.id)!)).toBe(true);
+  });
+
+  it('sort order: active → paused → completed/cancelled', () => {
+    const { addGoal, pauseGoal, cancelGoal, markGoalCompleted } = useGoalsStore.getState();
+    const a = addGoal({ title: 'Active', icon: 'piggy', targetAmount: 1_000 }).goal!;
+    const p = addGoal({ title: 'Paused', icon: 'piggy', targetAmount: 1_000 }).goal!;
+    const c = addGoal({ title: 'Cancelled', icon: 'piggy', targetAmount: 1_000 }).goal!;
+    const d = addGoal({ title: 'Done', icon: 'piggy', targetAmount: 1_000 }).goal!;
+    pauseGoal(p.id);
+    cancelGoal(c.id);
+    markGoalCompleted(d.id);
+    const titles = useGoalsStore.getState().goals.map((g) => g.title);
+    // Active first; remaining order determined by createdAt within group.
+    expect(titles[0]).toBe('Active');
+    // Paused before completed/cancelled.
+    expect(titles.indexOf('Paused')).toBeLessThan(titles.indexOf('Done'));
+    expect(titles.indexOf('Paused')).toBeLessThan(titles.indexOf('Cancelled'));
+    // a.id, p.id, c.id, d.id all used.
+    expect([a.id, p.id, c.id, d.id]).toHaveLength(4);
   });
 });
