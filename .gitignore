@@ -44,3 +44,8 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# EAS submit credentials — never commit
+play-store-key.json
+*-service-account.json
+AuthKey_*.p8

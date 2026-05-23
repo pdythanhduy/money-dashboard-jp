@@ -55,8 +55,6 @@ try {
     interpolation: { escapeValue: false },
     returnNull: false,
   });
-  // eslint-disable-next-line no-console
-  console.log('[i18n] init dispatched, initial lng:', i18n.language);
 } catch (err) {
   // eslint-disable-next-line no-console
   console.error('[i18n] init failed', err);
