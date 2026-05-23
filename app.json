@@ -46,6 +46,12 @@
           "enableBackgroundRemoteNotifications": false
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "618e2cd5-6cba-4d4d-8769-1e53c2aa81d1"
+      }
+    },
+    "owner": "tt-duy"
   }
 }
