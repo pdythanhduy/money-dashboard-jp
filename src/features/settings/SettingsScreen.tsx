@@ -21,6 +21,10 @@ import { ThemePicker } from '@/features/settings/components/ThemePicker';
 import { buildExportPayload, wipeAllAppData } from '@/features/settings/data-actions';
 import { APP_BUILD, APP_VERSION } from '@/lib/app-info';
 import {
+  authenticateWithBiometrics,
+  isBiometricAvailable,
+} from '@/lib/biometric-auth';
+import {
   getPermissionStatus,
   requestNotificationPermission,
 } from '@/lib/notifications';
@@ -111,6 +115,32 @@ export function SettingsScreen() {
     setOpenModal(null);
     Alert.alert(t('settings.clear.doneToast'));
   }, [t]);
+
+  const handleFaceIdToggle = useCallback(
+    async (next: boolean) => {
+      if (!next) {
+        updateSetting('faceIdEnabled', false);
+        Alert.alert(t('security.biometric.disabled'));
+        return;
+      }
+      const availability = await isBiometricAvailable();
+      if (!availability.available) {
+        Alert.alert(t('security.biometric.unavailable'));
+        return;
+      }
+      const auth = await authenticateWithBiometrics(t('security.biometric.unlockSubtitle'));
+      if (!auth.success) {
+        // Stay off — never persist `true` without a successful prompt.
+        if (auth.error === 'cancelled') Alert.alert(t('security.biometric.cancelled'));
+        else if (auth.error === 'unavailable') Alert.alert(t('security.biometric.unavailable'));
+        else Alert.alert(t('security.biometric.failed'));
+        return;
+      }
+      updateSetting('faceIdEnabled', true);
+      Alert.alert(t('security.biometric.enableSuccess'));
+    },
+    [t, updateSetting],
+  );
 
   const openExternal = useCallback(
     (url: string) => {
@@ -206,7 +236,9 @@ export function SettingsScreen() {
             icon="finger-print-outline"
             label={t('settings.items.faceId')}
             value={settings.faceIdEnabled}
-            onChange={(v) => updateSetting('faceIdEnabled', v)}
+            onChange={(v) => {
+              void handleFaceIdToggle(v);
+            }}
           />
         </SettingsSection>
 
