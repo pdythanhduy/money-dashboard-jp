@@ -41,7 +41,7 @@ describe('EmptyState', () => {
     const r = renderTree(<EmptyState onPressCta={jest.fn()} />);
     const tree = JSON.stringify(r.toJSON());
     expect(tree).toContain('Bắt đầu hành trình tài chính');
-    expect(tree).toContain('Nhập thông tin lương');
+    expect(tree).toContain('Nhập lương để xem mỗi ngày còn được tiêu bao nhiêu');
     expect(tree).toContain('Tính lương ngay');
     TestRenderer.act(() => r.unmount());
   });

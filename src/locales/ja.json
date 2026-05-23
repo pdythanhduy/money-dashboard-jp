@@ -422,7 +422,7 @@
     },
     "empty": {
       "title": "家計管理を始めよう",
-      "subtitle": "給与情報を入力するとダッシュボードがリアルタイムで更新されます",
+      "subtitle": "給与を入力すると、毎日いくら使えるかが分かります。",
       "cta": "今すぐ計算",
       "zeroIncomeTitle": "計算結果が¥0です",
       "zeroIncomeBody": "直近の計算で手取りが¥0になりました（課税ラインに達していません）。数値を見直して再計算してください。"
@@ -461,7 +461,7 @@
       "madeFor": "❤️ Made for Vietnamese in Japan"
     },
     "footers": {
-      "notifications": "書類の期限と給料日の通知 — 近日公開",
+      "notifications": "書類期限をローカル通知でお知らせ。リモートプッシュ通知はありません。",
       "security": "アプリを再表示するときにFace ID / Touch IDを要求します"
     },
     "values": {
@@ -519,8 +519,8 @@
       "close": "閉じる"
     },
     "legal": {
-      "privacyUrl": "https://kakei.app/privacy",
-      "termsUrl": "https://kakei.app/terms",
+      "privacyUrl": "https://www.kakei.app/privacy",
+      "termsUrl": "https://www.kakei.app/terms",
       "contactEmail": "feedback@kakei.app",
       "openExternal": "外部リンクを開く"
     }
@@ -1018,7 +1018,7 @@
     },
     "empty": {
       "title": "まだ支出記録がありません",
-      "body": "最初の支出を追加してください。カテゴリ別に集計し、予算と比較します。",
+      "body": "最初の支出を追加して、毎日の支出と月予算を比較しましょう。",
       "cta": "最初の支出を追加"
     },
     "dashboard": {
@@ -1183,7 +1183,7 @@
     },
     "empty": {
       "title": "まだ送金記録がありません",
-      "body": "確認メールからレートと手数料を入力。年間合計、プロバイダー比較、贈与税の閾値¥110万を自動チェック。",
+      "body": "毎回の送金でレートと手数料を記録すれば、年間合計の確認、プロバイダー比較、¥110万の閾値チェックができます。",
       "cta": "最初の送金を追加"
     },
     "dashboard": {

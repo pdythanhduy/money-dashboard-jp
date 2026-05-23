@@ -65,7 +65,12 @@ export function CalculatorScreen() {
           <View style={{ flexDirection: 'row', gap: spacing.sm }}>
             <Pressable
               accessibilityRole="button"
-              onPress={() => console.log('[Calculator] save history stub')}
+              onPress={() => {
+                // History auto-saves on every Calculator submit (see
+                // useHistoryMigration / calculatorStore). This button is a
+                // visual receipt for users who tap expecting an action.
+                if (__DEV__) console.log('[Calculator] save history stub (auto-saved already)');
+              }}
               style={{
                 flex: 1,
                 minHeight: 50,

@@ -134,6 +134,8 @@ Kakeiは、日本で暮らすベトナム人のための家計・手取り計算
 4. Residence-card and visa reminders
 5. Plan trip and business-travel budgets
 
+> See [`screenshot-checklist.md`](screenshot-checklist.md) for the capture plan (which screen, what data to seed, how to name files, where to upload). Keep that file's captions in sync with this section.
+
 ## Keywords
 
 ### Vietnamese (≤ 100 chars combined, comma-separated for App Store)

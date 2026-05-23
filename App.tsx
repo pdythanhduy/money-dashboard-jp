@@ -14,8 +14,6 @@ import { useHistoryMigration } from '@/store/useHistoryMigration';
 import { useLanguageSync } from '@/store/useLanguageSync';
 import { ThemeProvider, useTheme } from '@/theme';
 
-console.log('[App] module loaded');
-
 // Expo Go on iOS occasionally fails to auto-hide the splash, which leaves
 // a white overlay covering the rendered React tree. Calling hideAsync()
 // at module load + on mount makes it deterministic. Errors are swallowed
@@ -33,7 +31,6 @@ export default function App() {
   const hydrated = useSettingsHydrated();
 
   useEffect(() => {
-    console.log('[App] mounted');
     SplashScreen.hideAsync().catch(() => {});
   }, []);
 

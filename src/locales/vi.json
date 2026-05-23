@@ -422,7 +422,7 @@
     },
     "empty": {
       "title": "Bắt đầu hành trình tài chính",
-      "subtitle": "Nhập thông tin lương để xem dashboard cập nhật real-time",
+      "subtitle": "Nhập lương để xem mỗi ngày còn được tiêu bao nhiêu.",
       "cta": "Tính lương ngay",
       "zeroIncomeTitle": "Thu nhập quá thấp để tính",
       "zeroIncomeBody": "Lần tính gần nhất ra take-home ¥0 — chưa đạt ngưỡng tối thiểu. Hãy điều chỉnh số liệu rồi tính lại."
@@ -461,7 +461,7 @@
       "madeFor": "❤️ Made for Vietnamese in Japan"
     },
     "footers": {
-      "notifications": "Thông báo nhắc hạn giấy tờ và ngày lương - sắp ra mắt",
+      "notifications": "Nhắc hạn giấy tờ qua thông báo cục bộ. Không có push từ server.",
       "security": "Yêu cầu Face ID / Touch ID khi mở lại app"
     },
     "values": {
@@ -519,8 +519,8 @@
       "close": "Đóng"
     },
     "legal": {
-      "privacyUrl": "https://kakei.app/privacy",
-      "termsUrl": "https://kakei.app/terms",
+      "privacyUrl": "https://www.kakei.app/privacy",
+      "termsUrl": "https://www.kakei.app/terms",
       "contactEmail": "feedback@kakei.app",
       "openExternal": "Mở liên kết bên ngoài"
     }
@@ -1018,7 +1018,7 @@
     },
     "empty": {
       "title": "Chưa có khoản chi nào",
-      "body": "Thêm khoản đầu tiên để bắt đầu theo dõi. App tự tính theo nhóm + so với budget.",
+      "body": "Thêm khoản đầu tiên để theo dõi chi tiêu hàng ngày và so với ngân sách tháng.",
       "cta": "Thêm khoản chi đầu tiên"
     },
     "dashboard": {
@@ -1183,7 +1183,7 @@
     },
     "empty": {
       "title": "Chưa có lần gửi nào",
-      "body": "Thêm lần gửi đầu tiên với rate + phí từ confirmation email. App tính tổng năm, so provider, và cảnh báo ngưỡng thuế quà tặng ¥110万.",
+      "body": "Ghi lại tỷ giá + phí mỗi lần gửi để xem tổng năm, so sánh provider, và cảnh báo ngưỡng ¥110万.",
       "cta": "Thêm lần gửi đầu tiên"
     },
     "dashboard": {
