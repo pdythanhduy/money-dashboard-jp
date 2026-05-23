@@ -47,7 +47,7 @@ export const lightColors: ColorPalette = {
   accent: yellow,
   accentSubtle: yellowSubtle,
 
-  background: '#f7fafc',
+  background: '#edf2f7',
   surface: '#ffffff',
   surfaceElevated: '#ffffff',
 
@@ -55,8 +55,8 @@ export const lightColors: ColorPalette = {
   textSecondary: '#4a5568',
   textInverse: '#ffffff',
 
-  border: '#e2e8f0',
-  borderStrong: '#cbd5e0',
+  border: '#cbd5e0',
+  borderStrong: '#a0aec0',
 
   success: '#38a169',
   warning: '#dd6b20',

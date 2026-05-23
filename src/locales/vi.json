@@ -926,6 +926,12 @@
       "filterAll": "Tất cả",
       "empty": "Không có khoản nào trong giai đoạn này"
     },
+    "entry": {
+      "deleteLabel": "Xóa {{name}}",
+      "deleteConfirmTitle": "Xóa khoản chi này?",
+      "deleteConfirmMessage": "{{name}} · {{amount}} sẽ bị xóa.",
+      "deleteConfirmAction": "Xóa"
+    },
     "add": {
       "title": "Thêm khoản chi"
     },
