@@ -465,7 +465,7 @@
       "security": "Yêu cầu Face ID / Touch ID khi mở lại app"
     },
     "values": {
-      "languageSystem": "Theo hệ thống (auto-detect)",
+      "languageSystem": "Theo hệ thống",
       "languageVi": "Tiếng Việt",
       "languageJa": "日本語",
       "themeSystem": "Theo hệ thống",

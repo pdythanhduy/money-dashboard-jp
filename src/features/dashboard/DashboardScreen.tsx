@@ -31,6 +31,7 @@ import { useCalculatorStore } from '@/store/calculatorStore';
 import { useFurusatoStore } from '@/store/furusatoStore';
 import { getSavedTotal, isGoalCompleted, useGoalsStore } from '@/store/goalsStore';
 import { useKakeiboStore } from '@/store/kakeiboStore';
+import { useOnboardingStore } from '@/store/onboardingStore';
 import { useRemittanceStore } from '@/store/remittanceStore';
 import { useTheme } from '@/theme';
 
@@ -54,6 +55,8 @@ export function DashboardScreen() {
   const remittanceEntries = useRemittanceStore((s) => s.entries);
   const remittanceGoal = useRemittanceStore((s) => s.annualGoalJPY);
   const takeHomeMonthly = useCalculatorStore((s) => s.lastResult?.takeHomeMonthly ?? 0);
+  const hasCompletedOnboarding = useOnboardingStore((s) => s.hasCompletedOnboarding);
+  const hasSeenGuidedSetup = useOnboardingStore((s) => s.hasSeenGuidedSetup);
 
   // FAB only makes sense if the user has anything to budget AGAINST or
   // any existing log activity. Otherwise the floating "+" lands on an
@@ -147,7 +150,36 @@ export function DashboardScreen() {
     return { days, year: deadline.getFullYear() };
   })();
 
+  // For brand-new users who haven't run Calculator yet, the full-screen
+  // EmptyState would short-circuit before GuidedSetupCard renders — leaving
+  // the user with ONLY a "Calculate salary" CTA and no idea about the other
+  // 4 setup steps. When the guided setup is still active, show a minimal
+  // Dashboard (greeting + GuidedSetupCard) instead so they see the full
+  // setup hub on first launch.
+  const showGuidedSetup = hasCompletedOnboarding && !hasSeenGuidedSetup;
+
   if (!data.hasData) {
+    if (showGuidedSetup) {
+      return (
+        <View style={{ flex: 1, backgroundColor: colors.background }}>
+          <ScrollView contentContainerStyle={{ paddingBottom: spacing.xxl }} showsVerticalScrollIndicator={false}>
+            <GreetingHeader
+              greeting={data.greeting}
+              today={data.today}
+              daysUntilPayday={data.daysUntilPayday}
+              isPayday={data.isPayday}
+            />
+            <GuidedSetupCard
+              onSalary={goToCalculator}
+              onFixedCosts={goToKakeibo}
+              onBudget={goToKakeibo}
+              onDocuments={goToDocuments}
+              onDailyTracking={goToKakeibo}
+            />
+          </ScrollView>
+        </View>
+      );
+    }
     return <EmptyState onPressCta={goToCalculator} />;
   }
 

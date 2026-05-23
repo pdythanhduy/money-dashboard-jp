@@ -61,9 +61,21 @@ export function SettingsItem(props: SettingsItemProps) {
     }
     if (props.kind === 'navigate' || props.kind === 'value') {
       return (
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.xs }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: spacing.xs,
+            flexShrink: 1,
+            maxWidth: '55%',
+          }}
+        >
           {props.value ? (
-            <Text style={[typography.callout, { color: colors.textSecondary }]} numberOfLines={1}>
+            <Text
+              style={[typography.callout, { color: colors.textSecondary, flexShrink: 1 }]}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
               {props.value}
             </Text>
           ) : null}
@@ -106,10 +118,20 @@ export function SettingsItem(props: SettingsItemProps) {
           <Ionicons name={props.icon} size={20} color={iconColor} />
         </View>
       ) : null}
-      <View style={{ flex: 1 }}>
-        <Text style={[typography.body, { color: labelColor }]}>{props.label}</Text>
+      <View style={{ flex: 1, minWidth: 0 }}>
+        <Text
+          style={[typography.body, { color: labelColor }]}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          {props.label}
+        </Text>
         {props.sublabel ? (
-          <Text style={[typography.caption, { color: colors.textSecondary, marginTop: 2 }]}>
+          <Text
+            style={[typography.caption, { color: colors.textSecondary, marginTop: 2 }]}
+            numberOfLines={2}
+            ellipsizeMode="tail"
+          >
             {props.sublabel}
           </Text>
         ) : null}
