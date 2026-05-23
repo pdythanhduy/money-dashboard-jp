@@ -6,6 +6,7 @@ import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-c
 
 import '@/lib/i18n';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { AppLockGate } from '@/features/security/AppLockGate';
 import { configureNotifications } from '@/lib/notifications';
 import { RootNavigator } from '@/navigation/RootNavigator';
 import { useSettingsHydrated } from '@/store/settingsStore';
@@ -59,7 +60,9 @@ function NavigationShell() {
   return (
     <NavigationContainer theme={navTheme}>
       <StatusBar style={isDark ? 'light' : 'dark'} />
-      <RootNavigator />
+      <AppLockGate>
+        <RootNavigator />
+      </AppLockGate>
     </NavigationContainer>
   );
 }

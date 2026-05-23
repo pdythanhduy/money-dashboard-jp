@@ -462,7 +462,7 @@
     },
     "footers": {
       "notifications": "書類の期限と給料日の通知 — 近日公開",
-      "security": "生体認証でアプリをロック — 近日公開"
+      "security": "アプリを再表示するときにFace ID / Touch IDを要求します"
     },
     "values": {
       "languageSystem": "システムに従う（自動検出）",
@@ -1423,6 +1423,21 @@
     },
     "dashboard": {
       "cardTitle": "旅行・出張"
+    }
+  },
+  "security": {
+    "biometric": {
+      "title": "アプリロック",
+      "settingLabel": "Face ID / Touch IDでロック",
+      "settingDescription": "アプリを再表示するときに生体認証を要求します。",
+      "unlockTitle": "Kakeiはロック中です",
+      "unlockSubtitle": "財務データを表示するには認証してください。",
+      "unlockButton": "ロック解除",
+      "enableSuccess": "アプリロックを有効にしました",
+      "disabled": "アプリロックを無効にしました",
+      "unavailable": "生体認証が利用できない、または未設定です",
+      "failed": "認証に失敗しました",
+      "cancelled": "認証がキャンセルされました"
     }
   }
 }

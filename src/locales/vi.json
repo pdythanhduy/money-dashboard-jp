@@ -462,7 +462,7 @@
     },
     "footers": {
       "notifications": "Thông báo nhắc hạn giấy tờ và ngày lương - sắp ra mắt",
-      "security": "Khóa app bằng sinh trắc học - sắp ra mắt"
+      "security": "Yêu cầu Face ID / Touch ID khi mở lại app"
     },
     "values": {
       "languageSystem": "Theo hệ thống (auto-detect)",
@@ -1423,6 +1423,21 @@
     },
     "dashboard": {
       "cardTitle": "Chuyến đi"
+    }
+  },
+  "security": {
+    "biometric": {
+      "title": "Khóa ứng dụng",
+      "settingLabel": "Khóa bằng Face ID / Touch ID",
+      "settingDescription": "Yêu cầu xác thực sinh trắc học khi mở lại ứng dụng.",
+      "unlockTitle": "Kakei đang được khóa",
+      "unlockSubtitle": "Xác thực để xem dữ liệu tài chính của bạn.",
+      "unlockButton": "Mở khóa",
+      "enableSuccess": "Đã bật khóa ứng dụng",
+      "disabled": "Đã tắt khóa ứng dụng",
+      "unavailable": "Thiết bị chưa hỗ trợ hoặc chưa thiết lập sinh trắc học",
+      "failed": "Xác thực không thành công",
+      "cancelled": "Bạn đã hủy xác thực"
     }
   }
 }

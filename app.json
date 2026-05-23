@@ -15,7 +15,10 @@
     "ios": {
       "supportsTablet": true,
       "buildNumber": "2",
-      "bundleIdentifier": "com.kakei.moneydashboardjp"
+      "bundleIdentifier": "com.kakei.moneydashboardjp",
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "Kakei uses Face ID to unlock the app and protect your financial data."
+      }
     },
     "android": {
       "adaptiveIcon": {
