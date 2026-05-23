@@ -18,6 +18,7 @@ import { isFurusatoUseful } from '@/features/furusato/furusato-eligibility';
 import { useFurusatoSummary } from '@/features/furusato/hooks/useFurusatoSummary';
 import { iconNameFor } from '@/features/goals/components/IconPicker';
 import { QuickAddExpenseModal } from '@/features/kakeibo/components/QuickAddExpenseModal';
+import { GuidedSetupCard } from '@/features/onboarding/components/GuidedSetupCard';
 import { useMedicalSummary } from '@/features/medical/hooks/useMedicalSummary';
 import { formatCurrency } from '@/lib/format';
 import { computeGoalProjection } from '@/lib/goals-math';
@@ -99,6 +100,7 @@ export function DashboardScreen() {
   })();
 
   const goToCalculator = () => navigation.navigate('Calculator');
+  const goToDocuments = () => navigation.navigate('Documents');
   const goToMedical = () => {
     // RootNavigator hosts Medical as a sibling of Main → reach it via the
     // root-typed parent navigator.
@@ -180,6 +182,13 @@ export function DashboardScreen() {
           today={data.today}
           daysUntilPayday={data.daysUntilPayday}
           isPayday={data.isPayday}
+        />
+        <GuidedSetupCard
+          onSalary={goToCalculator}
+          onFixedCosts={goToKakeibo}
+          onBudget={goToKakeibo}
+          onDocuments={goToDocuments}
+          onDailyTracking={goToKakeibo}
         />
         {topWall ? (
           <Pressable

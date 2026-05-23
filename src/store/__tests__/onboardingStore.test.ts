@@ -23,7 +23,12 @@ jest.mock('@react-native-async-storage/async-storage', () => {
 import { ONBOARDING_SLIDE_COUNT, useOnboardingStore } from '@/store/onboardingStore';
 
 beforeEach(() => {
-  useOnboardingStore.setState({ hasCompletedOnboarding: false, currentSlide: 0 });
+  useOnboardingStore.setState({
+    hasCompletedOnboarding: false,
+    currentSlide: 0,
+    hasSeenGuidedSetup: false,
+    completedSteps: [],
+  });
 });
 
 describe('onboardingStore.defaults', () => {
@@ -80,5 +85,73 @@ describe('onboardingStore.reset', () => {
     const s = useOnboardingStore.getState();
     expect(s.hasCompletedOnboarding).toBe(false);
     expect(s.currentSlide).toBe(0);
+  });
+
+  it('also clears guided-setup state', () => {
+    useOnboardingStore.setState({
+      hasSeenGuidedSetup: true,
+      completedSteps: ['salary', 'budget'],
+    });
+    useOnboardingStore.getState().reset();
+    const s = useOnboardingStore.getState();
+    expect(s.hasSeenGuidedSetup).toBe(false);
+    expect(s.completedSteps).toEqual([]);
+  });
+});
+
+describe('onboardingStore.markStepComplete', () => {
+  it('appends the step on first call', () => {
+    useOnboardingStore.getState().markStepComplete('salary');
+    expect(useOnboardingStore.getState().completedSteps).toEqual(['salary']);
+  });
+
+  it('is idempotent — second call with the same step is a no-op', () => {
+    useOnboardingStore.getState().markStepComplete('salary');
+    useOnboardingStore.getState().markStepComplete('salary');
+    expect(useOnboardingStore.getState().completedSteps).toEqual(['salary']);
+  });
+
+  it('keeps step order across distinct calls', () => {
+    useOnboardingStore.getState().markStepComplete('salary');
+    useOnboardingStore.getState().markStepComplete('budget');
+    useOnboardingStore.getState().markStepComplete('documents');
+    expect(useOnboardingStore.getState().completedSteps).toEqual(['salary', 'budget', 'documents']);
+  });
+});
+
+describe('onboardingStore.skipGuidedSetup / completeGuidedSetup', () => {
+  it('skipGuidedSetup flips hasSeenGuidedSetup to true', () => {
+    useOnboardingStore.getState().skipGuidedSetup();
+    expect(useOnboardingStore.getState().hasSeenGuidedSetup).toBe(true);
+  });
+
+  it('completeGuidedSetup also flips hasSeenGuidedSetup to true', () => {
+    useOnboardingStore.getState().completeGuidedSetup();
+    expect(useOnboardingStore.getState().hasSeenGuidedSetup).toBe(true);
+  });
+
+  it('skipGuidedSetup does not clear completedSteps progress', () => {
+    useOnboardingStore.getState().markStepComplete('salary');
+    useOnboardingStore.getState().skipGuidedSetup();
+    expect(useOnboardingStore.getState().completedSteps).toEqual(['salary']);
+  });
+});
+
+describe('onboardingStore.resetGuidedSetup', () => {
+  it('clears both hasSeenGuidedSetup and completedSteps so the card shows again', () => {
+    useOnboardingStore.setState({
+      hasSeenGuidedSetup: true,
+      completedSteps: ['salary', 'budget'],
+    });
+    useOnboardingStore.getState().resetGuidedSetup();
+    const s = useOnboardingStore.getState();
+    expect(s.hasSeenGuidedSetup).toBe(false);
+    expect(s.completedSteps).toEqual([]);
+  });
+
+  it('does NOT reset the welcome onboarding flag', () => {
+    useOnboardingStore.setState({ hasCompletedOnboarding: true, hasSeenGuidedSetup: true });
+    useOnboardingStore.getState().resetGuidedSetup();
+    expect(useOnboardingStore.getState().hasCompletedOnboarding).toBe(true);
   });
 });

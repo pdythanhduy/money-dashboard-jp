@@ -564,6 +564,42 @@
         "language": "希望言語",
         "languageSub": "いつでも変更できます"
       }
+    },
+    "guidedSetup": {
+      "title": "Kakeiを始める",
+      "subtitle": "アプリを最大限活用する5ステップ",
+      "stepCountDone": "{{done}}/{{total}} 完了",
+      "dismiss": "閉じる",
+      "showAgainInSettings": "設定から後で再表示できます",
+      "settingsRow": "オンボーディングを再表示",
+      "settingsRowSub": "Dashboardの5ステップガイドをもう一度表示します",
+      "steps": {
+        "salary": {
+          "title": "手取り月収から始めましょう",
+          "body": "月に実際いくら使えるかを確認します。",
+          "cta": "給与を計算"
+        },
+        "fixedCosts": {
+          "title": "固定費を追加",
+          "body": "家賃、電気、ガス、携帯などを月の支出に反映します。",
+          "cta": "固定費を追加"
+        },
+        "budget": {
+          "title": "月予算を設定",
+          "body": "例：食費 ¥40,000/月。残り金額を確認できます。",
+          "cta": "予算を設定"
+        },
+        "documents": {
+          "title": "書類の期限を管理",
+          "body": "在留カード、ビザ、パスポートなどの期限を忘れないようにします。",
+          "cta": "書類を追加"
+        },
+        "dailyTracking": {
+          "title": "毎日の支出を記録",
+          "body": "使ったらすぐ記録して、今月の状態を確認しましょう。",
+          "cta": "始める"
+        }
+      }
     }
   },
   "documents": {

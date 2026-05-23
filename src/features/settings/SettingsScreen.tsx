@@ -42,6 +42,7 @@ export function SettingsScreen() {
   const entries = useHistoryStore((s) => s.entries);
   const lastInput = useCalculatorStore((s) => s.lastInput);
   const resetOnboarding = useOnboardingStore((s) => s.reset);
+  const resetGuidedSetup = useOnboardingStore((s) => s.resetGuidedSetup);
 
   // Municipality picker stays hidden until the user actually goes freelance
   // (or has previously set a default). Avoids three rows of clutter for the
@@ -222,6 +223,17 @@ export function SettingsScreen() {
             label={t('settings.items.clearData')}
             destructive
             onPress={() => setOpenModal('clear')}
+            showBorder
+          />
+          <SettingsItem
+            kind="navigate"
+            icon="help-circle-outline"
+            label={t('onboarding.guidedSetup.settingsRow')}
+            sublabel={t('onboarding.guidedSetup.settingsRowSub')}
+            onPress={() => {
+              resetGuidedSetup();
+              Alert.alert(t('onboarding.guidedSetup.settingsRow'));
+            }}
             showBorder
           />
           {__DEV__ ? (
