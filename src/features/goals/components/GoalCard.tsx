@@ -5,8 +5,13 @@ import { Pressable, Text, View } from 'react-native';
 
 import { iconNameFor } from '@/features/goals/components/IconPicker';
 import { formatCurrency } from '@/lib/format';
-import { computeGoalProjection } from '@/lib/goals-math';
-import { getSavedTotal, isGoalCompleted, type Goal } from '@/store/goalsStore';
+import { computeGoalHealth } from '@/lib/money-goal-math';
+import {
+  getGoalCategory,
+  getGoalStatus,
+  getSavedTotal,
+  type Goal,
+} from '@/store/goalsStore';
 import { useTheme } from '@/theme';
 
 interface Props {
@@ -35,13 +40,15 @@ function GoalCardImpl({ goal, onPress }: Props) {
   const { t } = useTranslation();
   const { colors, typography, spacing, radius } = useTheme();
   const saved = getSavedTotal(goal);
-  const completed = isGoalCompleted(goal);
-  const projection = computeGoalProjection({
-    saved,
-    target: goal.targetAmount,
-    ...(goal.deadline ? { deadline: goal.deadline } : {}),
-  });
-  const accentColor = completed ? colors.success : colors.brand;
+  const status = getGoalStatus(goal);
+  const category = getGoalCategory(goal);
+  const health = computeGoalHealth({ goal });
+
+  const accentColor = (() => {
+    if (health.health === 'completed') return colors.success;
+    if (health.health === 'behind') return colors.warning;
+    return colors.brand;
+  })();
 
   return (
     <Pressable
@@ -55,7 +62,7 @@ function GoalCardImpl({ goal, onPress }: Props) {
         backgroundColor: colors.surfaceElevated,
         borderRadius: radius.md,
         gap: spacing.sm,
-        opacity: pressed ? 0.85 : 1,
+        opacity: pressed ? (status === 'cancelled' || status === 'paused' ? 0.6 : 0.85) : status === 'cancelled' ? 0.55 : status === 'paused' ? 0.75 : 1,
       })}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}>
@@ -80,23 +87,89 @@ function GoalCardImpl({ goal, onPress }: Props) {
               saved: formatCurrency(saved),
               target: formatCurrency(goal.targetAmount),
             })}
+            {' · '}
+            {t(`goals.categories.${category}`)}
           </Text>
         </View>
         <Text style={[typography.callout, { color: accentColor, fontWeight: '700' }]}>
-          {Math.round(projection.progressPercent * 100)}%
+          {Math.round(health.progressPercent * 100)}%
         </Text>
       </View>
-      <ProgressBar percent={projection.progressPercent} color={accentColor} />
-      {completed ? (
-        <Text style={[typography.caption, { color: colors.success, fontWeight: '600' }]}>
-          {t('goals.progress.completed')}
-        </Text>
-      ) : projection.monthlyTarget && projection.monthsToDeadline ? (
+      <ProgressBar percent={health.progressPercent} color={accentColor} />
+      <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: spacing.xs }}>
+        {/* Status badge (always visible for non-default states) */}
+        {status !== 'active' ? (
+          <StatusBadge label={t(`goals.status.${status}`)} status={status} />
+        ) : null}
+        {/* Health badge */}
+        <HealthBadge label={t(`goals.health.${health.health}`)} health={health.health} />
+      </View>
+      {/* Required-monthly-saving line, only when there is a deadline + active */}
+      {status === 'active' && health.requiredMonthlySaving !== undefined ? (
         <Text style={[typography.caption, { color: colors.textSecondary }]} numberOfLines={1}>
-          {t('goals.progress.monthlyTarget', { amount: formatCurrency(projection.monthlyTarget) })}
+          {t('goals.progress.monthlyTarget', { amount: formatCurrency(health.requiredMonthlySaving) })}
         </Text>
       ) : null}
     </Pressable>
+  );
+}
+
+function StatusBadge({
+  label,
+  status,
+}: {
+  label: string;
+  status: 'paused' | 'completed' | 'cancelled';
+}) {
+  const { colors, typography, spacing, radius } = useTheme();
+  const bg =
+    status === 'completed'
+      ? colors.success
+      : status === 'paused'
+        ? colors.warning
+        : colors.textSecondary;
+  return (
+    <View
+      style={{
+        paddingHorizontal: spacing.xs,
+        paddingVertical: 2,
+        borderRadius: radius.pill,
+        backgroundColor: bg,
+      }}
+    >
+      <Text style={[typography.caption, { color: colors.textInverse, fontWeight: '700' }]}>
+        {label}
+      </Text>
+    </View>
+  );
+}
+
+function HealthBadge({
+  label,
+  health,
+}: {
+  label: string;
+  health: 'on_track' | 'behind' | 'completed' | 'no_deadline';
+}) {
+  const { colors, typography, spacing, radius } = useTheme();
+  const fg =
+    health === 'behind'
+      ? colors.warning
+      : health === 'completed'
+        ? colors.success
+        : colors.textSecondary;
+  return (
+    <View
+      style={{
+        paddingHorizontal: spacing.xs,
+        paddingVertical: 2,
+        borderRadius: radius.pill,
+        borderWidth: 1,
+        borderColor: fg,
+      }}
+    >
+      <Text style={[typography.caption, { color: fg, fontWeight: '600' }]}>{label}</Text>
+    </View>
   );
 }
 

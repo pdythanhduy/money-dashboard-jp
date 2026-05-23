@@ -1,13 +1,13 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
-import { Modal, Pressable, ScrollView, Text, View } from 'react-native';
+import { Alert, Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { iconNameFor } from '@/features/goals/components/IconPicker';
 import { formatCurrency } from '@/lib/format';
 import { computeGoalProjection } from '@/lib/goals-math';
 import { useCalculatorStore } from '@/store/calculatorStore';
-import { getSavedTotal, isGoalCompleted, useGoalsStore } from '@/store/goalsStore';
+import { getGoalStatus, getSavedTotal, isGoalCompleted, useGoalsStore } from '@/store/goalsStore';
 import { useTheme } from '@/theme';
 
 interface Props {
@@ -40,6 +40,10 @@ export function GoalDetailModal({ visible, goalId, onClose, onEdit, onAddSavings
   const goal = useGoalsStore((s) =>
     goalId ? s.goals.find((g) => g.id === goalId) ?? null : null,
   );
+  const markGoalCompleted = useGoalsStore((s) => s.markGoalCompleted);
+  const pauseGoal = useGoalsStore((s) => s.pauseGoal);
+  const resumeGoal = useGoalsStore((s) => s.resumeGoal);
+  const cancelGoal = useGoalsStore((s) => s.cancelGoal);
 
   if (!goal) {
     return (
@@ -49,6 +53,14 @@ export function GoalDetailModal({ visible, goalId, onClose, onEdit, onAddSavings
 
   const saved = getSavedTotal(goal);
   const completed = isGoalCompleted(goal);
+  const status = getGoalStatus(goal);
+
+  const confirmCancel = () => {
+    Alert.alert(t('goals.actions.cancelConfirmTitle'), t('goals.actions.cancelConfirmBody'), [
+      { text: t('common.cancel'), style: 'cancel' },
+      { text: t('goals.actions.cancel'), style: 'destructive', onPress: () => cancelGoal(goal.id) },
+    ]);
+  };
   const projection = computeGoalProjection({
     saved,
     target: goal.targetAmount,
@@ -203,8 +215,43 @@ export function GoalDetailModal({ visible, goalId, onClose, onEdit, onAddSavings
             borderTopWidth: 1,
             borderTopColor: colors.border,
             backgroundColor: colors.background,
+            gap: spacing.sm,
           }}
         >
+          {/* Status action row — shown only for non-completed goals */}
+          {status !== 'completed' ? (
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs }}>
+              {status === 'active' ? (
+                <StatusActionButton
+                  label={t('goals.actions.pause')}
+                  icon="pause"
+                  onPress={() => pauseGoal(goal.id)}
+                />
+              ) : null}
+              {status === 'paused' ? (
+                <StatusActionButton
+                  label={t('goals.actions.resume')}
+                  icon="play"
+                  onPress={() => resumeGoal(goal.id)}
+                />
+              ) : null}
+              {(status === 'active' || status === 'paused') ? (
+                <StatusActionButton
+                  label={t('goals.actions.markComplete')}
+                  icon="checkmark-circle-outline"
+                  onPress={() => markGoalCompleted(goal.id)}
+                />
+              ) : null}
+              {status !== 'cancelled' ? (
+                <StatusActionButton
+                  label={t('goals.actions.cancel')}
+                  icon="close-circle-outline"
+                  onPress={confirmCancel}
+                  destructive
+                />
+              ) : null}
+            </View>
+          ) : null}
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={t('goals.actions.addSavings')}
@@ -228,5 +275,41 @@ export function GoalDetailModal({ visible, goalId, onClose, onEdit, onAddSavings
         </View>
       </SafeAreaView>
     </Modal>
+  );
+}
+
+function StatusActionButton({
+  label,
+  icon,
+  onPress,
+  destructive,
+}: {
+  label: string;
+  icon: keyof typeof Ionicons.glyphMap;
+  onPress: () => void;
+  destructive?: boolean;
+}) {
+  const { colors, typography, spacing, radius } = useTheme();
+  const color = destructive ? colors.danger : colors.brand;
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      onPress={onPress}
+      style={({ pressed }) => ({
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 4,
+        paddingHorizontal: spacing.sm,
+        paddingVertical: spacing.xs,
+        borderRadius: radius.pill,
+        borderWidth: 1,
+        borderColor: color,
+        opacity: pressed ? 0.85 : 1,
+      })}
+    >
+      <Ionicons name={icon} size={14} color={color} />
+      <Text style={[typography.caption, { color, fontWeight: '600' }]}>{label}</Text>
+    </Pressable>
   );
 }

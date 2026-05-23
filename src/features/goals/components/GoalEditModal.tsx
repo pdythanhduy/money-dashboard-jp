@@ -17,7 +17,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { isoFromYMD, ymdFromIso } from '@/features/documents/date-utils';
 import { IconPicker } from '@/features/goals/components/IconPicker';
-import { useGoalsStore, type Goal, type GoalIcon } from '@/store/goalsStore';
+import {
+  ALL_MONEY_GOAL_CATEGORIES,
+  useGoalsStore,
+  type Goal,
+  type GoalIcon,
+  type MoneyGoalCategory,
+} from '@/store/goalsStore';
 import { useTheme } from '@/theme';
 
 interface Props {
@@ -29,7 +35,9 @@ interface Props {
 interface DraftState {
   title: string;
   icon: GoalIcon;
+  category: MoneyGoalCategory;
   amountInput: string;
+  monthlyInput: string;
   useDeadline: boolean;
   year: string;
   month: string;
@@ -43,7 +51,9 @@ function emptyDraft(): DraftState {
   return {
     title: '',
     icon: 'piggy',
+    category: 'other',
     amountInput: '',
+    monthlyInput: '',
     useDeadline: false,
     year: String(inThreeMonths.getFullYear()),
     month: String(inThreeMonths.getMonth() + 1),
@@ -58,7 +68,9 @@ function draftFromGoal(g: Goal): DraftState {
   return {
     title: g.title,
     icon: g.icon,
+    category: g.category ?? 'other',
     amountInput: String(g.targetAmount),
+    monthlyInput: g.monthlyContribution !== undefined ? String(g.monthlyContribution) : '',
     useDeadline: Boolean(g.deadline),
     year: ymd ? String(ymd.year) : fallback.year,
     month: ymd ? String(ymd.month) : fallback.month,
@@ -111,11 +123,14 @@ export function GoalEditModal({ visible, editing, onClose }: Props) {
           Number.parseInt(draft.day, 10),
         )
       : undefined;
+    const monthly = parseYen(draft.monthlyInput);
     const payload = {
       title: draft.title.trim(),
       icon: draft.icon,
+      category: draft.category,
       targetAmount: parseYen(draft.amountInput),
       ...(deadline ? { deadline } : {}),
+      ...(monthly > 0 ? { monthlyContribution: monthly } : {}),
       ...(draft.note.trim() ? { note: draft.note.trim() } : {}),
     };
     if (editing) {
@@ -229,6 +244,73 @@ export function GoalEditModal({ visible, editing, onClose }: Props) {
 
             <Field label={t('goals.fields.icon')}>
               <IconPicker value={draft.icon} onChange={(icon) => setDraft((d) => ({ ...d, icon }))} />
+            </Field>
+
+            <Field label={t('goals.fields.category')}>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs }}>
+                {ALL_MONEY_GOAL_CATEGORIES.map((cat) => {
+                  const selected = draft.category === cat;
+                  return (
+                    <Pressable
+                      key={cat}
+                      accessibilityRole="button"
+                      accessibilityState={{ selected }}
+                      accessibilityLabel={t(`goals.categories.${cat}`)}
+                      onPress={() => setDraft((d) => ({ ...d, category: cat }))}
+                      style={({ pressed }) => ({
+                        paddingHorizontal: spacing.sm,
+                        paddingVertical: 6,
+                        borderRadius: radius.pill,
+                        borderWidth: 1,
+                        borderColor: selected ? colors.brand : colors.border,
+                        backgroundColor: selected ? colors.brand : colors.surface,
+                        opacity: pressed ? 0.85 : 1,
+                      })}
+                    >
+                      <Text
+                        style={[
+                          typography.caption,
+                          {
+                            color: selected ? colors.textInverse : colors.text,
+                            fontWeight: '600',
+                          },
+                        ]}
+                      >
+                        {t(`goals.categories.${cat}`)}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </View>
+            </Field>
+
+            <Field label={t('goals.fields.monthlyContribution')}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: spacing.xs,
+                  borderWidth: 1,
+                  borderColor: colors.border,
+                  borderRadius: radius.sm,
+                  paddingHorizontal: spacing.md,
+                  backgroundColor: colors.surface,
+                }}
+              >
+                <Text style={[typography.body, { color: colors.textSecondary }]}>¥</Text>
+                <TextInput
+                  value={draft.monthlyInput.replace(/[^\d]/g, '')}
+                  onChangeText={(v) => setDraft((d) => ({ ...d, monthlyInput: v.replace(/[^\d]/g, '') }))}
+                  placeholder="20000"
+                  placeholderTextColor={colors.textSecondary}
+                  keyboardType="numeric"
+                  inputMode="numeric"
+                  style={{ flex: 1, minHeight: 50, color: colors.text, ...typography.body }}
+                />
+              </View>
+              <Text style={[typography.caption, { color: colors.textSecondary, marginTop: 2 }]}>
+                {t('goals.fields.monthlyContributionHint')}
+              </Text>
             </Field>
 
             <View style={{ gap: spacing.xs }}>
