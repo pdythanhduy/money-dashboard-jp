@@ -65,7 +65,8 @@ Same matrix. Substitute fingerprint / face unlock for Face ID.
 
 ## EAS submission readiness
 
-- [ ] `eas.json` — `REPLACE_WITH_*` placeholders replaced (Apple Team ID, App Store Connect App ID, Play service-account JSON path)
+- [x] `eas.json` iOS submit creds — Apple Team ID, ASC App ID, Apple ID filled (see PR #40)
+- [ ] `play-store-key.json` dropped at repo root (Google service-account JSON, gitignored)
 - [ ] `eas build --profile production --platform all` succeeds
 - [ ] Build artifacts download and install on a test device per platform
 - [ ] `eas submit --platform ios` / `--platform android` reaches the stores

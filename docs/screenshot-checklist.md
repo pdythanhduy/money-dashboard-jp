@@ -45,6 +45,8 @@ Captions in this file match [`store-copy.md`](store-copy.md) → "Screenshot cap
 
 **What to capture:** Dashboard scrolled so DailySpendingCard (FinancialHealthCard) is the hero — status pill + today's spend + remaining + chip strip (`Budget 3/3 OK · Nhiều nhất: Ăn uống · Cố định 19%`).
 
+The `WeeklyReviewCard` will also render directly below DailySpendingCard once entries exist; it's fine if it's partially visible in the capture, but center the frame on DailySpendingCard for the marketing hero.
+
 **Caption vi:** "Biết mỗi ngày còn được tiêu bao nhiêu"
 **Caption ja:** "今日いくら使えるかが一目で分かる"
 
