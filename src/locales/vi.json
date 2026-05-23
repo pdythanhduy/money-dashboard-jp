@@ -407,6 +407,14 @@
       "fixedCostChip": "Cố định {{percent}}%",
       "title": "Tình trạng tháng này"
     },
+    "weeklyReview": {
+      "title": "Tuần này",
+      "spent": "Tuần này bạn đã tiêu {{amount}}",
+      "moreThanLastWeek": "Cao hơn tuần trước {{amount}}",
+      "lessThanLastWeek": "Thấp hơn tuần trước {{amount}}",
+      "sameAsLastWeek": "Gần bằng tuần trước",
+      "topCategory": "Nhiều nhất: {{category}}"
+    },
     "upcoming": {
       "title": "Sắp tới hạn",
       "daysLeft": "còn {{days}} ngày",
