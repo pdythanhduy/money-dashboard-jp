@@ -401,6 +401,12 @@
       "statusWarning": "注意",
       "statusDanger": "危険"
     },
+    "financialHealth": {
+      "budgetChip": "予算 {{safe}}/{{total}} OK",
+      "topCategoryChip": "最多: {{category}}",
+      "fixedCostChip": "固定費 {{percent}}%",
+      "title": "今月の状況"
+    },
     "upcoming": {
       "title": "もうすぐ期限",
       "daysLeft": "あと{{days}}日",

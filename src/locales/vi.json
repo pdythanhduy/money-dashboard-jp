@@ -401,6 +401,12 @@
       "statusWarning": "Cảnh báo",
       "statusDanger": "Nguy hiểm"
     },
+    "financialHealth": {
+      "budgetChip": "Budget {{safe}}/{{total}} OK",
+      "topCategoryChip": "Nhiều nhất: {{category}}",
+      "fixedCostChip": "Cố định {{percent}}%",
+      "title": "Tình trạng tháng này"
+    },
     "upcoming": {
       "title": "Sắp tới hạn",
       "daysLeft": "còn {{days}} ngày",
