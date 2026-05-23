@@ -1468,5 +1468,39 @@
       "failed": "Xác thực không thành công",
       "cancelled": "Bạn đã hủy xác thực"
     }
+  },
+  "taxChecklist": {
+    "title": "Việc cần làm cuối năm",
+    "subtitle": "Tự nhắc — app không khai thuế hộ.",
+    "disclaimer": "Đây là danh sách tự nhắc, KHÔNG phải tư vấn thuế. Xem kỹ với 税理士 nếu cần.",
+    "yearLabel": "Năm {{year}}",
+    "progress": "{{done}}/{{total}} xong",
+    "items": {
+      "gensen": {
+        "title": "Kiểm tra 源泉徴収票",
+        "body": "Lấy 源泉徴収票 từ công ty và kiểm tra số liệu khớp."
+      },
+      "kakutei": {
+        "title": "Kiểm tra có cần 確定申告 không",
+        "body": "Có thu nhập phụ, freelance, hoặc khấu trừ đặc biệt → có thể cần."
+      },
+      "furusato": {
+        "title": "Kiểm tra ふるさと納税",
+        "body": "Đã quyên góp năm nay? Lưu lại 寄付金受領証明書."
+      },
+      "medical": {
+        "title": "Kiểm tra 医療費控除",
+        "body": "Hóa đơn y tế > ¥100,000 hoặc 5% take-home → có thể được khấu trừ."
+      },
+      "dependent": {
+        "title": "Kiểm tra giấy tờ phụ thuộc / 海外送金",
+        "body": "Gia đình ở Việt Nam phụ thuộc? Lưu giấy tờ gửi tiền + giấy tờ thân nhân."
+      }
+    },
+    "dashboard": {
+      "reminderTitle": "Đến mùa khai thuế",
+      "reminderBody": "Còn {{remaining}}/{{total}} việc chưa xong cho năm {{year}}.",
+      "cta": "Xem checklist"
+    }
   }
 }
