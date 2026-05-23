@@ -1510,6 +1510,7 @@
       "reminderTitle": "Đến mùa khai thuế",
       "reminderBody": "Còn {{remaining}}/{{total}} việc chưa xong cho năm {{year}}.",
       "cta": "Xem checklist"
-    }
+    },
+    "completedMessage": "Checklist năm nay đã hoàn tất"
   }
 }

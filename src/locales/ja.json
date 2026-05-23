@@ -1510,6 +1510,7 @@
       "reminderTitle": "申告シーズンです",
       "reminderBody": "{{year}}年分のチェックリストはまだ {{remaining}}/{{total}} 件残っています。",
       "cta": "チェックリストを開く"
-    }
+    },
+    "completedMessage": "今年のチェックリストは完了しました"
   }
 }
