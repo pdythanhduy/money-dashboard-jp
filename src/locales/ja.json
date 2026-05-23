@@ -926,6 +926,12 @@
       "filterAll": "全て",
       "empty": "この期間の記録はありません"
     },
+    "entry": {
+      "deleteLabel": "{{name}}を削除",
+      "deleteConfirmTitle": "この支出を削除しますか？",
+      "deleteConfirmMessage": "{{name}} · {{amount}} を削除します。",
+      "deleteConfirmAction": "削除"
+    },
     "add": {
       "title": "支出を追加"
     },

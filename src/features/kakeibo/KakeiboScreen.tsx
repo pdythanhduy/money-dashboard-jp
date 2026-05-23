@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FlatList, Pressable, Text, View } from 'react-native';
+import { Alert, FlatList, Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { BudgetEditScreen } from '@/features/kakeibo/components/BudgetEditScreen';
@@ -57,6 +57,7 @@ export function KakeiboScreen() {
   const recurrings = useKakeiboStore((s) => s.recurrings);
   const toggleRecurringActive = useKakeiboStore((s) => s.toggleRecurringActive);
   const addEntry = useKakeiboStore((s) => s.addEntry);
+  const removeEntry = useKakeiboStore((s) => s.removeEntry);
   const markRecurringGenerated = useKakeiboStore((s) => s.markRecurringGenerated);
   const takeHomeMonthly = useCalculatorStore((s) => s.lastResult?.takeHomeMonthly);
 
@@ -163,6 +164,25 @@ export function KakeiboScreen() {
 
   const closeEntryModal = useCallback(() => setEntryModalOpen(false), []);
 
+  const requestDelete = useCallback(
+    (e: KakeiboEntry) => {
+      const name = e.label || t(`kakeibo.categories.${e.category}`);
+      Alert.alert(
+        t('kakeibo.entry.deleteConfirmTitle'),
+        t('kakeibo.entry.deleteConfirmMessage', { name, amount: formatCurrency(e.amount) }),
+        [
+          { text: t('common.cancel'), style: 'cancel' },
+          {
+            text: t('kakeibo.entry.deleteConfirmAction'),
+            style: 'destructive',
+            onPress: () => removeEntry(e.id),
+          },
+        ],
+      );
+    },
+    [removeEntry, t],
+  );
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }} edges={['top']}>
       <View
@@ -201,7 +221,7 @@ export function KakeiboScreen() {
       <FlatList
         data={tab === 'charts' ? [] : filteredEntries}
         keyExtractor={(e) => e.id}
-        renderItem={({ item }) => <EntryCard entry={item} onPress={openEdit} />}
+        renderItem={({ item }) => <EntryCard entry={item} onPress={openEdit} onDelete={requestDelete} />}
         ListHeaderComponent={
           <>
             <TabBar tab={tab} onChange={setTab} />
