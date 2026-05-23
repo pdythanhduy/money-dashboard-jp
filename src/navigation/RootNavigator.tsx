@@ -7,6 +7,7 @@ import { KakuteiScreen } from '@/features/kakutei/KakuteiScreen';
 import { MedicalScreen } from '@/features/medical/MedicalScreen';
 import { OnboardingNavigator } from '@/features/onboarding/OnboardingNavigator';
 import { RemittanceScreen } from '@/features/remittance/RemittanceScreen';
+import { TripBudgetScreen } from '@/features/trip/TripBudgetScreen';
 import { useOnboardingStore } from '@/store/onboardingStore';
 
 import { MainTabs } from './MainTabs';
@@ -21,6 +22,7 @@ export type RootStackParamList = {
   Kakeibo: undefined;
   Remittance: undefined;
   Kakutei: undefined;
+  TripBudget: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -39,6 +41,7 @@ export function RootNavigator() {
           <Stack.Screen name="Kakeibo" component={KakeiboScreen} />
           <Stack.Screen name="Remittance" component={RemittanceScreen} />
           <Stack.Screen name="Kakutei" component={KakuteiScreen} />
+          <Stack.Screen name="TripBudget" component={TripBudgetScreen} />
         </>
       ) : (
         <Stack.Screen name="Onboarding" component={OnboardingNavigator} />

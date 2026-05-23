@@ -1238,5 +1238,133 @@
       "noSalaryResult": "Chưa có kết quả từ Calculator — wizard cần income trước.",
       "openCalculator": "Mở Calculator"
     }
+  },
+  "trip": {
+    "title": "Chuyến đi",
+    "subtitle": "Lập kế hoạch và theo dõi chi tiêu cho du lịch hoặc công tác",
+    "add": "Thêm chuyến đi",
+    "edit": "Sửa chuyến đi",
+    "delete": "Xoá chuyến đi",
+    "complete": "Đánh dấu hoàn thành",
+    "cancel": "Huỷ chuyến đi",
+    "empty": {
+      "title": "Chưa có chuyến đi nào",
+      "body": "Tạo kế hoạch chi tiêu cho chuyến đi, công tác hoặc lần về Việt Nam.",
+      "cta": "Tạo chuyến đi đầu tiên"
+    },
+    "type": {
+      "label": "Loại",
+      "travel": "Du lịch",
+      "business": "Công tác",
+      "home_visit": "Về Việt Nam",
+      "other": "Khác"
+    },
+    "status": {
+      "planned": "Đã lên kế hoạch",
+      "active": "Đang đi",
+      "completed": "Hoàn thành",
+      "cancelled": "Đã huỷ"
+    },
+    "lifecycle": {
+      "upcoming": "Sắp khởi hành",
+      "active": "Đang đi",
+      "ended": "Đã kết thúc",
+      "cancelled": "Đã huỷ"
+    },
+    "field": {
+      "title": "Tên chuyến đi",
+      "titlePlaceholder": "VD: Kyoto 2 ngày, Tokyo công tác",
+      "destination": "Điểm đến",
+      "destinationPlaceholder": "VD: Kyoto, Osaka, Hà Nội",
+      "startDate": "Ngày bắt đầu",
+      "endDate": "Ngày kết thúc",
+      "companyAdvance": "Tạm ứng công ty",
+      "note": "Ghi chú"
+    },
+    "summary": {
+      "planned": "Kế hoạch",
+      "actual": "Thực tế",
+      "diff": "Chênh lệch",
+      "over": "Vượt {{amount}}",
+      "under": "Còn dư {{amount}}",
+      "even": "Đúng kế hoạch",
+      "progress": "Đã dùng {{percent}}% kế hoạch",
+      "daysUntil": "Còn {{days}} ngày",
+      "daysLeft": "Còn {{days}} ngày",
+      "endedDaysAgo": "Kết thúc {{days}} ngày trước",
+      "endedToday": "Vừa kết thúc"
+    },
+    "section": {
+      "plan": "Kế hoạch chi tiêu",
+      "actual": "Chi tiêu thực tế",
+      "compare": "So sánh kế hoạch / thực tế",
+      "settlement": "Hoàn ứng công tác",
+      "insights": "Nhận xét"
+    },
+    "action": {
+      "addPlan": "Thêm khoản dự kiến",
+      "addActual": "Thêm chi tiêu thực tế",
+      "edit": "Sửa",
+      "delete": "Xoá"
+    },
+    "settlement": {
+      "advanceLabel": "Tạm ứng",
+      "reimbursableLabel": "Có thể hoàn",
+      "companyOwesUser": "Công ty cần hoàn thêm {{amount}}",
+      "userOwesCompany": "Cần trả lại công ty {{amount}}",
+      "even": "Không cần hoàn ứng thêm",
+      "none": "Không có hoàn ứng"
+    },
+    "actualField": {
+      "reimbursable": "Có thể hoàn ứng",
+      "amount": "Số tiền",
+      "date": "Ngày",
+      "category": "Nhóm"
+    },
+    "category": {
+      "transport": "Di chuyển",
+      "hotel": "Khách sạn",
+      "food": "Ăn uống",
+      "shopping": "Mua sắm",
+      "ticket": "Vé tham quan",
+      "souvenir": "Quà tặng",
+      "local_transport": "Đi lại nội địa",
+      "communication": "Liên lạc / SIM",
+      "insurance": "Bảo hiểm",
+      "business": "Chi phí công việc",
+      "other": "Khác"
+    },
+    "insights": {
+      "title": "Nhận xét",
+      "noActualYet": {
+        "title": "Chưa có chi tiêu thực tế",
+        "body": "Khi bắt đầu chuyến đi, ghi lại từng khoản để theo dõi."
+      },
+      "overBudget": {
+        "title": "Vượt kế hoạch",
+        "body": "Đang vượt {{amount}} so với kế hoạch."
+      },
+      "underBudget": {
+        "title": "Trong kế hoạch",
+        "body": "Còn dư {{amount}} so với kế hoạch — tốt lắm!"
+      },
+      "topOverCategory": {
+        "title": "Nhóm vượt nhiều nhất",
+        "body": "{{category}} đang vượt {{amount}}."
+      },
+      "businessSettlement": {
+        "title": "Hoàn ứng công tác"
+      }
+    },
+    "validation": {
+      "titleRequired": "Cần nhập tên chuyến đi",
+      "datesInvalid": "Ngày không hợp lệ — kết thúc phải sau ngày bắt đầu",
+      "amountPositive": "Số tiền phải > 0",
+      "advanceNotNegative": "Tạm ứng không thể âm",
+      "limitReached": "Đã đạt giới hạn"
+    },
+    "dashboard": {
+      "cardTitle": "Chuyến đi"
+    }
   }
 }

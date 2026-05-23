@@ -11,6 +11,7 @@ import { GreetingHeader } from '@/features/dashboard/components/GreetingHeader';
 import { MonthlyTrendChart } from '@/features/dashboard/components/MonthlyTrendChart';
 import { QuickStatsRow } from '@/features/dashboard/components/QuickStatsRow';
 import { TakeHomeProgressCard } from '@/features/dashboard/components/TakeHomeProgressCard';
+import { TripBudgetCard } from '@/features/dashboard/components/TripBudgetCard';
 import { UpcomingEventsCard } from '@/features/dashboard/components/UpcomingEventsCard';
 import { useDashboardData } from '@/features/dashboard/hooks/useDashboardData';
 import { isFurusatoUseful } from '@/features/furusato/furusato-eligibility';
@@ -123,6 +124,10 @@ export function DashboardScreen() {
   const goToKakutei = () => {
     const parent = navigation.getParent<{ navigate: (route: keyof RootStackParamList) => void }>();
     parent?.navigate('Kakutei');
+  };
+  const goToTripBudget = () => {
+    const parent = navigation.getParent<{ navigate: (route: keyof RootStackParamList) => void }>();
+    parent?.navigate('TripBudget');
   };
 
   // 確定申告 deadline is March 15. Surface a card when within 90 days of
@@ -443,6 +448,7 @@ export function DashboardScreen() {
             </Text>
           </Pressable>
         ) : null}
+        <TripBudgetCard onPress={goToTripBudget} />
         <MonthlyTrendChart />
         <UpcomingEventsCard reminders={data.upcomingReminders} />
 
