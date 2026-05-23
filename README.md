@@ -25,6 +25,9 @@ verified FY2026 (令和8年度) rates from 国税庁 / 協会けんぽ / 日本�
   buckets. Local notifications optional.
 - **Goals / ふるさと納税 / 医療費 / 仕送り / 確定申告** — per-domain
   planning modules, all on-device.
+- **Trip & Business Budget Planner** — plan a trip's budget by category,
+  log actual expenses as you go, compare planned vs actual, and (for
+  business trips) settle reimbursable spend against a company advance.
 - **History** — Persistent log of every calculation with a 6-month trend
   chart and editable label / note per entry.
 - **Settings** — Language (vi / ja / system), theme (light / dark / system),

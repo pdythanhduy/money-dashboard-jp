@@ -1238,5 +1238,133 @@
       "noSalaryResult": "Calculator結果が必要です — まず計算してください。",
       "openCalculator": "Calculatorを開く"
     }
+  },
+  "trip": {
+    "title": "旅行・出張",
+    "subtitle": "旅行や出張の予算と実支出を管理します",
+    "add": "旅行を追加",
+    "edit": "旅行を編集",
+    "delete": "旅行を削除",
+    "complete": "完了にする",
+    "cancel": "旅行をキャンセル",
+    "empty": {
+      "title": "旅行はまだありません",
+      "body": "旅行、出張、一時帰国の予算を作成しましょう。",
+      "cta": "最初の旅行を作成"
+    },
+    "type": {
+      "label": "種類",
+      "travel": "旅行",
+      "business": "出張",
+      "home_visit": "一時帰国",
+      "other": "その他"
+    },
+    "status": {
+      "planned": "計画中",
+      "active": "進行中",
+      "completed": "完了",
+      "cancelled": "キャンセル"
+    },
+    "lifecycle": {
+      "upcoming": "もうすぐ出発",
+      "active": "進行中",
+      "ended": "終了",
+      "cancelled": "キャンセル"
+    },
+    "field": {
+      "title": "旅行名",
+      "titlePlaceholder": "例: 京都2日間、東京出張",
+      "destination": "行き先",
+      "destinationPlaceholder": "例: 京都、大阪、ハノイ",
+      "startDate": "開始日",
+      "endDate": "終了日",
+      "companyAdvance": "会社の仮払い",
+      "note": "メモ"
+    },
+    "summary": {
+      "planned": "予定",
+      "actual": "実績",
+      "diff": "差額",
+      "over": "{{amount}}超過",
+      "under": "{{amount}}余り",
+      "even": "予定どおり",
+      "progress": "予定の{{percent}}%使用",
+      "daysUntil": "あと{{days}}日",
+      "daysLeft": "残り{{days}}日",
+      "endedDaysAgo": "{{days}}日前に終了",
+      "endedToday": "今日終了"
+    },
+    "section": {
+      "plan": "予定支出",
+      "actual": "実際の支出",
+      "compare": "予定 / 実績の比較",
+      "settlement": "出張精算",
+      "insights": "気づき"
+    },
+    "action": {
+      "addPlan": "予定項目を追加",
+      "addActual": "実支出を追加",
+      "edit": "編集",
+      "delete": "削除"
+    },
+    "settlement": {
+      "advanceLabel": "仮払い",
+      "reimbursableLabel": "精算対象",
+      "companyOwesUser": "会社から追加精算 {{amount}}",
+      "userOwesCompany": "会社へ返金 {{amount}}",
+      "even": "追加精算なし",
+      "none": "精算なし"
+    },
+    "actualField": {
+      "reimbursable": "精算対象",
+      "amount": "金額",
+      "date": "日付",
+      "category": "カテゴリ"
+    },
+    "category": {
+      "transport": "交通",
+      "hotel": "ホテル",
+      "food": "食費",
+      "shopping": "買い物",
+      "ticket": "チケット",
+      "souvenir": "お土産",
+      "local_transport": "現地交通",
+      "communication": "通信 / SIM",
+      "insurance": "保険",
+      "business": "業務費",
+      "other": "その他"
+    },
+    "insights": {
+      "title": "気づき",
+      "noActualYet": {
+        "title": "実支出はまだありません",
+        "body": "旅行が始まったら支出を記録しましょう。"
+      },
+      "overBudget": {
+        "title": "予算超過",
+        "body": "予定より{{amount}}多く使っています。"
+      },
+      "underBudget": {
+        "title": "予算内",
+        "body": "予定より{{amount}}節約できています。"
+      },
+      "topOverCategory": {
+        "title": "最も超過したカテゴリ",
+        "body": "{{category}}が{{amount}}超過しています。"
+      },
+      "businessSettlement": {
+        "title": "出張精算"
+      }
+    },
+    "validation": {
+      "titleRequired": "旅行名を入力してください",
+      "datesInvalid": "日付が無効です — 終了日は開始日以降にしてください",
+      "amountPositive": "金額は0より大きい必要があります",
+      "advanceNotNegative": "仮払いは負の値にできません",
+      "limitReached": "上限に達しました"
+    },
+    "dashboard": {
+      "cardTitle": "旅行・出張"
+    }
   }
 }
