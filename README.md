@@ -32,7 +32,14 @@ verified FY2026 (令和8年度) rates from 国税庁 / 協会けんぽ / 日本�
   chart and editable label / note per entry.
 - **Settings** — Language (vi / ja / system), theme (light / dark / system),
   default prefecture & payday, GDPR-friendly export + clear-data flows.
-- **Onboarding** — 4-slide swipe-paginated welcome with quick-setup.
+- **Onboarding** — 4-slide swipe-paginated welcome with quick-setup, plus a
+  5-step `GuidedSetupCard` on the Dashboard that walks new users through
+  the recommended setup path (salary → fixed costs → budget → documents
+  → daily tracking). Re-surfaceable from Settings.
+- **Biometric app lock** (optional, off by default) — Settings toggle gates
+  the navigation tree behind Face ID / Touch ID. Cold launch always
+  re-locks; background → foreground re-locks after 30s. Implemented via
+  `expo-local-authentication`; biometric data never leaves the OS.
 
 ## Compliance
 
@@ -62,9 +69,12 @@ verified FY2026 (令和8年度) rates from 国税庁 / 協会けんぽ / 日本�
 
 ```bash
 npm install
-npm test            # ≥ 215 tests across calc / dashboard / history / settings / i18n / a11y
+npm test            # 600+ tests across calc / dashboard / kakeibo / history / settings / i18n / a11y / strict-mode
 npm run typecheck   # tsc --noEmit
 npm start           # expo start, scan QR with Expo Go
+# Note: Expo Go does NOT support biometric prompts. Use a dev build
+# (`eas build --profile development`) to exercise the Face ID / Touch ID
+# flow on a real device.
 ```
 
 ## Folder layout
