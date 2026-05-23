@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Pressable, RefreshControl, ScrollView, Text, View } from 'react-native';
 
 import { DailySpendingCard } from '@/features/dashboard/components/DailySpendingCard';
+import { WeeklyReviewCard } from '@/features/dashboard/components/WeeklyReviewCard';
 import { EmptyState } from '@/features/dashboard/components/EmptyState';
 import { GreetingHeader } from '@/features/dashboard/components/GreetingHeader';
 import { MonthlyTrendChart } from '@/features/dashboard/components/MonthlyTrendChart';
@@ -264,6 +265,7 @@ export function DashboardScreen() {
           daysPassed={data.daysPassed}
         />
         <DailySpendingCard onPress={goToKakeibo} />
+        <WeeklyReviewCard onPress={goToKakeibo} />
         <QuickStatsRow
           proportionalTax={data.proportionalTax}
           proportionalInsurance={data.proportionalInsurance}

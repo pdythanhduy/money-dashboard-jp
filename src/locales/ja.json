@@ -407,6 +407,14 @@
       "fixedCostChip": "固定費 {{percent}}%",
       "title": "今月の状況"
     },
+    "weeklyReview": {
+      "title": "今週の支出",
+      "spent": "今週は{{amount}}使っています",
+      "moreThanLastWeek": "先週より{{amount}}多いです",
+      "lessThanLastWeek": "先週より{{amount}}少ないです",
+      "sameAsLastWeek": "先週とほぼ同じです",
+      "topCategory": "最多: {{category}}"
+    },
     "upcoming": {
       "title": "もうすぐ期限",
       "daysLeft": "あと{{days}}日",
