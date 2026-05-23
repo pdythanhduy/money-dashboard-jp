@@ -564,6 +564,42 @@
         "language": "Ngôn ngữ ưa thích",
         "languageSub": "Bạn có thể đổi bất cứ lúc nào"
       }
+    },
+    "guidedSetup": {
+      "title": "Bắt đầu cùng Kakei",
+      "subtitle": "5 bước để app hữu ích nhất cho bạn",
+      "stepCountDone": "{{done}}/{{total}} đã xong",
+      "dismiss": "Đóng",
+      "showAgainInSettings": "Bạn có thể bật lại ở Cài đặt sau",
+      "settingsRow": "Hiện lại hướng dẫn ban đầu",
+      "settingsRowSub": "Mở lại 5 bước thiết lập trên Dashboard",
+      "steps": {
+        "salary": {
+          "title": "Bắt đầu với lương thực nhận",
+          "body": "Nhập lương để biết mỗi tháng bạn thật sự còn bao nhiêu.",
+          "cta": "Tính lương"
+        },
+        "fixedCosts": {
+          "title": "Thêm chi phí cố định",
+          "body": "Tiền nhà, điện, gas, điện thoại… sẽ được tính vào ngân sách tháng.",
+          "cta": "Thêm chi phí"
+        },
+        "budget": {
+          "title": "Đặt ngân sách tháng",
+          "body": "Ví dụ: ăn uống ¥40,000/tháng. App sẽ cho biết bạn còn bao nhiêu.",
+          "cta": "Đặt budget"
+        },
+        "documents": {
+          "title": "Nhắc hạn giấy tờ",
+          "body": "Thêm thẻ cư trú, visa hoặc hộ chiếu để không quên hạn.",
+          "cta": "Thêm giấy tờ"
+        },
+        "dailyTracking": {
+          "title": "Ghi chi tiêu hằng ngày",
+          "body": "Mỗi lần tiêu tiền, thêm nhanh để xem tháng này có đang ổn không.",
+          "cta": "Bắt đầu"
+        }
+      }
     }
   },
   "documents": {
