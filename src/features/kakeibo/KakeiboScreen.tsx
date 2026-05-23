@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Alert, FlatList, Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { BudgetComparisonSection } from '@/features/kakeibo/components/BudgetComparisonSection';
 import { BudgetEditScreen } from '@/features/kakeibo/components/BudgetEditScreen';
 import { CategoryBreakdownBar } from '@/features/kakeibo/components/CategoryBreakdownBar';
 import { CategoryFilter, type CategoryFilterValue } from '@/features/kakeibo/components/CategoryFilter';
@@ -30,7 +31,6 @@ import {
 } from '@/lib/kakeibo-charts';
 import {
   buildMonthlyReport,
-  computeAllBudgetStatuses,
   filterEntriesByMonth,
   type KakeiboEntry,
 } from '@/lib/kakeibo-math';
@@ -106,12 +106,6 @@ export function KakeiboScreen() {
     () => buildMonthlyReport(entries, shiftMonth(yearMonth, -1)),
     [entries, yearMonth],
   );
-
-  const budgetStatuses = useMemo(
-    () => computeAllBudgetStatuses(entries, yearMonth, budgets),
-    [entries, yearMonth, budgets],
-  );
-  const budgetWarnings = budgetStatuses.filter((s) => s.severity !== 'safe');
 
   const filteredEntries = useMemo(() => {
     const inMonth = filterEntriesByMonth(entries, yearMonth);
@@ -258,47 +252,7 @@ export function KakeiboScreen() {
               {...(report.surplus !== undefined ? { surplus: report.surplus } : {})}
             />
             {report.byCategory.length > 0 ? <CategoryBreakdownBar byCategory={report.byCategory} /> : null}
-            {budgetWarnings.length > 0 ? (
-              <View
-                style={{
-                  marginHorizontal: spacing.lg,
-                  marginTop: spacing.md,
-                  padding: spacing.md,
-                  borderRadius: radius.md,
-                  borderLeftWidth: 4,
-                  borderLeftColor: colors.warning,
-                  backgroundColor: colors.surfaceElevated,
-                  gap: spacing.xs,
-                }}
-              >
-                <Text style={[typography.caption, { color: colors.textSecondary }]}>
-                  {t('kakeibo.budget.warningsTitle')}
-                </Text>
-                {budgetWarnings.map((s) => (
-                  <View key={s.category} style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.xs }}>
-                    <Ionicons
-                      name={CATEGORY_ICONS[s.category]}
-                      size={16}
-                      color={s.severity === 'over' ? colors.danger : colors.warning}
-                    />
-                    <Text style={[typography.callout, { color: colors.text, flex: 1 }]} numberOfLines={1}>
-                      {t(`kakeibo.categories.${s.category}`)}
-                    </Text>
-                    <Text
-                      style={[
-                        typography.caption,
-                        { color: s.severity === 'over' ? colors.danger : colors.warning, fontWeight: '600' },
-                      ]}
-                    >
-                      {t('kakeibo.budget.spentOfLimit', {
-                        spent: formatCurrency(s.spent),
-                        limit: formatCurrency(s.limit),
-                      })}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-            ) : null}
+            <BudgetComparisonSection entries={entries} budgets={budgets} yearMonth={yearMonth} />
             {prevReport.totalSpent > 0 || report.totalSpent > 0 ? (
               <MonthComparisonCard prev={prevReport} current={report} />
             ) : null}

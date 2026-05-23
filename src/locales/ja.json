@@ -911,7 +911,17 @@
       "save": "予算を保存",
       "remove": "上限なし",
       "warningsTitle": "予算アラート",
-      "spentOfLimit": "{{spent}} / {{limit}}"
+      "spentOfLimit": "{{spent}} / {{limit}}",
+      "saveSuccess": "月予算を保存しました"
+    },
+    "budgetComparison": {
+      "title": "月の予算",
+      "remaining": "残り {{amount}}",
+      "over": "{{amount}} 超過",
+      "empty": "月予算はまだありません",
+      "safe": "予算内",
+      "warning": "もうすぐ超過",
+      "danger": "予算超過"
     },
     "comparison": {
       "title": "前月との比較",

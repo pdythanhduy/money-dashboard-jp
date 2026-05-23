@@ -911,7 +911,17 @@
       "save": "Lưu budget",
       "remove": "Bỏ giới hạn",
       "warningsTitle": "Cảnh báo budget",
-      "spentOfLimit": "{{spent}} / {{limit}}"
+      "spentOfLimit": "{{spent}} / {{limit}}",
+      "saveSuccess": "Đã lưu ngân sách tháng"
+    },
+    "budgetComparison": {
+      "title": "Ngân sách tháng",
+      "remaining": "Còn lại {{amount}}",
+      "over": "Vượt {{amount}}",
+      "empty": "Chưa có ngân sách tháng",
+      "safe": "Trong ngân sách",
+      "warning": "Gần vượt",
+      "danger": "Đã vượt"
     },
     "comparison": {
       "title": "So với tháng trước",
