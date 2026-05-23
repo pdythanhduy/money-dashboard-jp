@@ -11,6 +11,7 @@ import { IncomeStep } from '@/features/kakutei/components/IncomeStep';
 import { ManualDeductionsStep } from '@/features/kakutei/components/ManualDeductionsStep';
 import { StepIndicator } from '@/features/kakutei/components/StepIndicator';
 import { SummaryStep } from '@/features/kakutei/components/SummaryStep';
+import { TaxChecklistSection } from '@/features/kakutei/components/TaxChecklistSection';
 import { useTheme } from '@/theme';
 
 const TOTAL_STEPS = 5;
@@ -60,6 +61,10 @@ export function KakuteiScreen() {
           contentContainerStyle={{ paddingVertical: spacing.md, paddingBottom: spacing.xxl }}
           keyboardShouldPersistTaps="handled"
         >
+          {/* Checklist sits ABOVE the step content so users coming from the
+              Dashboard reminder always see it first; tax-prep items are the
+              context for everything below. */}
+          <TaxChecklistSection />
           {step === 1 ? <FiscalYearStep /> : null}
           {step === 2 ? <IncomeStep /> : null}
           {step === 3 ? <AutoDeductionsStep /> : null}
