@@ -26,6 +26,7 @@ import { useMultiJobStore } from '@/store/multiJobStore';
 import { useOnboardingStore } from '@/store/onboardingStore';
 import { useRemittanceStore } from '@/store/remittanceStore';
 import { DEFAULT_SETTINGS, useSettingsStore, type AppSettings } from '@/store/settingsStore';
+import { useTaxChecklistStore } from '@/store/taxChecklistStore';
 import type { HistoryEntry } from '@/types/history';
 
 /**
@@ -82,4 +83,5 @@ export async function wipeAllAppData(): Promise<void> {
   useKakeiboStore.getState().clearAll();
   useRemittanceStore.getState().clearAll();
   useKakuteiStore.getState().resetDraft();
+  useTaxChecklistStore.getState().clearAll();
 }
