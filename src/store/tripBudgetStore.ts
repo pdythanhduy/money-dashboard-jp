@@ -29,6 +29,24 @@ export const MAX_ACTUAL_EXPENSES_PER_TRIP = 500;
 
 const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
+/**
+ * Strict calendar-aware ISO date check.
+ *
+ * Regex alone passes "2026-02-31" and "2026-13-01" — both invalid. We
+ * round-trip through `new Date(y, m-1, d)` and require the parts to come
+ * back unchanged. Local-time construction is fine: we only need calendar
+ * validity, not an absolute timestamp.
+ */
+export function isValidIsoDate(value: string): boolean {
+  if (!ISO_DATE_RE.test(value)) return false;
+  const y = Number(value.slice(0, 4));
+  const m = Number(value.slice(5, 7));
+  const d = Number(value.slice(8, 10));
+  if (m < 1 || m > 12 || d < 1 || d > 31) return false;
+  const date = new Date(y, m - 1, d);
+  return date.getFullYear() === y && date.getMonth() === m - 1 && date.getDate() === d;
+}
+
 export type StoreResultReason = 'not_found' | 'limit_reached' | 'invalid_input';
 
 export interface StoreResult<T = unknown> {
@@ -103,7 +121,7 @@ function sortDescByStartDate(list: TripBudget[]): TripBudget[] {
 
 function validateTripInput(input: AddTripInput): boolean {
   if (!input.title.trim()) return false;
-  if (!ISO_DATE_RE.test(input.startDate) || !ISO_DATE_RE.test(input.endDate)) return false;
+  if (!isValidIsoDate(input.startDate) || !isValidIsoDate(input.endDate)) return false;
   if (input.endDate < input.startDate) return false;
   if (input.companyAdvanceAmount !== undefined && input.companyAdvanceAmount < 0) return false;
   return true;
@@ -147,10 +165,26 @@ export const useTripBudgetStore = create<TripBudgetStore>()(
       updateTrip: (id, partial) => {
         const t = get().trips.find((x) => x.id === id);
         if (!t) return { ok: false, reason: 'not_found' };
-        if (partial.endDate && partial.startDate && partial.endDate < partial.startDate) {
+        // Validate the MERGED candidate, not just the partial. Otherwise
+        // changing only one of (startDate, endDate) can leave the trip in
+        // an invalid range.
+        const candidate: TripBudget = { ...t, ...partial };
+        if (partial.title !== undefined && !candidate.title.trim()) {
           return { ok: false, reason: 'invalid_input' };
         }
-        const next: TripBudget = { ...t, ...partial, updatedAt: nowIso() };
+        if (!isValidIsoDate(candidate.startDate) || !isValidIsoDate(candidate.endDate)) {
+          return { ok: false, reason: 'invalid_input' };
+        }
+        if (candidate.endDate < candidate.startDate) {
+          return { ok: false, reason: 'invalid_input' };
+        }
+        if (
+          candidate.companyAdvanceAmount !== undefined &&
+          candidate.companyAdvanceAmount < 0
+        ) {
+          return { ok: false, reason: 'invalid_input' };
+        }
+        const next: TripBudget = { ...candidate, updatedAt: nowIso() };
         set({ trips: sortDescByStartDate(get().trips.map((x) => (x.id === id ? next : x))) });
         return { ok: true, trip: next };
       },
@@ -192,6 +226,11 @@ export const useTripBudgetStore = create<TripBudgetStore>()(
       updatePlanItem: (tripId, itemId, partial) => {
         const t = get().trips.find((x) => x.id === tripId);
         if (!t) return { ok: false, reason: 'not_found' };
+        const target = t.plannedItems.find((p) => p.id === itemId);
+        if (!target) return { ok: false, reason: 'not_found' };
+        if (partial.plannedAmount !== undefined && partial.plannedAmount <= 0) {
+          return { ok: false, reason: 'invalid_input' };
+        }
         const next: TripBudget = {
           ...t,
           plannedItems: t.plannedItems.map((p) => (p.id === itemId ? { ...p, ...partial } : p)),
@@ -219,7 +258,7 @@ export const useTripBudgetStore = create<TripBudgetStore>()(
         if (t.actualExpenses.length >= MAX_ACTUAL_EXPENSES_PER_TRIP) {
           return { ok: false, reason: 'limit_reached' };
         }
-        if (input.amount <= 0 || !ISO_DATE_RE.test(input.date)) {
+        if (input.amount <= 0 || !isValidIsoDate(input.date)) {
           return { ok: false, reason: 'invalid_input' };
         }
         const expense: TripActualExpense = {
@@ -243,6 +282,14 @@ export const useTripBudgetStore = create<TripBudgetStore>()(
       updateActualExpense: (tripId, expenseId, partial) => {
         const t = get().trips.find((x) => x.id === tripId);
         if (!t) return { ok: false, reason: 'not_found' };
+        const target = t.actualExpenses.find((e) => e.id === expenseId);
+        if (!target) return { ok: false, reason: 'not_found' };
+        if (partial.amount !== undefined && partial.amount <= 0) {
+          return { ok: false, reason: 'invalid_input' };
+        }
+        if (partial.date !== undefined && !isValidIsoDate(partial.date)) {
+          return { ok: false, reason: 'invalid_input' };
+        }
         const next: TripBudget = {
           ...t,
           actualExpenses: t.actualExpenses.map((e) =>

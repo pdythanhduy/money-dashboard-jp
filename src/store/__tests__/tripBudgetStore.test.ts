@@ -220,3 +220,175 @@ describe('tripBudgetStore — lifecycle transitions', () => {
     expect(useTripBudgetStore.getState().getTrip(a.id)?.status).toBe('cancelled');
   });
 });
+
+describe('tripBudgetStore — strict calendar-date validation', () => {
+  it('addTrip rejects 2026-02-31 (impossible calendar date)', () => {
+    const r = useTripBudgetStore.getState().addTrip({
+      title: 'A',
+      type: 'travel',
+      startDate: '2026-02-31',
+      endDate: '2026-03-05',
+    });
+    expect(r.ok).toBe(false);
+    expect(r.reason).toBe('invalid_input');
+  });
+
+  it('addTrip rejects 2026-13-01 (month out of range)', () => {
+    const r = useTripBudgetStore.getState().addTrip({
+      title: 'A',
+      type: 'travel',
+      startDate: '2026-13-01',
+      endDate: '2026-13-05',
+    });
+    expect(r.ok).toBe(false);
+    expect(r.reason).toBe('invalid_input');
+  });
+
+  it('addTrip rejects 2026-00-10 (zero month)', () => {
+    const r = useTripBudgetStore.getState().addTrip({
+      title: 'A',
+      type: 'travel',
+      startDate: '2026-00-10',
+      endDate: '2026-01-15',
+    });
+    expect(r.ok).toBe(false);
+    expect(r.reason).toBe('invalid_input');
+  });
+
+  it('addActualExpense rejects invalid calendar date 2026-02-31', () => {
+    const s = useTripBudgetStore.getState();
+    const a = s.addTrip({
+      title: 'A',
+      type: 'travel',
+      startDate: '2026-06-10',
+      endDate: '2026-06-12',
+    }).trip!;
+    const r = s.addActualExpense(a.id, {
+      date: '2026-02-31',
+      category: 'food',
+      amount: 1_000,
+    });
+    expect(r.ok).toBe(false);
+    expect(r.reason).toBe('invalid_input');
+  });
+});
+
+describe('tripBudgetStore — updateTrip merged-candidate validation', () => {
+  it('rejects when changing only startDate pushes it past existing endDate', () => {
+    const s = useTripBudgetStore.getState();
+    const a = s.addTrip({
+      title: 'A',
+      type: 'travel',
+      startDate: '2026-06-10',
+      endDate: '2026-06-12',
+    }).trip!;
+    const r = s.updateTrip(a.id, { startDate: '2026-06-20' });
+    expect(r.ok).toBe(false);
+    expect(r.reason).toBe('invalid_input');
+    expect(useTripBudgetStore.getState().getTrip(a.id)?.startDate).toBe('2026-06-10');
+  });
+
+  it('rejects when changing only endDate pulls it before existing startDate', () => {
+    const s = useTripBudgetStore.getState();
+    const a = s.addTrip({
+      title: 'A',
+      type: 'travel',
+      startDate: '2026-06-10',
+      endDate: '2026-06-12',
+    }).trip!;
+    const r = s.updateTrip(a.id, { endDate: '2026-06-05' });
+    expect(r.ok).toBe(false);
+    expect(r.reason).toBe('invalid_input');
+  });
+
+  it('rejects empty title update', () => {
+    const s = useTripBudgetStore.getState();
+    const a = s.addTrip({
+      title: 'A',
+      type: 'travel',
+      startDate: '2026-06-10',
+      endDate: '2026-06-12',
+    }).trip!;
+    const r = s.updateTrip(a.id, { title: '   ' });
+    expect(r.ok).toBe(false);
+    expect(r.reason).toBe('invalid_input');
+  });
+
+  it('rejects negative companyAdvanceAmount', () => {
+    const s = useTripBudgetStore.getState();
+    const a = s.addTrip({
+      title: 'Biz',
+      type: 'business',
+      startDate: '2026-06-10',
+      endDate: '2026-06-12',
+    }).trip!;
+    const r = s.updateTrip(a.id, { companyAdvanceAmount: -1_000 });
+    expect(r.ok).toBe(false);
+    expect(r.reason).toBe('invalid_input');
+  });
+
+  it('rejects when startDate is updated to an impossible calendar date', () => {
+    const s = useTripBudgetStore.getState();
+    const a = s.addTrip({
+      title: 'A',
+      type: 'travel',
+      startDate: '2026-06-10',
+      endDate: '2026-06-12',
+    }).trip!;
+    const r = s.updateTrip(a.id, { startDate: '2026-02-31' });
+    expect(r.ok).toBe(false);
+    expect(r.reason).toBe('invalid_input');
+  });
+});
+
+describe('tripBudgetStore — item update validation', () => {
+  it('updatePlanItem rejects plannedAmount <= 0', () => {
+    const s = useTripBudgetStore.getState();
+    const a = s.addTrip({
+      title: 'A',
+      type: 'travel',
+      startDate: '2026-06-10',
+      endDate: '2026-06-12',
+    }).trip!;
+    const p = s.addPlanItem(a.id, { category: 'hotel', plannedAmount: 30_000 }).item!;
+    expect(s.updatePlanItem(a.id, p.id, { plannedAmount: 0 }).reason).toBe('invalid_input');
+    expect(s.updatePlanItem(a.id, p.id, { plannedAmount: -100 }).reason).toBe('invalid_input');
+    expect(useTripBudgetStore.getState().getTrip(a.id)?.plannedItems[0]?.plannedAmount).toBe(30_000);
+  });
+
+  it('updateActualExpense rejects amount <= 0', () => {
+    const s = useTripBudgetStore.getState();
+    const a = s.addTrip({
+      title: 'A',
+      type: 'travel',
+      startDate: '2026-06-10',
+      endDate: '2026-06-12',
+    }).trip!;
+    const e = s.addActualExpense(a.id, {
+      date: '2026-06-11',
+      category: 'food',
+      amount: 5_000,
+    }).item!;
+    expect(s.updateActualExpense(a.id, e.id, { amount: 0 }).reason).toBe('invalid_input');
+    expect(useTripBudgetStore.getState().getTrip(a.id)?.actualExpenses[0]?.amount).toBe(5_000);
+  });
+
+  it('updateActualExpense rejects invalid ISO date', () => {
+    const s = useTripBudgetStore.getState();
+    const a = s.addTrip({
+      title: 'A',
+      type: 'travel',
+      startDate: '2026-06-10',
+      endDate: '2026-06-12',
+    }).trip!;
+    const e = s.addActualExpense(a.id, {
+      date: '2026-06-11',
+      category: 'food',
+      amount: 5_000,
+    }).item!;
+    expect(s.updateActualExpense(a.id, e.id, { date: '2026-02-31' }).reason).toBe(
+      'invalid_input',
+    );
+    expect(useTripBudgetStore.getState().getTrip(a.id)?.actualExpenses[0]?.date).toBe('2026-06-11');
+  });
+});
