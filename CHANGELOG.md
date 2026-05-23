@@ -8,11 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 (empty — next changes land here)
 
-## [0.2.0] - 2026-05-21
+## [0.2.0] - 2026-05-23
 
-Pre-launch release. Adds Phases 5I–5Q on top of [0.1.0], polishes for App
-Store / Play Store submission. 437 → 439 tests with the new strict-mode
-detector.
+Pre-launch release. Adds Phases 5I–5Q + 5U–5W + the May 23 release-polish
+wave on top of [0.1.0], polishes for App Store / Play Store submission.
+**iOS buildNumber `3`, Android versionCode `3`** (semver unchanged from
+the 2026-05-21 checkpoint; build bumped because substantive work landed
+between checkpoint and ship). Final test count on main: **655** across
+66 suites.
 
 ### Added
 
@@ -80,8 +83,95 @@ detector.
 - `eas.json` skeleton for EAS Build (development / preview / production
   profiles + submit metadata).
 - README "Building for production" section.
-- iOS `buildNumber: "2"`, Android `versionCode: 2`, app & package version
-  `0.2.0`.
+- iOS `buildNumber: "3"`, Android `versionCode: 3`, app & package version
+  `0.2.0` (bumped from build 2 at the 2026-05-21 checkpoint after the
+  Phase 5U–5W + release-polish wave landed).
+
+#### Phase 5U — Kakeibo daily UX (#25)
+- Recurring expense templates (manual + auto-post) with monthly idempotency
+  via `lastGeneratedYearMonth`.
+- Quick-add expense modal + floating-action button on Dashboard.
+- Daily-spending hero card with salary-anchored allowance + 7-day mini
+  chart.
+
+#### Phase 5V + 5W — Kakeibo charts, insights, hardening
+- Real document deadlines (Dashboard upcoming reminders no longer use
+  stubs).
+- Kakeibo Charts tab: daily / monthly / category SVG charts + 5 rule-
+  based insights (top category, MoM delta, daily-allowance breach, high
+  food ratio, safe-month signal).
+- Hardening: safe_month gating, high_food floor, list-only category
+  filter, app display name "Kakei".
+
+#### Phase 6A — Trip & Business Budget Planner (#27)
+- Plan a trip's budget by category, log actual expenses as you go,
+  compare planned vs actual, and (for business trips) settle reimbursable
+  spend against a company advance.
+- Dashboard `TripBudgetCard` surfaces active trips.
+
+#### Issue #26 — Kakeibo monthly budget comparison visibility (#28)
+- New `BudgetComparisonSection` on Kakeibo Overview renders every saved
+  budget (icon · spent / limit · progress bar · remaining-or-over caption)
+  regardless of severity (safe / warning / over).
+- Replaces the prior warning-only block.
+- Save toast confirms successful budget save.
+
+#### Issue #30 — FinancialHealthCard / DailySpendingCard upgrade (#32)
+- New pure helper `computeFinancialHealth` composes existing
+  `computeLivingCost` + `buildMonthlyReport.byCategory[0]` +
+  `computeAllBudgetStatuses` + `computeDailySpending` — no new math.
+- `DailySpendingCard` extended in place with a compact chip strip:
+  `Budget X/Y OK · Nhiều nhất: <cat> · Cố định N%`. Each chip is
+  independent; strip hidden when no chips qualify; first-launch UX
+  unchanged.
+
+#### Kakeibo daily usability + light-mode contrast (#33)
+- Light-mode tokens tightened: `background` slate-50 → slate-100,
+  `border` slate-200 → slate-300, `borderStrong` slate-300 → slate-400.
+  Dark mode untouched.
+- Direct delete per row on Kakeibo list — trash icon → confirm dialog
+  → `removeEntry`. Nested `Pressable` owns its hit area; no swipe
+  gesture dep.
+
+#### Issue #31 — Biometric app lock (#34)
+- New dependency: `expo-local-authentication ~17.0.8` (SDK 54-aligned,
+  first-party Expo module, no network).
+- `src/lib/biometric-auth.ts` — pure wrappers around `LocalAuthentication`
+  with discriminated result shapes (`cancelled` / `failed` / `unavailable`
+  / `unknown`).
+- `src/store/appLockStore.ts` — in-memory only; cold launch always
+  re-locks if `faceIdEnabled` is on. Exports `LOCK_TIMEOUT_MS = 30_000`.
+- `src/features/security/AppLockGate.tsx` wraps `RootNavigator`; AppState
+  listener stamps background timestamps; on `active` re-locks if elapsed
+  ≥ `LOCK_TIMEOUT_MS`.
+- Settings toggle gates on availability + auth — only persists `true`
+  after a successful prompt.
+- iOS: `NSFaceIDUsageDescription` added to `app.json`.
+- Replaces the placeholder "coming soon" toggle that flipped a boolean
+  no part of the app consumed.
+
+#### First-use onboarding — GuidedSetupCard (#35)
+- Compact 5-step card on Dashboard (salary → fixed costs → budget →
+  documents → daily tracking). Each row has a numbered chip + title +
+  1-line body + CTA pill. Done steps show a checkmark + dim.
+- Permanent dismiss via close (X). Auto-dismisses when all 5 marked
+  complete.
+- Settings → "Hiện lại hướng dẫn ban đầu" / "オンボーディングを再表示"
+  resets the flag so the card returns.
+- Sits below `AppLockGate` — biometric prompt always wins over onboarding.
+
+#### Release polish docs (#36)
+- `docs/store-copy.md` — App Store / Play Store title, subtitle,
+  positioning, long description, 5 feature bullets, screenshot captions,
+  keywords (vi / ja / en).
+- `docs/privacy-summary.md` — plain-language complement to
+  `PRIVACY_POLICY.md` inventorying every store, listing what is NOT
+  done (no account / no server / no analytics / no crash reporter /
+  no ad SDK), and walking through GDPR rights.
+- `docs/release-checklist.md` — short release-cut tick list pairing
+  with `MANUAL_TEST_CHECKLIST.md`.
+- README — onboarding bullet refreshed to mention `GuidedSetupCard`;
+  new biometric app lock bullet; quickstart test count refreshed.
 
 ### Polish
 - Accessibility audit: every Pressable / Touchable / Switch under `src/`
