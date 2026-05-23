@@ -23,7 +23,7 @@ import { QuickAddExpenseModal } from '@/features/kakeibo/components/QuickAddExpe
 import { GuidedSetupCard } from '@/features/onboarding/components/GuidedSetupCard';
 import { useMedicalSummary } from '@/features/medical/hooks/useMedicalSummary';
 import { formatCurrency } from '@/lib/format';
-import { computeGoalProjection } from '@/lib/goals-math';
+import { computeGoalHealth, selectFeaturedGoal } from '@/lib/money-goal-math';
 import { buildMonthlyReport } from '@/lib/kakeibo-math';
 import { buildYearlySummary } from '@/lib/remittance-math';
 import { activeWalls } from '@/lib/wall-warnings';
@@ -31,7 +31,7 @@ import type { MainTabParamList } from '@/navigation/MainTabs';
 import type { RootStackParamList } from '@/navigation/RootNavigator';
 import { useCalculatorStore } from '@/store/calculatorStore';
 import { useFurusatoStore } from '@/store/furusatoStore';
-import { getSavedTotal, isGoalCompleted, useGoalsStore } from '@/store/goalsStore';
+import { useGoalsStore } from '@/store/goalsStore';
 import { useKakeiboStore } from '@/store/kakeiboStore';
 import { useOnboardingStore } from '@/store/onboardingStore';
 import { useRemittanceStore } from '@/store/remittanceStore';
@@ -84,24 +84,20 @@ export function DashboardScreen() {
     return { totalSpent: r.totalSpent, percentOfIncome };
   })();
 
-  // Pick the active goal closest to completion (highest progressPercent).
-  // We don't compute monthly figures here — the dashboard card only needs
-  // %-and-remaining, projection details live on the GoalsScreen.
+  // Featured goal = active goal with the nearest future deadline, else
+  // largest remaining, else null. See `selectFeaturedGoal` for the
+  // tie-break rules. We compute health here so the card can also show
+  // the required-monthly-saving when the goal has a deadline.
   const featuredGoal = (() => {
-    const active = goals.filter((g) => !isGoalCompleted(g));
-    if (active.length === 0) return null;
-    let best = active[0]!;
-    let bestPct = getSavedTotal(best) / best.targetAmount;
-    for (let i = 1; i < active.length; i++) {
-      const g = active[i]!;
-      const pct = getSavedTotal(g) / g.targetAmount;
-      if (pct > bestPct) {
-        best = g;
-        bestPct = pct;
-      }
-    }
-    const proj = computeGoalProjection({ saved: getSavedTotal(best), target: best.targetAmount });
-    return { goal: best, percent: Math.round(proj.progressPercent * 100), remaining: proj.remaining };
+    const picked = selectFeaturedGoal(goals);
+    if (!picked) return null;
+    const health = computeGoalHealth({ goal: picked });
+    return {
+      goal: picked,
+      percent: Math.round(health.progressPercent * 100),
+      remaining: health.remainingAmount,
+      requiredMonthlySaving: health.requiredMonthlySaving,
+    };
   })();
 
   const goToCalculator = () => navigation.navigate('Calculator');
@@ -373,6 +369,13 @@ export function DashboardScreen() {
                 remaining: formatCurrency(featuredGoal.remaining),
               })}
             </Text>
+            {featuredGoal.requiredMonthlySaving !== undefined ? (
+              <Text style={[typography.caption, { color: colors.textSecondary, marginTop: 2 }]}>
+                {t('goals.progress.monthlyTarget', {
+                  amount: formatCurrency(featuredGoal.requiredMonthlySaving),
+                })}
+              </Text>
+            ) : null}
           </Pressable>
         ) : (
           <Pressable

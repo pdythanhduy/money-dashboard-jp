@@ -846,6 +846,9 @@
       "deadline": "期限 (任意)",
       "deadlineHint": "期限が無ければ空欄でOK",
       "icon": "アイコン",
+      "category": "カテゴリ",
+      "monthlyContribution": "毎月の貯金額 (任意)",
+      "monthlyContributionHint": "毎月一定額を貯める予定があれば入力",
       "note": "メモ",
       "notePlaceholder": "詳細、理由、プラン..."
     },
@@ -901,7 +904,13 @@
       "deleteConfirmTitle": "この目標を削除しますか？",
       "deleteConfirmBody": "記録した全ての貯金履歴も失われます。元に戻せません。",
       "removeSavings": "この記録を削除",
-      "save": "保存"
+      "save": "保存",
+      "pause": "一時停止",
+      "resume": "再開",
+      "markComplete": "達成にする",
+      "cancel": "目標を中止",
+      "cancelConfirmTitle": "この目標を中止しますか？",
+      "cancelConfirmBody": "目標は「中止」状態になります。後で再開できます。"
     },
     "addSavings": {
       "title": "貯金を追加",

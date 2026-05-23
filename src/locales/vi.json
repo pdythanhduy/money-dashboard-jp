@@ -846,6 +846,9 @@
       "deadline": "Hạn chót (tuỳ chọn)",
       "deadlineHint": "Để trống nếu chưa có hạn cụ thể",
       "icon": "Biểu tượng",
+      "category": "Phân loại",
+      "monthlyContribution": "Để dành mỗi tháng (tuỳ chọn)",
+      "monthlyContributionHint": "Nhập nếu bạn có kế hoạch tiết kiệm cố định mỗi tháng",
       "note": "Ghi chú",
       "notePlaceholder": "Chi tiết, lý do, kế hoạch..."
     },
@@ -901,7 +904,13 @@
       "deleteConfirmTitle": "Xoá mục tiêu này?",
       "deleteConfirmBody": "Tất cả khoản tiết kiệm đã ghi sẽ mất theo. Hành động không thể hoàn tác.",
       "removeSavings": "Xoá khoản này",
-      "save": "Lưu"
+      "save": "Lưu",
+      "pause": "Tạm dừng",
+      "resume": "Tiếp tục",
+      "markComplete": "Đánh dấu hoàn thành",
+      "cancel": "Huỷ mục tiêu",
+      "cancelConfirmTitle": "Huỷ mục tiêu này?",
+      "cancelConfirmBody": "Mục tiêu sẽ chuyển sang trạng thái đã huỷ. Bạn có thể tiếp tục lại sau."
     },
     "addSavings": {
       "title": "Thêm khoản tiết kiệm",
