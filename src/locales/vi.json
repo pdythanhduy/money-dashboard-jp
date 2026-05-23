@@ -860,6 +860,27 @@
       "heart": "Sức khoẻ",
       "star": "Khác"
     },
+    "categories": {
+      "home_visit": "Về Việt Nam",
+      "emergency_fund": "Quỹ dự phòng",
+      "travel": "Du lịch",
+      "moving": "Chuyển nhà",
+      "shopping": "Mua sắm",
+      "education": "Học hành",
+      "other": "Khác"
+    },
+    "status": {
+      "active": "Đang tiến hành",
+      "paused": "Tạm dừng",
+      "completed": "Đã hoàn thành",
+      "cancelled": "Đã huỷ"
+    },
+    "health": {
+      "on_track": "Đang đúng tiến độ",
+      "behind": "Đang chậm tiến độ",
+      "completed": "Đã đạt mục tiêu",
+      "no_deadline": "Chưa đặt hạn"
+    },
     "progress": {
       "savedOfTarget": "{{saved}} / {{target}}",
       "remaining": "Còn thiếu {{amount}}",

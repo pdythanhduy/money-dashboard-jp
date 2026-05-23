@@ -860,6 +860,27 @@
       "heart": "健康",
       "star": "その他"
     },
+    "categories": {
+      "home_visit": "一時帰国",
+      "emergency_fund": "予備費",
+      "travel": "旅行",
+      "moving": "引っ越し",
+      "shopping": "買い物",
+      "education": "学業・スキル",
+      "other": "その他"
+    },
+    "status": {
+      "active": "進行中",
+      "paused": "一時停止",
+      "completed": "達成",
+      "cancelled": "中止"
+    },
+    "health": {
+      "on_track": "順調",
+      "behind": "遅れ気味",
+      "completed": "達成済み",
+      "no_deadline": "期限なし"
+    },
     "progress": {
       "savedOfTarget": "{{saved}} / {{target}}",
       "remaining": "残り {{amount}}",
