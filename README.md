@@ -12,10 +12,21 @@ verified FY2026 (令和8年度) rates from 国税庁 / 協会けんぽ / 日本�
 - **Calculator** — Compute 所得税, 復興特別所得税, 住民税, 健康保険,
   介護保険, 厚生年金, 雇用保険 (salary) OR 国民健康保険 + 国民年金
   (freelance). Supports 8 prefectures + Osaka-shi / Tokyo 23-ku NHI.
-- **Dashboard** — Real-time proportional take-home for the current month,
-  payday countdown (configurable day-of-month), retention rate, mini stats.
+- **Dashboard** — Real-time proportional take-home, payday countdown,
+  daily-spending hero with salary-anchored allowance + 7-day mini chart,
+  real document-deadline reminders, quick-add FAB.
+- **Kakeibo** — Daily expense tracker with 12 categories, recurring
+  templates (manual or auto-post), per-category budgets, segmented
+  Overview / Charts / List tabs, monthly comparison, and rule-based
+  insights (top category, MoM delta, daily-allowance breach, high food
+  ratio, safe-month signal).
+- **Documents** — User-added deadlines (residence card, visa, passport,
+  contracts, tax) surfaced on Dashboard with real days-left + severity
+  buckets. Local notifications optional.
+- **Goals / ふるさと納税 / 医療費 / 仕送り / 確定申告** — per-domain
+  planning modules, all on-device.
 - **History** — Persistent log of every calculation with a 6-month trend
-  chart (SVG, no chart-library dep) and editable label / note per entry.
+  chart and editable label / note per entry.
 - **Settings** — Language (vi / ja / system), theme (light / dark / system),
   default prefecture & payday, GDPR-friendly export + clear-data flows.
 - **Onboarding** — 4-slide swipe-paginated welcome with quick-setup.
@@ -119,8 +130,14 @@ MIT — see [`LICENSE`](LICENSE).
 
 ## Status
 
-v0.2.0. Feature-complete for 17 phases (5A–5Q): Foundation → Calculator →
-Dashboard → History → Settings → Onboarding → Multi-job → Documents →
-Medical → ふるさと納税 → Goals → Kakeibo → Remittance → 確定申告.
-Pending real Privacy / Terms hosting URLs and final icon polish before
-App Store / Play submission.
+v0.2.0. Feature-complete through Phase 5W release-hardening pass.
+Pipeline: 5A–5Q (Foundation → Calculator → Dashboard → History → Settings →
+Onboarding → Multi-job → Documents → Medical → ふるさと納税 → Goals →
+Kakeibo → Remittance → 確定申告) → 5U Kakeibo daily UX (recurring +
+quick-add FAB + daily card) → 5V real document deadlines (Dashboard
+upcoming reminders no longer use stubs) → kakeibo charts + insights →
+5W hardening (safe_month gating, high_food floor, list-only category
+filter, app display name "Kakei").
+
+Pending before submission: real Privacy / Terms hosting URLs and final
+icon polish.

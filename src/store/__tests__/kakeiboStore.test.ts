@@ -25,10 +25,10 @@ jest.mock('expo-crypto', () => {
   return { randomUUID: jest.fn(() => `kak-${++n}`) };
 });
 
-import { MAX_ENTRIES, useKakeiboStore } from '@/store/kakeiboStore';
+import { MAX_ENTRIES, MAX_RECURRINGS, useKakeiboStore } from '@/store/kakeiboStore';
 
 beforeEach(() => {
-  useKakeiboStore.setState({ entries: [], budgets: [] });
+  useKakeiboStore.setState({ entries: [], budgets: [], recurrings: [] });
 });
 
 describe('kakeiboStore.addEntry', () => {
@@ -125,12 +125,72 @@ describe('kakeiboStore.setBudget', () => {
 });
 
 describe('kakeiboStore.clearAll', () => {
-  it('wipes both entries and budgets', () => {
-    const { addEntry, setBudget, clearAll } = useKakeiboStore.getState();
+  it('wipes entries, budgets, AND recurrings', () => {
+    const { addEntry, setBudget, addRecurring, clearAll } = useKakeiboStore.getState();
     addEntry({ date: '2026-05-01', amount: 100, category: 'food' });
     setBudget('food', 30_000);
+    addRecurring({ name: 'Wifi', amount: 4_500, category: 'communication', dayOfMonth: 1 });
     clearAll();
     expect(useKakeiboStore.getState().entries).toEqual([]);
     expect(useKakeiboStore.getState().budgets).toEqual([]);
+    expect(useKakeiboStore.getState().recurrings).toEqual([]);
+  });
+});
+
+describe('kakeiboStore — recurrings', () => {
+  it('addRecurring returns added=true with id, defaults active=true, clamps dayOfMonth', () => {
+    const r = useKakeiboStore.getState().addRecurring({
+      name: 'Tiền điện',
+      amount: 8_000,
+      category: 'utilities',
+      dayOfMonth: 99, // clamped to 31
+    });
+    expect(r.added).toBe(true);
+    expect(r.recurring?.dayOfMonth).toBe(31);
+    expect(r.recurring?.active).toBe(true);
+    expect(r.recurring?.createdAt).toMatch(/^\d{4}-\d{2}-\d{2}T/);
+  });
+
+  it('refuses past MAX_RECURRINGS with reason=limit_reached', () => {
+    const store = useKakeiboStore.getState();
+    for (let i = 0; i < MAX_RECURRINGS; i++) {
+      store.addRecurring({
+        name: `R${i}`,
+        amount: 1_000,
+        category: 'other',
+        dayOfMonth: 1,
+      });
+    }
+    const r = store.addRecurring({
+      name: 'overflow',
+      amount: 1_000,
+      category: 'other',
+      dayOfMonth: 1,
+    });
+    expect(r.added).toBe(false);
+    expect(r.reason).toBe('limit_reached');
+    expect(useKakeiboStore.getState().recurrings).toHaveLength(MAX_RECURRINGS);
+  });
+
+  it('toggleRecurringActive flips active flag', () => {
+    const { addRecurring, toggleRecurringActive, getRecurring } = useKakeiboStore.getState();
+    const a = addRecurring({ name: 'Wifi', amount: 4_500, category: 'communication', dayOfMonth: 5 })
+      .recurring!;
+    expect(getRecurring(a.id)?.active).toBe(true);
+    toggleRecurringActive(a.id);
+    expect(getRecurring(a.id)?.active).toBe(false);
+    toggleRecurringActive(a.id);
+    expect(getRecurring(a.id)?.active).toBe(true);
+  });
+
+  it('markRecurringGenerated sets lastGeneratedYearMonth on matching id only', () => {
+    const { addRecurring, markRecurringGenerated, getRecurring } = useKakeiboStore.getState();
+    const a = addRecurring({ name: 'Rent', amount: 80_000, category: 'rent', dayOfMonth: 27 })
+      .recurring!;
+    const b = addRecurring({ name: 'Wifi', amount: 4_500, category: 'communication', dayOfMonth: 5 })
+      .recurring!;
+    markRecurringGenerated(a.id, '2026-05');
+    expect(getRecurring(a.id)?.lastGeneratedYearMonth).toBe('2026-05');
+    expect(getRecurring(b.id)?.lastGeneratedYearMonth).toBeUndefined();
   });
 });

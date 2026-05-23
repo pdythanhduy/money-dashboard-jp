@@ -13,6 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { APP_VERSION } from '@/lib/app-info';
 import { cancelAllReminders } from '@/lib/notifications';
 import { useCalculatorStore } from '@/store/calculatorStore';
+import { useDocumentDeadlineStore } from '@/store/documentDeadlineStore';
 import { useDocumentsStore } from '@/store/documentsStore';
 import { useFurusatoStore } from '@/store/furusatoStore';
 import { useGoalsStore } from '@/store/goalsStore';
@@ -72,6 +73,7 @@ export async function wipeAllAppData(): Promise<void> {
   useOnboardingStore.getState().reset();
   useMultiJobStore.getState().clearAll();
   useDocumentsStore.getState().clearAll();
+  useDocumentDeadlineStore.getState().clearDocumentDeadlines();
   useMedicalExpensesStore.getState().clearAll();
   useFurusatoStore.getState().clearAll();
   useGoalsStore.getState().clearAll();

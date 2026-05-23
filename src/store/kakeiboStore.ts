@@ -14,12 +14,21 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 import type { BudgetTarget, ExpenseCategory, KakeiboEntry } from '@/lib/kakeibo-math';
+import type { RecurringExpense } from '@/types/recurring-expense';
 
 export const MAX_ENTRIES = 5000;
+/** Cap on recurring rows — even power users rarely have > ~15 (rent, utilities, mobile, etc.). */
+export const MAX_RECURRINGS = 30;
 
 export interface AddEntryResult {
   added: boolean;
   entry?: KakeiboEntry;
+  reason?: 'limit_reached';
+}
+
+export interface AddRecurringResult {
+  added: boolean;
+  recurring?: RecurringExpense;
   reason?: 'limit_reached';
 }
 
@@ -32,9 +41,21 @@ interface AddEntryInput {
   isRecurring?: boolean;
 }
 
+interface AddRecurringInput {
+  name: string;
+  amount: number;
+  category: ExpenseCategory;
+  dayOfMonth: number;
+  note?: string;
+  active?: boolean;
+  /** Defaults to false — see RecurringExpense.autoPost docs. */
+  autoPost?: boolean;
+}
+
 interface KakeiboStore {
   entries: KakeiboEntry[];
   budgets: BudgetTarget[];
+  recurrings: RecurringExpense[];
 
   addEntry: (input: AddEntryInput) => AddEntryResult;
   updateEntry: (id: string, partial: Partial<Omit<KakeiboEntry, 'id'>>) => void;
@@ -46,10 +67,19 @@ interface KakeiboStore {
   removeBudget: (category: ExpenseCategory) => void;
   clearBudgets: () => void;
 
+  addRecurring: (input: AddRecurringInput) => AddRecurringResult;
+  updateRecurring: (id: string, partial: Partial<Omit<RecurringExpense, 'id' | 'createdAt'>>) => void;
+  removeRecurring: (id: string) => void;
+  toggleRecurringActive: (id: string) => void;
+  toggleRecurringAutoPost: (id: string) => void;
+  markRecurringGenerated: (id: string, yearMonth: string) => void;
+  clearRecurrings: () => void;
+
   clearAll: () => void;
 
   getEntry: (id: string) => KakeiboEntry | undefined;
   getBudget: (category: ExpenseCategory) => BudgetTarget | undefined;
+  getRecurring: (id: string) => RecurringExpense | undefined;
 }
 
 function sortDescByDate(list: KakeiboEntry[]): KakeiboEntry[] {
@@ -61,6 +91,7 @@ export const useKakeiboStore = create<KakeiboStore>()(
     (set, get) => ({
       entries: [],
       budgets: [],
+      recurrings: [],
 
       addEntry: (input) => {
         const current = get().entries;
@@ -122,15 +153,78 @@ export const useKakeiboStore = create<KakeiboStore>()(
 
       clearBudgets: () => set({ budgets: [] }),
 
-      clearAll: () => set({ entries: [], budgets: [] }),
+      addRecurring: (input) => {
+        const current = get().recurrings;
+        if (current.length >= MAX_RECURRINGS) {
+          return { added: false, reason: 'limit_reached' };
+        }
+        const recurring: RecurringExpense = {
+          id: Crypto.randomUUID(),
+          name: input.name,
+          amount: input.amount,
+          category: input.category,
+          dayOfMonth: Math.min(Math.max(1, Math.floor(input.dayOfMonth)), 31),
+          active: input.active ?? true,
+          autoPost: input.autoPost ?? false,
+          createdAt: new Date().toISOString(),
+          ...(input.note ? { note: input.note } : {}),
+        };
+        set({ recurrings: [...current, recurring] });
+        return { added: true, recurring };
+      },
+
+      updateRecurring: (id, partial) => {
+        set({
+          recurrings: get().recurrings.map((r) =>
+            r.id === id ? { ...r, ...partial } : r,
+          ),
+        });
+      },
+
+      removeRecurring: (id) => {
+        set({ recurrings: get().recurrings.filter((r) => r.id !== id) });
+      },
+
+      toggleRecurringActive: (id) => {
+        set({
+          recurrings: get().recurrings.map((r) =>
+            r.id === id ? { ...r, active: !r.active } : r,
+          ),
+        });
+      },
+
+      toggleRecurringAutoPost: (id) => {
+        set({
+          recurrings: get().recurrings.map((r) =>
+            r.id === id ? { ...r, autoPost: !r.autoPost } : r,
+          ),
+        });
+      },
+
+      markRecurringGenerated: (id, yearMonth) => {
+        set({
+          recurrings: get().recurrings.map((r) =>
+            r.id === id ? { ...r, lastGeneratedYearMonth: yearMonth } : r,
+          ),
+        });
+      },
+
+      clearRecurrings: () => set({ recurrings: [] }),
+
+      clearAll: () => set({ entries: [], budgets: [], recurrings: [] }),
 
       getEntry: (id) => get().entries.find((e) => e.id === id),
       getBudget: (category) => get().budgets.find((b) => b.category === category),
+      getRecurring: (id) => get().recurrings.find((r) => r.id === id),
     }),
     {
       name: 'kakei-kakeibo-v1',
       storage: createJSONStorage(() => AsyncStorage),
-      partialize: (state) => ({ entries: state.entries, budgets: state.budgets }),
+      partialize: (state) => ({
+        entries: state.entries,
+        budgets: state.budgets,
+        recurrings: state.recurrings,
+      }),
     },
   ),
 );

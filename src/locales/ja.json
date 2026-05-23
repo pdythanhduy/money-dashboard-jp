@@ -386,6 +386,21 @@
       "title": "6ヶ月のトレンド",
       "needsTwoPoints": "6ヶ月のトレンドを表示するには2回以上の計算が必要です"
     },
+    "dailySpending": {
+      "title": "今日の支出",
+      "today": "今日は {{amount}} 使用",
+      "dailyRemaining": "今月残り {{amount}}/日",
+      "underBudget": "予算内",
+      "overBudget": "平均を超過",
+      "noBudget": "予算未設定 — 家計簿で設定してください",
+      "viewAll": "詳細を見る",
+      "quickAddFab": "簡単に追加",
+      "fixedCostTotal": "固定費 {{amount}}",
+      "remainingMonth": "月末まで残り {{amount}}",
+      "statusSafe": "安全",
+      "statusWarning": "注意",
+      "statusDanger": "危険"
+    },
     "upcoming": {
       "title": "もうすぐ期限",
       "daysLeft": "あと{{days}}日",
@@ -549,6 +564,24 @@
     "title": "書類",
     "subtitle": "期限が近い書類を通知",
     "expiryLabel": "期限:",
+    "expiryDate": "有効期限",
+    "remindBefore": "何日前に通知",
+    "type": "書類の種類",
+    "note": "メモ",
+    "titleField": "書類名",
+    "titlePlaceholder": "例: 私の在留カード",
+    "todayExpiry": "本日期限",
+    "types": {
+      "residence_card": "在留カード",
+      "visa": "ビザ",
+      "my_number": "マイナンバー",
+      "passport": "パスポート",
+      "health_insurance": "健康保険",
+      "housing_contract": "賃貸契約",
+      "phone_contract": "携帯契約",
+      "tax": "税金・確定申告",
+      "other": "その他"
+    },
     "daysLeft": "あと{{days}}日",
     "expired": "期限切れ",
     "today": "本日",
@@ -935,6 +968,73 @@
       "percentOfIncome": "月収の {{percent}}%",
       "noIncome": "Calculatorの結果なし",
       "viewDetails": "詳細を見る"
+    },
+    "charts": {
+      "tabs": {
+        "overview": "概要",
+        "charts": "グラフ",
+        "list": "明細"
+      },
+      "daily": {
+        "title": "日別支出"
+      },
+      "monthly": {
+        "title": "月別推移"
+      },
+      "category": {
+        "title": "カテゴリ別支出"
+      },
+      "empty": "グラフを表示するデータがありません"
+    },
+    "insights": {
+      "title": "今月の気づき",
+      "topCategory": {
+        "title": "一番多い支出カテゴリ",
+        "body": "{{category}}に最も多く使っています：{{amount}}。"
+      },
+      "monthIncrease": {
+        "title": "先月より支出が増えています",
+        "body": "今月は先月より{{amount}}多く使っています。"
+      },
+      "monthDecrease": {
+        "title": "先月より支出が減っています",
+        "body": "今月は先月より{{amount}}少なく使っています。"
+      },
+      "todayOver": {
+        "title": "今日は少し使いすぎです",
+        "body": "今日の安全ラインを{{amount}}超えています。"
+      },
+      "highFood": {
+        "title": "食費の割合が高めです",
+        "body": "食費が今月の支出の{{percent}}%を占めています。"
+      },
+      "safeMonth": {
+        "title": "今月は比較的安全です",
+        "body": "現在の支出は手取り月収の70%未満です。"
+      }
+    },
+    "recurring": {
+      "title": "定期支出",
+      "addButton": "定期支出を追加",
+      "emptyState": "定期支出はまだありません。家賃、Wi-Fi、電気代などを追加すると毎月自動記録します。",
+      "dayLabel": "毎月 {{day}} 日",
+      "nameLabel": "項目名",
+      "namePlaceholder": "例: 電気代、ソフトバンクWi-Fi",
+      "addTitle": "定期支出を追加",
+      "editTitle": "定期支出を編集",
+      "activeLabel": "有効",
+      "autoNote": "毎月この日に自動でエントリ作成",
+      "autoPostLabel": "自動記録",
+      "autoPostHint": "オンにすると、毎月指定日に自動で記録します。",
+      "pendingThisMonth": "期限到来 — 承認待ち",
+      "addThisMonth": "今月に追加",
+      "limitReached": "定期支出は{{max}}件までです"
+    },
+    "quickAdd": {
+      "title": "簡単に追加",
+      "recentAmounts": "クイック金額",
+      "success": "記録しました",
+      "todayDate": "今日"
     }
   },
   "remittance": {

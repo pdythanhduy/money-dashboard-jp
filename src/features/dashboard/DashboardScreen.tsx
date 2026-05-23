@@ -1,9 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, RefreshControl, ScrollView, Text, View } from 'react-native';
 
+import { DailySpendingCard } from '@/features/dashboard/components/DailySpendingCard';
 import { EmptyState } from '@/features/dashboard/components/EmptyState';
 import { GreetingHeader } from '@/features/dashboard/components/GreetingHeader';
 import { MonthlyTrendChart } from '@/features/dashboard/components/MonthlyTrendChart';
@@ -14,6 +16,7 @@ import { useDashboardData } from '@/features/dashboard/hooks/useDashboardData';
 import { isFurusatoUseful } from '@/features/furusato/furusato-eligibility';
 import { useFurusatoSummary } from '@/features/furusato/hooks/useFurusatoSummary';
 import { iconNameFor } from '@/features/goals/components/IconPicker';
+import { QuickAddExpenseModal } from '@/features/kakeibo/components/QuickAddExpenseModal';
 import { useMedicalSummary } from '@/features/medical/hooks/useMedicalSummary';
 import { formatCurrency } from '@/lib/format';
 import { computeGoalProjection } from '@/lib/goals-math';
@@ -35,6 +38,7 @@ export function DashboardScreen() {
   const { t } = useTranslation();
   const { colors, typography, spacing, radius } = useTheme();
   const navigation = useNavigation<DashboardNavigationProp>();
+  const [quickAddOpen, setQuickAddOpen] = useState(false);
   const data = useDashboardData();
   const lastInputAnnual = useCalculatorStore((s) => s.lastInput?.annualIncome ?? 0);
   const walls = activeWalls(lastInputAnnual);
@@ -44,9 +48,16 @@ export function DashboardScreen() {
   const furusatoDonations = useFurusatoStore((s) => s.donations);
   const goals = useGoalsStore((s) => s.goals);
   const kakeiboEntries = useKakeiboStore((s) => s.entries);
+  const kakeiboRecurrings = useKakeiboStore((s) => s.recurrings);
   const remittanceEntries = useRemittanceStore((s) => s.entries);
   const remittanceGoal = useRemittanceStore((s) => s.annualGoalJPY);
   const takeHomeMonthly = useCalculatorStore((s) => s.lastResult?.takeHomeMonthly ?? 0);
+
+  // FAB only makes sense if the user has anything to budget AGAINST or
+  // any existing log activity. Otherwise the floating "+" lands on an
+  // empty dashboard with no context — confusing.
+  const showQuickAddFab =
+    takeHomeMonthly > 0 || kakeiboEntries.length > 0 || kakeiboRecurrings.length > 0;
 
   const remittanceThisYear = (() => {
     if (remittanceEntries.length === 0) return null;
@@ -206,6 +217,7 @@ export function DashboardScreen() {
           daysInMonth={data.daysInMonth}
           daysPassed={data.daysPassed}
         />
+        <DailySpendingCard onPress={goToKakeibo} />
         <QuickStatsRow
           proportionalTax={data.proportionalTax}
           proportionalInsurance={data.proportionalInsurance}
@@ -455,6 +467,35 @@ export function DashboardScreen() {
           </Pressable>
         </View>
       </ScrollView>
+
+      {showQuickAddFab ? (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t('dashboard.dailySpending.quickAddFab')}
+          onPress={() => setQuickAddOpen(true)}
+          style={({ pressed }) => ({
+            position: 'absolute',
+            right: spacing.lg,
+            bottom: spacing.lg,
+            width: 56,
+            height: 56,
+            borderRadius: 28,
+            backgroundColor: colors.brand,
+            alignItems: 'center',
+            justifyContent: 'center',
+            opacity: pressed ? 0.85 : 1,
+            shadowColor: '#000',
+            shadowOpacity: 0.25,
+            shadowRadius: 8,
+            shadowOffset: { width: 0, height: 2 },
+            elevation: 4,
+          })}
+        >
+          <Ionicons name="add" size={28} color={colors.textInverse} />
+        </Pressable>
+      ) : null}
+
+      <QuickAddExpenseModal visible={quickAddOpen} onClose={() => setQuickAddOpen(false)} />
     </View>
   );
 }

@@ -386,6 +386,21 @@
       "title": "Xu hướng 6 tháng",
       "needsTwoPoints": "Cần ít nhất 2 lần tính để xem xu hướng 6 tháng"
     },
+    "dailySpending": {
+      "title": "Chi tiêu hôm nay",
+      "today": "Hôm nay đã tiêu {{amount}}",
+      "dailyRemaining": "Còn {{amount}}/ngày cho hết tháng",
+      "underBudget": "Trong ngân sách",
+      "overBudget": "Vượt trung bình",
+      "noBudget": "Chưa đặt budget — vào Kakeibo để thiết lập",
+      "viewAll": "Xem chi tiết",
+      "quickAddFab": "Thêm chi nhanh",
+      "fixedCostTotal": "Chi cố định {{amount}}",
+      "remainingMonth": "Còn {{amount}} đến cuối tháng",
+      "statusSafe": "An toàn",
+      "statusWarning": "Cảnh báo",
+      "statusDanger": "Nguy hiểm"
+    },
     "upcoming": {
       "title": "Sắp tới hạn",
       "daysLeft": "còn {{days}} ngày",
@@ -549,6 +564,24 @@
     "title": "Giấy tờ",
     "subtitle": "Nhắc các giấy tờ sắp hết hạn",
     "expiryLabel": "Hết hạn:",
+    "expiryDate": "Ngày hết hạn",
+    "remindBefore": "Nhắc trước",
+    "type": "Loại giấy tờ",
+    "note": "Ghi chú",
+    "titleField": "Tên giấy tờ",
+    "titlePlaceholder": "VD: Thẻ cư trú của tôi",
+    "todayExpiry": "Hôm nay hết hạn",
+    "types": {
+      "residence_card": "Thẻ cư trú",
+      "visa": "Visa",
+      "my_number": "My Number",
+      "passport": "Hộ chiếu",
+      "health_insurance": "Bảo hiểm y tế",
+      "housing_contract": "Hợp đồng nhà",
+      "phone_contract": "Hợp đồng điện thoại",
+      "tax": "Thuế / khai thuế",
+      "other": "Khác"
+    },
     "daysLeft": "Còn {{days}} ngày",
     "expired": "Đã hết hạn",
     "today": "Hôm nay",
@@ -935,6 +968,73 @@
       "percentOfIncome": "{{percent}}% thu nhập tháng",
       "noIncome": "Chưa có thu nhập từ Calculator",
       "viewDetails": "Xem chi tiết"
+    },
+    "charts": {
+      "tabs": {
+        "overview": "Tổng quan",
+        "charts": "Biểu đồ",
+        "list": "Danh sách"
+      },
+      "daily": {
+        "title": "Chi tiêu từng ngày"
+      },
+      "monthly": {
+        "title": "Xu hướng theo tháng"
+      },
+      "category": {
+        "title": "Chi tiêu theo nhóm"
+      },
+      "empty": "Chưa có dữ liệu để vẽ biểu đồ"
+    },
+    "insights": {
+      "title": "Nhận xét tháng này",
+      "topCategory": {
+        "title": "Nhóm chi nhiều nhất",
+        "body": "Bạn tiêu nhiều nhất cho {{category}}: {{amount}}."
+      },
+      "monthIncrease": {
+        "title": "Chi tiêu tăng so với tháng trước",
+        "body": "Tháng này cao hơn tháng trước {{amount}}."
+      },
+      "monthDecrease": {
+        "title": "Chi tiêu giảm so với tháng trước",
+        "body": "Tháng này thấp hơn tháng trước {{amount}}."
+      },
+      "todayOver": {
+        "title": "Hôm nay hơi quá tay",
+        "body": "Bạn đã tiêu vượt mức an toàn hôm nay {{amount}}."
+      },
+      "highFood": {
+        "title": "Ăn uống đang chiếm tỷ lệ cao",
+        "body": "Ăn uống chiếm {{percent}}% tổng chi tiêu tháng này."
+      },
+      "safeMonth": {
+        "title": "Tháng này đang khá an toàn",
+        "body": "Tổng chi hiện vẫn dưới 70% lương thực nhận."
+      }
+    },
+    "recurring": {
+      "title": "Chi cố định định kỳ",
+      "addButton": "Thêm khoản định kỳ",
+      "emptyState": "Chưa có khoản định kỳ nào. Thêm tiền nhà, wifi, điện... để app tự ghi mỗi tháng.",
+      "dayLabel": "Ngày {{day}} hàng tháng",
+      "nameLabel": "Tên khoản",
+      "namePlaceholder": "VD: Tiền điện, Wifi Softbank",
+      "addTitle": "Thêm khoản định kỳ",
+      "editTitle": "Sửa khoản định kỳ",
+      "activeLabel": "Đang bật",
+      "autoNote": "Tự động tạo entry vào ngày này mỗi tháng",
+      "autoPostLabel": "Tự động ghi",
+      "autoPostHint": "Nếu bật, app sẽ tự ghi khoản này mỗi tháng khi đến ngày.",
+      "pendingThisMonth": "Tới hạn — chờ xác nhận",
+      "addThisMonth": "Thêm vào tháng này",
+      "limitReached": "Đã đạt giới hạn {{max}} khoản định kỳ"
+    },
+    "quickAdd": {
+      "title": "Thêm chi nhanh",
+      "recentAmounts": "Số tiền nhanh",
+      "success": "Đã ghi",
+      "todayDate": "Hôm nay"
     }
   },
   "remittance": {
