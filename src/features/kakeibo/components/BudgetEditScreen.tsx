@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  Alert,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -76,6 +77,10 @@ export function BudgetEditScreen({ visible, onClose }: Props) {
       monthlyLimit: parseYen(draft[category] ?? ''),
     }));
     setBudgets(next);
+    // Lightweight confirmation: the Overview tab will surface the new
+    // budgets immediately, but a toast removes the "did anything happen?"
+    // moment after pressing Save.
+    Alert.alert(t('kakeibo.budget.saveSuccess'));
     onClose();
   };
 
