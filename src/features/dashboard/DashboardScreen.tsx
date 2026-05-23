@@ -264,6 +264,11 @@ export function DashboardScreen() {
         <DailySpendingCard onPress={goToKakeibo} />
         <WeeklyReviewCard onPress={goToKakeibo} />
         <TaxChecklistReminderCard onPress={goToKakutei} />
+        {/* Date-sensitive deadlines (residence card, visa, payday)
+            belong above the at-a-glance stats — they're action items,
+            not status. Used to render at the very bottom of the
+            Dashboard which buried them. */}
+        <UpcomingEventsCard reminders={data.upcomingReminders} />
         <QuickStatsRow
           proportionalTax={data.proportionalTax}
           proportionalInsurance={data.proportionalInsurance}
@@ -498,7 +503,6 @@ export function DashboardScreen() {
         ) : null}
         <TripBudgetCard onPress={goToTripBudget} />
         <MonthlyTrendChart />
-        <UpcomingEventsCard reminders={data.upcomingReminders} />
 
         <View style={{ alignItems: 'center', marginTop: spacing.xl, paddingHorizontal: spacing.lg }}>
           <Text
