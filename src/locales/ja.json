@@ -465,7 +465,7 @@
       "security": "アプリを再表示するときにFace ID / Touch IDを要求します"
     },
     "values": {
-      "languageSystem": "システムに従う（自動検出）",
+      "languageSystem": "システムに従う",
       "languageVi": "Tiếng Việt",
       "languageJa": "日本語",
       "themeSystem": "システムに従う",
