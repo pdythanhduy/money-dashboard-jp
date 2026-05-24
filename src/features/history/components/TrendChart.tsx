@@ -18,6 +18,17 @@ export function TrendChart({ data, width, height }: TrendChartProps) {
   const { t } = useTranslation();
   const { colors, typography } = useTheme();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  // ALL hooks must run unconditionally on every render — the previous
+  // structure early-returned for data.length < 2 BEFORE calling useMemo,
+  // which made React see a different hook count between the "empty" and
+  // "has data" paths and threw "Rendered fewer hooks than expected" as
+  // soon as a user navigated into a populated History screen. Compute
+  // layout unconditionally (returns null for short data, which the early
+  // return below catches without touching the hook order).
+  const layout = useMemo(
+    () => (data.length < 2 ? null : buildTrendChartLayout(data, width, height)),
+    [data, width, height],
+  );
 
   if (data.length < 2) {
     return (
@@ -36,9 +47,6 @@ export function TrendChart({ data, width, height }: TrendChartProps) {
     );
   }
 
-  // Layout math is pure but non-trivial — memo so swipes / theme flips don't
-  // recompute the SVG path string on every render.
-  const layout = useMemo(() => buildTrendChartLayout(data, width, height), [data, width, height]);
   if (!layout) return null;
   const activeDot = activeIndex !== null ? layout.dots[activeIndex] : null;
 
