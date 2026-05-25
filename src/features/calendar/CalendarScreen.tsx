@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useMemo, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import { useDocumentDeadlineStore } from '@/store/documentDeadlineStore';
@@ -29,12 +30,14 @@ function todayIso(): string {
 export function CalendarScreen() {
   const { t, i18n } = useTranslation();
   const { colors, typography, spacing, radius } = useTheme();
+  const insets = useSafeAreaInsets();
 
   const today = todayIso();
   const [todayYear, todayMonth] = [Number(today.slice(0, 4)), Number(today.slice(5, 7))];
   const [year, setYear] = useState(todayYear);
   const [month, setMonth] = useState(todayMonth);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const isOnToday = year === todayYear && month === todayMonth;
 
   const kakeibo = useKakeiboStore((s) => s.entries);
   const recurringExpenses = useKakeiboStore((s) => s.recurrings);
@@ -100,38 +103,98 @@ export function CalendarScreen() {
     setMonth(todayMonth);
   };
 
+  // Bottom padding clears tab bar + home indicator. Tab bar height + extra
+  // breathing room so the last card isn't flush against the chrome.
+  const scrollBottomPad = spacing.xl + insets.bottom;
+
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
-      <ScrollView contentContainerStyle={{ padding: spacing.md, gap: spacing.md }}>
+    <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: colors.background }}>
+      {/* Header is OUTSIDE the ScrollView so it stays pinned and never crowds
+          the notch when the user scrolls down. */}
+      <View
+        style={{
+          paddingHorizontal: spacing.md,
+          paddingTop: spacing.sm,
+          paddingBottom: spacing.sm,
+          borderBottomWidth: 1,
+          borderBottomColor: colors.border,
+          backgroundColor: colors.background,
+        }}
+      >
         <View
           style={{
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
-            marginTop: spacing.sm,
+            minHeight: 44,
           }}
         >
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={t('calendar.prevMonth')}
             onPress={goPrev}
-            hitSlop={8}
+            hitSlop={12}
+            style={{
+              width: 44,
+              height: 44,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
           >
             <Ionicons name="chevron-back" size={26} color={colors.text} />
           </Pressable>
-          <Pressable accessibilityRole="button" onPress={goToday} hitSlop={8}>
-            <Text style={[typography.title3, { color: colors.text }]}>{monthLabel}</Text>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={isOnToday ? monthLabel : `${monthLabel} — ${t('calendar.todayButton')}`}
+            onPress={goToday}
+            hitSlop={8}
+            style={{
+              flex: 1,
+              minHeight: 44,
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingHorizontal: spacing.sm,
+            }}
+          >
+            <Text
+              style={[typography.title3, { color: colors.text, textAlign: 'center' }]}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              minimumFontScale={0.85}
+            >
+              {monthLabel}
+            </Text>
+            {!isOnToday ? (
+              <Text style={[typography.caption, { color: colors.brand, marginTop: 2 }]}>
+                {t('calendar.todayButton')}
+              </Text>
+            ) : null}
           </Pressable>
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={t('calendar.nextMonth')}
             onPress={goNext}
-            hitSlop={8}
+            hitSlop={12}
+            style={{
+              width: 44,
+              height: 44,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
           >
             <Ionicons name="chevron-forward" size={26} color={colors.text} />
           </Pressable>
         </View>
+      </View>
 
+      <ScrollView
+        contentContainerStyle={{
+          paddingHorizontal: spacing.md,
+          paddingTop: spacing.md,
+          paddingBottom: scrollBottomPad,
+          gap: spacing.md,
+        }}
+      >
         <Text style={[typography.caption, { color: colors.textSecondary, textAlign: 'center' }]}>
           {t('calendar.tapDateHint')}
         </Text>
@@ -163,7 +226,7 @@ export function CalendarScreen() {
         events={selectedEvents}
         onClose={() => setSelectedDate(null)}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 

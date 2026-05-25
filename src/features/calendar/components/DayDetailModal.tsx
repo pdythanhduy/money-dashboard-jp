@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Modal, Pressable, ScrollView, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import { formatCurrency } from '@/lib/format';
@@ -18,10 +19,16 @@ interface DayDetailModalProps {
 export function DayDetailModal({ visible, date, events, onClose }: DayDetailModalProps) {
   const { t, i18n } = useTranslation();
   const { colors, typography, spacing, radius } = useTheme();
+  const insets = useSafeAreaInsets();
 
+  // Note: hooks above must always run; early-return is OK here because all
+  // hooks (including useSafeAreaInsets) are above this line.
   if (!visible || !date) return null;
   const holiday = lookupHoliday(date);
   const heading = formatDisplayDate(date, i18n.language);
+  // Clear the home indicator: at least spacing.xl, more if the device reports
+  // a non-zero bottom inset (notch / Dynamic Island phones).
+  const sheetBottomPad = Math.max(insets.bottom, spacing.md) + spacing.md;
 
   return (
     <Modal animationType="slide" transparent onRequestClose={onClose} visible={visible}>
@@ -45,16 +52,28 @@ export function DayDetailModal({ visible, date, events, onClose }: DayDetailModa
             borderTopRightRadius: radius.lg,
             paddingHorizontal: spacing.lg,
             paddingTop: spacing.md,
-            paddingBottom: spacing.xl,
-            maxHeight: '75%',
+            paddingBottom: sheetBottomPad,
+            maxHeight: '80%',
           }}
         >
+          {/* Drag-affordance pill — purely visual */}
+          <View
+            style={{
+              alignSelf: 'center',
+              width: 40,
+              height: 4,
+              borderRadius: 2,
+              backgroundColor: colors.border,
+              marginBottom: spacing.sm,
+            }}
+          />
           <View
             style={{
               flexDirection: 'row',
-              alignItems: 'center',
+              alignItems: 'flex-start',
               justifyContent: 'space-between',
               marginBottom: spacing.sm,
+              gap: spacing.sm,
             }}
           >
             <View style={{ flex: 1 }}>
@@ -69,7 +88,14 @@ export function DayDetailModal({ visible, date, events, onClose }: DayDetailModa
               accessibilityRole="button"
               accessibilityLabel={t('common.close')}
               onPress={onClose}
-              hitSlop={8}
+              hitSlop={12}
+              style={{
+                width: 44,
+                height: 44,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginRight: -spacing.sm,
+              }}
             >
               <Ionicons name="close" size={26} color={colors.textSecondary} />
             </Pressable>
@@ -80,7 +106,10 @@ export function DayDetailModal({ visible, date, events, onClose }: DayDetailModa
               {t('calendar.noEvents')}
             </Text>
           ) : (
-            <ScrollView>
+            <ScrollView
+              contentContainerStyle={{ paddingBottom: spacing.sm }}
+              showsVerticalScrollIndicator={false}
+            >
               {events.map((event) => (
                 <EventRow key={event.id} event={event} />
               ))}

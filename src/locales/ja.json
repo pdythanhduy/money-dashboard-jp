@@ -14,6 +14,7 @@
   "calendar": {
     "prevMonth": "前の月",
     "nextMonth": "次の月",
+    "todayButton": "今日に戻る",
     "tapDateHint": "日付をタップで詳細表示。月名タップで今日に戻ります。",
     "noEvents": "この日には予定がありません。",
     "weekdays": {
