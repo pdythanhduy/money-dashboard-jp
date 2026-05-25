@@ -22,7 +22,12 @@
  * Assumptions in Phase 1:
  * - Salary workers are always enrolled in 健保 + 厚年 + 雇用保険.
  *   (Real-world: ≥¥88k/month + ≥20hr/week thresholds; not modeled.)
- * - 賞与 (bonus) is rolled into 年収 / 12 monthly; no separate 賞与 calc.
+ * - 賞与 (bonus) handling depends on input shape:
+ *   - If `monthlyBaseSalary` is set: 月給 uses 標準報酬月額 grade and bonus
+ *     uses 標準賞与額 with the FY2026 caps (¥5.73M cumulative for 健保/介護,
+ *     ¥1.5M per payment for 厚年). Accurate for users with bonus.
+ *   - Otherwise: legacy fallback splits `annualIncome / 12` as monthly grade
+ *     with no separate bonus calc. Less accurate but preserves 0.2.x behavior.
  * - Business income (`annualIncome`) is 事業所得 (already net of 経費).
  * - Single-person, single-household for 国保 (no shared 平等割 split).
  * - Spouse with `hasSpouse: true` is assumed to meet the ¥580k income cap.
@@ -42,6 +47,10 @@ import {
   BASIC_DEDUCTION_NATIONAL_TAX,
   BASIC_DEDUCTION_RESIDENT_TAX,
 } from './tax-data/basic-deduction';
+import {
+  KENPO_BONUS_ANNUAL_CAP,
+  KOSEI_NENKIN_BONUS_PER_PAYMENT_CAP,
+} from './tax-data/bonus-caps';
 import { calculateEmploymentIncomeDeduction } from './tax-data/employment-income-deduction';
 import { EMPLOYMENT_INSURANCE_RATE_EMPLOYEE } from './tax-data/employment-insurance';
 import {
@@ -49,6 +58,7 @@ import {
   RECONSTRUCTION_SURTAX_RATE,
 } from './tax-data/income-tax-brackets';
 import {
+  CHILDCARE_SUPPORT_RATE_FY2026,
   KENPO_RATES,
   LONG_TERM_CARE_AGE_MAX,
   LONG_TERM_CARE_AGE_MIN,
@@ -61,11 +71,21 @@ import {
   DEPENDENT_MIN_AGE,
   SPOUSE_DEDUCTION_NATIONAL_TAX,
   SPOUSE_DEDUCTION_RESIDENT_TAX,
+  SPOUSE_INCOME_CEILING,
+  SPOUSE_SPECIAL_DEDUCTION_NATIONAL_TAX,
+  SPOUSE_SPECIAL_DEDUCTION_RESIDENT_TAX,
+  SPOUSE_SPECIAL_INCOME_CEILING,
+  TAXPAYER_SPOUSE_INCOME_CEILING,
   type SpouseDeductionRow,
+  type SpouseSpecialDeductionRow,
   WORKING_STUDENT_DEDUCTION_NATIONAL_TAX,
   WORKING_STUDENT_DEDUCTION_RESIDENT_TAX,
   WORKING_STUDENT_INCOME_CEILING,
 } from './tax-data/other-deductions';
+import {
+  calculateLifeInsuranceDeductionNational,
+  calculateLifeInsuranceDeductionResident,
+} from './life-insurance-deduction';
 import {
   KOKUMIN_NENKIN_MONTHLY_FY2026,
   KOSEI_NENKIN_RATE_EMPLOYEE,
@@ -128,6 +148,52 @@ function validateInput(input: SalaryInput): void {
   if (input.hasSpouse && input.spouseAge === undefined) {
     throw new Error(`hasSpouse=true requires spouseAge`);
   }
+  if (input.monthlyBaseSalary !== undefined) {
+    if (!Number.isFinite(input.monthlyBaseSalary) || input.monthlyBaseSalary < 0) {
+      throw new Error(`monthlyBaseSalary must be >= 0, got ${input.monthlyBaseSalary}`);
+    }
+    const bonus = input.annualBonus ?? 0;
+    if (!Number.isFinite(bonus) || bonus < 0) {
+      throw new Error(`annualBonus must be >= 0, got ${bonus}`);
+    }
+    const bonusCount = input.bonusPaymentCount ?? 2;
+    if (bonus > 0 && (!Number.isInteger(bonusCount) || bonusCount <= 0)) {
+      throw new Error(
+        `bonusPaymentCount must be a positive integer when annualBonus > 0, got ${bonusCount}`,
+      );
+    }
+    const computed = input.monthlyBaseSalary * 12 + bonus;
+    if (Math.abs(computed - input.annualIncome) > 12) {
+      throw new Error(
+        `monthlyBaseSalary (${input.monthlyBaseSalary}) × 12 + annualBonus (${bonus}) = ${computed}, ` +
+          `but annualIncome = ${input.annualIncome}. They must match within ±¥12.`,
+      );
+    }
+  }
+  if (input.idecoMonthlyContribution !== undefined) {
+    if (!Number.isFinite(input.idecoMonthlyContribution) || input.idecoMonthlyContribution < 0) {
+      throw new Error(
+        `idecoMonthlyContribution must be >= 0, got ${input.idecoMonthlyContribution}`,
+      );
+    }
+  }
+  if (input.lifeInsurancePremiums) {
+    const fields: ReadonlyArray<['generalNew' | 'careMedicalNew' | 'personalPensionNew', number | undefined]> = [
+      ['generalNew', input.lifeInsurancePremiums.generalNew],
+      ['careMedicalNew', input.lifeInsurancePremiums.careMedicalNew],
+      ['personalPensionNew', input.lifeInsurancePremiums.personalPensionNew],
+    ];
+    for (const [name, val] of fields) {
+      if (val !== undefined && (!Number.isFinite(val) || val < 0)) {
+        throw new Error(`lifeInsurancePremiums.${name} must be >= 0, got ${val}`);
+      }
+    }
+  }
+  if (input.spouseAnnualIncome !== undefined) {
+    if (!Number.isFinite(input.spouseAnnualIncome) || input.spouseAnnualIncome < 0) {
+      throw new Error(`spouseAnnualIncome must be >= 0, got ${input.spouseAnnualIncome}`);
+    }
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -155,6 +221,52 @@ function lookupSpouseDeduction(
     }
   }
   return 0;
+}
+
+function lookupSpouseSpecialDeduction(
+  table: readonly SpouseSpecialDeductionRow[],
+  spouseTotalIncome: number,
+  taxpayerTotalIncome: number,
+): number {
+  if (spouseTotalIncome <= SPOUSE_INCOME_CEILING) return 0;
+  if (spouseTotalIncome > SPOUSE_SPECIAL_INCOME_CEILING) return 0;
+  if (taxpayerTotalIncome > TAXPAYER_SPOUSE_INCOME_CEILING) return 0;
+  for (const row of table) {
+    if (taxpayerTotalIncome <= row.taxpayerIncomeUpperBound) {
+      for (const tier of row.tiers) {
+        if (spouseTotalIncome <= tier.spouseIncomeUpperBound) {
+          return tier.deduction;
+        }
+      }
+    }
+  }
+  return 0;
+}
+
+/**
+ * Dispatch spouse deduction: 配偶者控除 (when spouse 合計所得 ≤ ¥580k) OR
+ * 配偶者特別控除 (¥580k < spouse 合計所得 ≤ ¥1.33M). Returns the applicable
+ * amount; the two are mutually exclusive.
+ *
+ * If `spouseAnnualIncome` is undefined and `hasSpouse` is true, falls back
+ * to legacy behavior (assumes spouse qualifies for full 配偶者控除).
+ */
+function resolveSpouseDeduction(
+  input: SalaryInput,
+  controlTable: readonly SpouseDeductionRow[],
+  specialTable: readonly SpouseSpecialDeductionRow[],
+  taxpayerTotalIncome: number,
+): number {
+  if (!input.hasSpouse) return 0;
+  if (input.spouseAnnualIncome === undefined) {
+    return lookupSpouseDeduction(controlTable, true, input.spouseAge, taxpayerTotalIncome);
+  }
+  const spouseEmploymentIncomeDed = calculateEmploymentIncomeDeduction(input.spouseAnnualIncome);
+  const spouseTotalIncome = Math.max(0, input.spouseAnnualIncome - spouseEmploymentIncomeDed);
+  if (spouseTotalIncome <= SPOUSE_INCOME_CEILING) {
+    return lookupSpouseDeduction(controlTable, true, input.spouseAge, taxpayerTotalIncome);
+  }
+  return lookupSpouseSpecialDeduction(specialTable, spouseTotalIncome, taxpayerTotalIncome);
 }
 
 type DependentTable = typeof DEPENDENT_DEDUCTION | typeof DEPENDENT_DEDUCTION_RESIDENT_TAX;
@@ -215,12 +327,25 @@ function calculateTotalIncome(input: SalaryInput): number {
  * 健康保険 + 介護保険 (employee portion, annual yen) for salary, OR
  * 国民健康保険 total (annual yen) for business. Dispatches by category.
  *
+ * Salary mode further dispatches on the presence of `monthlyBaseSalary`:
+ * if set, monthly portion uses 標準報酬月額 grade and bonus portion uses
+ * 標準賞与額 with the ¥5.73M annual cap (蓄積).
+ *
  * @see ./tax-data/kenpo-rates.ts (salary)
  * @see ./tax-data/kokuho-rates.ts (business)
  */
 export function calculateHealthInsurance(input: SalaryInput): number {
   validateInput(input);
   if (input.category === 'salary') {
+    if (input.monthlyBaseSalary !== undefined) {
+      return calculateHealthInsuranceSalaryWithBonus(
+        input.monthlyBaseSalary,
+        input.annualBonus ?? 0,
+        input.bonusPaymentCount ?? 2,
+        input.prefecture as Prefecture,
+        input.age,
+      );
+    }
     return calculateHealthInsuranceSalary(
       input.annualIncome / 12,
       input.prefecture as Prefecture,
@@ -234,6 +359,11 @@ export function calculateHealthInsurance(input: SalaryInput): number {
   );
 }
 
+/** 標準賞与額 — round bonus payment down to nearest ¥1,000. */
+function standardBonusAmount(bonusPayment: number): number {
+  return Math.floor(bonusPayment / 1_000) * 1_000;
+}
+
 function calculateHealthInsuranceSalary(
   monthlyIncome: number,
   prefecture: Prefecture,
@@ -242,9 +372,49 @@ function calculateHealthInsuranceSalary(
   const grade = getStandardRemunerationGrade(monthlyIncome);
   const rate = KENPO_RATES[prefecture];
   const eligibleCare = age >= LONG_TERM_CARE_AGE_MIN && age <= LONG_TERM_CARE_AGE_MAX;
-  const totalRate = rate.healthRate + (eligibleCare ? rate.longTermCareRate : 0);
+  // 健保 + 介護 (40-64) + 子ども・子育て支援金 (FY2026, universal).
+  const totalRate =
+    rate.healthRate +
+    (eligibleCare ? rate.longTermCareRate : 0) +
+    CHILDCARE_SUPPORT_RATE_FY2026;
   const monthlyEmployee = floorToYen((grade.monthlyAmount * totalRate) / 2);
   return monthlyEmployee * 12;
+}
+
+/**
+ * Monthly portion uses 標準報酬月額 grade from `monthlyBase`. Bonus portion
+ * sums per-payment premiums on 標準賞与額, capped cumulatively at
+ * KENPO_BONUS_ANNUAL_CAP across the fiscal year (健保 + 介護 share the cap).
+ */
+function calculateHealthInsuranceSalaryWithBonus(
+  monthlyBase: number,
+  annualBonus: number,
+  bonusCount: number,
+  prefecture: Prefecture,
+  age: number,
+): number {
+  const monthlyAnnual = calculateHealthInsuranceSalary(monthlyBase, prefecture, age);
+  if (annualBonus <= 0 || bonusCount <= 0) return monthlyAnnual;
+
+  const rate = KENPO_RATES[prefecture];
+  const eligibleCare = age >= LONG_TERM_CARE_AGE_MIN && age <= LONG_TERM_CARE_AGE_MAX;
+  // Bonus uses same rate stack as monthly: 健保 + 介護 + 子ども・子育て.
+  const totalRate =
+    rate.healthRate +
+    (eligibleCare ? rate.longTermCareRate : 0) +
+    CHILDCARE_SUPPORT_RATE_FY2026;
+
+  const perBonusPayment = annualBonus / bonusCount;
+  let cumulativeStandardBonus = 0;
+  let bonusEmployee = 0;
+  for (let i = 0; i < bonusCount; i += 1) {
+    const stdBonusRaw = standardBonusAmount(perBonusPayment);
+    const remainingCap = Math.max(0, KENPO_BONUS_ANNUAL_CAP - cumulativeStandardBonus);
+    const stdBonus = Math.min(stdBonusRaw, remainingCap);
+    cumulativeStandardBonus += stdBonus;
+    bonusEmployee += floorToYen((stdBonus * totalRate) / 2);
+  }
+  return monthlyAnnual + bonusEmployee;
 }
 
 function calculateKokuhoComponent(
@@ -280,12 +450,23 @@ function calculateNationalHealthInsurance(
 /**
  * 厚生年金 (employee portion, annual yen) for salary, OR 国民年金 (annual)
  * for business. Dispatches by category.
+ *
+ * Salary mode further dispatches on `monthlyBaseSalary`: if set, monthly
+ * portion uses 標準報酬月額 (cap ¥650k) and bonus portion sums premiums on
+ * each 標準賞与額 capped per-payment at KOSEI_NENKIN_BONUS_PER_PAYMENT_CAP.
  */
 export function calculatePension(input: SalaryInput): number {
   validateInput(input);
   if (input.category === 'salary') {
     if (input.pensionType === 'national') {
       return calculateNationalPensionAnnual();
+    }
+    if (input.monthlyBaseSalary !== undefined) {
+      return calculatePensionSalaryWithBonus(
+        input.monthlyBaseSalary,
+        input.annualBonus ?? 0,
+        input.bonusPaymentCount ?? 2,
+      );
     }
     return calculatePensionSalary(input.annualIncome / 12);
   }
@@ -297,6 +478,29 @@ function calculatePensionSalary(monthlyIncome: number): number {
   const standardForPension = Math.min(grade.monthlyAmount, PENSION_MAX_STANDARD_REMUNERATION);
   const monthlyEmployee = floorToYen(standardForPension * KOSEI_NENKIN_RATE_EMPLOYEE);
   return monthlyEmployee * 12;
+}
+
+/**
+ * Monthly portion uses 標準報酬月額 grade (capped at ¥650k for 厚年). Bonus
+ * portion: each payment's 標準賞与額 is capped at ¥1.5M independently — no
+ * cumulative cap (unlike 健保).
+ */
+function calculatePensionSalaryWithBonus(
+  monthlyBase: number,
+  annualBonus: number,
+  bonusCount: number,
+): number {
+  const monthlyAnnual = calculatePensionSalary(monthlyBase);
+  if (annualBonus <= 0 || bonusCount <= 0) return monthlyAnnual;
+
+  const perBonusPayment = annualBonus / bonusCount;
+  let bonusEmployee = 0;
+  for (let i = 0; i < bonusCount; i += 1) {
+    const stdBonusRaw = standardBonusAmount(perBonusPayment);
+    const stdBonus = Math.min(stdBonusRaw, KOSEI_NENKIN_BONUS_PER_PAYMENT_CAP);
+    bonusEmployee += floorToYen(stdBonus * KOSEI_NENKIN_RATE_EMPLOYEE);
+  }
+  return monthlyAnnual + bonusEmployee;
 }
 
 function calculateNationalPensionAnnual(): number {
@@ -329,10 +533,10 @@ export function calculateTaxableIncomeForNationalTax(
 ): number {
   const totalIncome = calculateTotalIncome(input);
   const basic = lookupBasicDeduction(BASIC_DEDUCTION_NATIONAL_TAX, totalIncome);
-  const spouse = lookupSpouseDeduction(
+  const spouse = resolveSpouseDeduction(
+    input,
     SPOUSE_DEDUCTION_NATIONAL_TAX,
-    input.hasSpouse ?? false,
-    input.spouseAge,
+    SPOUSE_SPECIAL_DEDUCTION_NATIONAL_TAX,
     totalIncome,
   );
   const dependent = lookupDependentDeduction(DEPENDENT_DEDUCTION, input.dependents ?? []);
@@ -341,7 +545,17 @@ export function calculateTaxableIncomeForNationalTax(
     input.isWorkingStudent,
     totalIncome,
   );
-  const taxable = totalIncome - socialInsuranceAnnual - basic - spouse - dependent - workingStudent;
+  const ideco = (input.idecoMonthlyContribution ?? 0) * 12;
+  const lifeInsurance = calculateLifeInsuranceDeductionNational(input.lifeInsurancePremiums);
+  const taxable =
+    totalIncome -
+    socialInsuranceAnnual -
+    basic -
+    spouse -
+    dependent -
+    workingStudent -
+    ideco -
+    lifeInsurance;
   return floorTo1000(Math.max(0, taxable));
 }
 
@@ -352,10 +566,10 @@ export function calculateTaxableIncomeForResidentTax(
 ): number {
   const totalIncome = calculateTotalIncome(input);
   const basic = lookupBasicDeduction(BASIC_DEDUCTION_RESIDENT_TAX, totalIncome);
-  const spouse = lookupSpouseDeduction(
+  const spouse = resolveSpouseDeduction(
+    input,
     SPOUSE_DEDUCTION_RESIDENT_TAX,
-    input.hasSpouse ?? false,
-    input.spouseAge,
+    SPOUSE_SPECIAL_DEDUCTION_RESIDENT_TAX,
     totalIncome,
   );
   const dependent = lookupDependentDeduction(
@@ -367,7 +581,17 @@ export function calculateTaxableIncomeForResidentTax(
     input.isWorkingStudent,
     totalIncome,
   );
-  const taxable = totalIncome - socialInsuranceAnnual - basic - spouse - dependent - workingStudent;
+  const ideco = (input.idecoMonthlyContribution ?? 0) * 12;
+  const lifeInsurance = calculateLifeInsuranceDeductionResident(input.lifeInsurancePremiums);
+  const taxable =
+    totalIncome -
+    socialInsuranceAnnual -
+    basic -
+    spouse -
+    dependent -
+    workingStudent -
+    ideco -
+    lifeInsurance;
   return floorTo1000(Math.max(0, taxable));
 }
 
@@ -470,6 +694,10 @@ export function calculateTakeHome(input: SalaryInput): TakeHomeResult {
   const standardMonthlyRemuneration =
     monthlyForGrade !== undefined ? getStandardRemunerationGrade(monthlyForGrade).monthlyAmount : undefined;
 
+  const idecoAnnual = (input.idecoMonthlyContribution ?? 0) * 12;
+  const lifeInsuranceNational = calculateLifeInsuranceDeductionNational(input.lifeInsurancePremiums);
+  const lifeInsuranceResident = calculateLifeInsuranceDeductionResident(input.lifeInsurancePremiums);
+
   const breakdown: TakeHomeBreakdown = {
     employmentIncomeDeduction,
     employmentIncome: input.category === 'salary' ? totalIncome : 0,
@@ -477,10 +705,10 @@ export function calculateTakeHome(input: SalaryInput): TakeHomeResult {
     basicDeductionNationalTax: lookupBasicDeduction(BASIC_DEDUCTION_NATIONAL_TAX, totalIncome),
     basicDeductionResidentTax: lookupBasicDeduction(BASIC_DEDUCTION_RESIDENT_TAX, totalIncome),
     socialInsuranceDeduction: socialInsuranceAnnual,
-    spouseDeduction: lookupSpouseDeduction(
+    spouseDeduction: resolveSpouseDeduction(
+      input,
       SPOUSE_DEDUCTION_NATIONAL_TAX,
-      input.hasSpouse ?? false,
-      input.spouseAge,
+      SPOUSE_SPECIAL_DEDUCTION_NATIONAL_TAX,
       totalIncome,
     ),
     dependentDeduction: lookupDependentDeduction(DEPENDENT_DEDUCTION, input.dependents ?? []),
@@ -489,6 +717,9 @@ export function calculateTakeHome(input: SalaryInput): TakeHomeResult {
       input.isWorkingStudent,
       totalIncome,
     ),
+    idecoDeduction: idecoAnnual,
+    lifeInsuranceDeductionNational: lifeInsuranceNational,
+    lifeInsuranceDeductionResident: lifeInsuranceResident,
     taxableIncomeForNationalTax: taxableNational,
     taxableIncomeForResidentTax: taxableResident,
     baseIncomeTax: incomeTaxBreakdown.baseIncomeTax,
