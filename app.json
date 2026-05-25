@@ -2,7 +2,7 @@
   "expo": {
     "name": "Kakei",
     "slug": "money-dashboard-jp",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -14,7 +14,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "buildNumber": "7",
+      "buildNumber": "8",
       "bundleIdentifier": "com.kakei.moneydashboardjp",
       "infoPlist": {
         "NSFaceIDUsageDescription": "Kakei uses Face ID to unlock the app and protect your financial data.",
@@ -28,7 +28,7 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "versionCode": 7,
+      "versionCode": 8,
       "package": "com.kakei.moneydashboardjp"
     },
     "web": {
