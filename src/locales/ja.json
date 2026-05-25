@@ -6,9 +6,76 @@
   "tabs": {
     "dashboard": "ダッシュボード",
     "calculator": "給与計算",
+    "calendar": "カレンダー",
     "history": "履歴",
     "documents": "書類",
     "settings": "設定"
+  },
+  "calendar": {
+    "prevMonth": "前の月",
+    "nextMonth": "次の月",
+    "tapDateHint": "日付をタップで詳細表示。月名タップで今日に戻ります。",
+    "noEvents": "この日には予定がありません。",
+    "weekdays": {
+      "0": "日",
+      "1": "月",
+      "2": "火",
+      "3": "水",
+      "4": "木",
+      "5": "金",
+      "6": "土"
+    },
+    "months": {
+      "1": "1月",
+      "2": "2月",
+      "3": "3月",
+      "4": "4月",
+      "5": "5月",
+      "6": "6月",
+      "7": "7月",
+      "8": "8月",
+      "9": "9月",
+      "10": "10月",
+      "11": "11月",
+      "12": "12月"
+    },
+    "kinds": {
+      "kakeibo_expense": "家計簿",
+      "medical_expense": "医療費",
+      "furusato_donation": "ふるさと納税",
+      "remittance": "海外送金",
+      "trip": "旅行・出張",
+      "document_expiry": "書類期限",
+      "recurring_expense": "定期支出",
+      "payday": "給料日",
+      "tax_filing": "確定申告",
+      "resident_tax": "住民税",
+      "year_end_adjustment": "年末調整",
+      "bonus_typical": "賞与(目安)"
+    },
+    "events": {
+      "kakeibo": "{{label}}",
+      "medical": "通院・薬 — {{category}}",
+      "furusato": "{{municipality}} に寄付",
+      "remittance": "海外送金",
+      "trip": "{{title}}",
+      "documentExpiry": "{{kind}} 期限",
+      "recurring": "{{name}}(定期)",
+      "payday": "給料日",
+      "taxFiling": "確定申告期限({{fiscalYear}}年分)",
+      "residentTax": "住民税 第{{quarter}}期",
+      "yearEndAdjustment": "年末調整 — 書類提出開始時期",
+      "bonusTypicalSummer": "夏のボーナス(目安)",
+      "bonusTypicalWinter": "冬のボーナス(目安)"
+    },
+    "legend": {
+      "title": "色の意味",
+      "taxDeadline": "税の期限",
+      "payday": "給料日・ボーナス",
+      "documentExpiry": "書類期限",
+      "trip": "旅行",
+      "expense": "支出・その他"
+    }
   },
   "screens": {
     "dashboard": {

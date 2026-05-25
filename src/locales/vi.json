@@ -6,9 +6,76 @@
   "tabs": {
     "dashboard": "Tổng quan",
     "calculator": "Tính lương",
+    "calendar": "Lịch",
     "history": "Lịch sử",
     "documents": "Giấy tờ",
     "settings": "Cài đặt"
+  },
+  "calendar": {
+    "prevMonth": "Tháng trước",
+    "nextMonth": "Tháng sau",
+    "tapDateHint": "Chạm vào ngày để xem chi tiết — chạm tháng để về hôm nay.",
+    "noEvents": "Không có sự kiện nào trong ngày này.",
+    "weekdays": {
+      "0": "CN",
+      "1": "T2",
+      "2": "T3",
+      "3": "T4",
+      "4": "T5",
+      "5": "T6",
+      "6": "T7"
+    },
+    "months": {
+      "1": "Tháng 1",
+      "2": "Tháng 2",
+      "3": "Tháng 3",
+      "4": "Tháng 4",
+      "5": "Tháng 5",
+      "6": "Tháng 6",
+      "7": "Tháng 7",
+      "8": "Tháng 8",
+      "9": "Tháng 9",
+      "10": "Tháng 10",
+      "11": "Tháng 11",
+      "12": "Tháng 12"
+    },
+    "kinds": {
+      "kakeibo_expense": "Chi tiêu (家計簿)",
+      "medical_expense": "Y tế",
+      "furusato_donation": "ふるさと納税",
+      "remittance": "Chuyển tiền về VN",
+      "trip": "Chuyến đi",
+      "document_expiry": "Giấy tờ hết hạn",
+      "recurring_expense": "Chi định kỳ",
+      "payday": "Ngày lương",
+      "tax_filing": "確定申告",
+      "resident_tax": "住民税",
+      "year_end_adjustment": "年末調整",
+      "bonus_typical": "Bonus 賞与 (thường lệ)"
+    },
+    "events": {
+      "kakeibo": "{{label}}",
+      "medical": "Khám/thuốc — {{category}}",
+      "furusato": "Quyên góp {{municipality}}",
+      "remittance": "Chuyển tiền",
+      "trip": "{{title}}",
+      "documentExpiry": "{{kind}} — hết hạn",
+      "recurring": "{{name}} (định kỳ)",
+      "payday": "Ngày lương",
+      "taxFiling": "Hạn 確定申告 cho thu nhập năm {{fiscalYear}}",
+      "residentTax": "住民税 đợt {{quarter}}",
+      "yearEndAdjustment": "年末調整 — bắt đầu nộp giấy tờ",
+      "bonusTypicalSummer": "Bonus mùa hè (thường lệ)",
+      "bonusTypicalWinter": "Bonus mùa đông (thường lệ)"
+    },
+    "legend": {
+      "title": "Chú thích màu",
+      "taxDeadline": "Hạn thuế",
+      "payday": "Ngày lương / bonus",
+      "documentExpiry": "Giấy tờ hết hạn",
+      "trip": "Chuyến đi",
+      "expense": "Chi tiêu / khác"
+    }
   },
   "screens": {
     "dashboard": {
