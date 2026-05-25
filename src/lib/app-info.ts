@@ -7,5 +7,5 @@
  * mirrored in `app.json` and `package.json`.
  */
 
-export const APP_VERSION = '0.2.1';
-export const APP_BUILD = '8';
+export const APP_VERSION = '0.3.0';
+export const APP_BUILD = '9';

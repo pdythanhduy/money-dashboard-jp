@@ -167,6 +167,35 @@
       "blueReturnDeduction": "青色申告控除",
       "blueReturnExplain": "Chọn mức khấu trừ khai thuế xanh nếu bạn đủ điều kiện."
     },
+    "detailed": {
+      "title": "Tính chi tiết & Khấu trừ thêm",
+      "subtitle": "Tách 月給 + 賞与, iDeCo, 生命保険料, thu nhập vợ/chồng — chính xác hơn cho hầu hết người làm công.",
+      "bonus": {
+        "title": "Lương tháng + Bonus (賞与)",
+        "subtitle": "Mặc định: chia đều thu nhập năm cho 12 tháng. Chọn Chi tiết để app tính 健保/厚年 đúng với cấu trúc thực tế (月給 + 賞与) theo cap pháp định FY2026.",
+        "simple": "Đơn giản (年収÷12)",
+        "detailed": "Chi tiết (月給 + 賞与)",
+        "monthlyBaseLabel": "月給 cơ bản / tháng",
+        "annualBonusLabel": "賞与 tổng / năm",
+        "countLabel": "Số lần 賞与 / năm",
+        "derived": "Tổng thu nhập năm = {{annual}} ({{base}}/月 × 12 + {{bonus}} 賞与)"
+      },
+      "ideco": {
+        "label": "iDeCo / 小規模企業共済 (per tháng)",
+        "helper": "Khấu trừ toàn bộ vào cả 所得税 và 住民税."
+      },
+      "lifeInsurance": {
+        "title": "生命保険料控除 (新制度)",
+        "subtitle": "Hợp đồng ký 2012-01 trở đi. Mỗi loại tối đa khấu trừ ¥40,000 (国税) / ¥28,000 (住民税); tổng 3 loại tối đa ¥120,000 / ¥70,000.",
+        "generalNew": "一般生命保険料 / năm",
+        "careMedicalNew": "介護医療保険料 / năm",
+        "personalPensionNew": "個人年金保険料 / năm"
+      },
+      "spouseIncome": {
+        "label": "Thu nhập 年収 của vợ/chồng",
+        "helper": "Để trống nếu vợ/chồng < ¥103万 (đủ 配偶者控除). Nhập số nếu lương ¥103万-¥201万 → tự áp 配偶者特別控除."
+      }
+    },
     "actions": {
       "calculate": "TÍNH TOÁN",
       "editInput": "Sửa thông tin",

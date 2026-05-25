@@ -167,6 +167,35 @@
       "blueReturnDeduction": "青色申告控除",
       "blueReturnExplain": "要件を満たす場合、青色申告の控除額を選択します。"
     },
+    "detailed": {
+      "title": "詳細入力・追加控除",
+      "subtitle": "月給と賞与を分けて入力、iDeCo・生命保険料・配偶者収入も反映。賞与のある方は実際の手取りに近づきます。",
+      "bonus": {
+        "title": "月給と賞与の内訳",
+        "subtitle": "デフォルトは年収を12で割って算出します。「詳細」を選ぶと、FY2026の標準賞与額の上限(健保¥573万・厚年¥150万/回)を考慮した正確な健保・厚年を計算します。",
+        "simple": "シンプル(年収÷12)",
+        "detailed": "詳細(月給+賞与)",
+        "monthlyBaseLabel": "月給(基本給)/月",
+        "annualBonusLabel": "賞与 年間合計",
+        "countLabel": "賞与の支給回数 / 年",
+        "derived": "年収合計 = {{annual}} ({{base}}/月 × 12 + 賞与 {{bonus}})"
+      },
+      "ideco": {
+        "label": "iDeCo / 小規模企業共済(月額)",
+        "helper": "所得税・住民税ともに全額所得控除されます。"
+      },
+      "lifeInsurance": {
+        "title": "生命保険料控除(新制度)",
+        "subtitle": "2012年1月以降に契約した分が対象。各カテゴリ最大 ¥40,000(所得税)/¥28,000(住民税)、3つ合計の上限は ¥120,000/¥70,000。",
+        "generalNew": "一般生命保険料 / 年間",
+        "careMedicalNew": "介護医療保険料 / 年間",
+        "personalPensionNew": "個人年金保険料 / 年間"
+      },
+      "spouseIncome": {
+        "label": "配偶者の年収",
+        "helper": "¥103万以下なら空欄でOK(配偶者控除が満額)。¥103万-¥201万なら入力すると配偶者特別控除を自動で適用します。"
+      }
+    },
     "actions": {
       "calculate": "計算する",
       "editInput": "入力を修正",

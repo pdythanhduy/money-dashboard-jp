@@ -17,6 +17,7 @@ import {
   formatCurrencyInput,
   parseCurrencyInput,
   type BlueReturnDeduction,
+  type CalculatorFormState,
   type IncomeMode,
   type PensionType,
   type UseCalculatorReturn,
@@ -36,6 +37,7 @@ export function SalaryForm({ calculator }: SalaryFormProps) {
   const { t } = useTranslation();
   const { colors, typography, spacing, radius, isDark } = useTheme();
   const [advancedOpen, setAdvancedOpen] = useState(false);
+  const [detailedOpen, setDetailedOpen] = useState(false);
   const { form, errors, updateField } = calculator;
 
   const prefectureOptions = useMemo<Array<PickerOption<Prefecture>>>(
@@ -221,6 +223,13 @@ export function SalaryForm({ calculator }: SalaryFormProps) {
         </Section>
 
         <DependentsInput form={form} updateField={updateField} />
+
+        <DetailedDeductionsSection
+          form={form}
+          updateField={updateField}
+          open={detailedOpen}
+          onToggle={() => setDetailedOpen((v) => !v)}
+        />
 
         {form.jobType === 'freelance' ? (
           <View
@@ -467,6 +476,331 @@ function IncomeModeToggle({
  * standalone `HourlyFields` component. Multi-job mode renders the same
  * component but driven by local draft state inside `JobEditModal`.
  */
+// ---------------------------------------------------------------------------
+// 0.3.0 — Detailed deductions section
+//
+// Collapsible block exposing the new accuracy-oriented inputs:
+// monthly base + bonus split, iDeCo, 生命保険料 (新制度), spouse income.
+// All fields are optional — leaving them blank preserves backward-compat
+// behavior with versions ≤ 0.2.x.
+// ---------------------------------------------------------------------------
+
+function DetailedDeductionsSection({
+  form,
+  updateField,
+  open,
+  onToggle,
+}: {
+  form: CalculatorFormState;
+  updateField: <K extends keyof CalculatorFormState>(key: K, value: CalculatorFormState[K]) => void;
+  open: boolean;
+  onToggle: () => void;
+}) {
+  const { t } = useTranslation();
+  const { colors, typography, spacing, radius } = useTheme();
+  const isSalary = form.jobType !== 'freelance';
+  const isAnnualMode = form.incomeMode === 'annual';
+  const showBonusSplit = isSalary && isAnnualMode;
+  const showSpouseIncome = form.hasDependents && form.hasSpouse;
+
+  return (
+    <View
+      style={{
+        backgroundColor: colors.surface,
+        borderRadius: radius.sm,
+        borderWidth: 1,
+        borderColor: colors.border,
+        overflow: 'hidden',
+      }}
+    >
+      <Pressable
+        accessibilityRole="button"
+        onPress={onToggle}
+        style={{
+          minHeight: 58,
+          paddingHorizontal: spacing.md,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <View style={{ flex: 1, paddingRight: spacing.sm }}>
+          <Text style={[typography.headline, { color: colors.text }]}>
+            {t('calculator.detailed.title')}
+          </Text>
+          <Text style={[typography.caption, { color: colors.textSecondary, marginTop: spacing.xs }]}>
+            {t('calculator.detailed.subtitle')}
+          </Text>
+        </View>
+        <Ionicons name={open ? 'chevron-up' : 'chevron-down'} size={22} color={colors.textSecondary} />
+      </Pressable>
+      {open ? (
+        <View
+          style={{
+            borderTopWidth: 1,
+            borderTopColor: colors.border,
+            padding: spacing.md,
+            gap: spacing.lg,
+          }}
+        >
+          {showBonusSplit ? (
+            <BonusSplitBlock form={form} updateField={updateField} />
+          ) : null}
+          <IdecoBlock form={form} updateField={updateField} />
+          <LifeInsuranceBlock form={form} updateField={updateField} />
+          {showSpouseIncome ? (
+            <SpouseIncomeBlock form={form} updateField={updateField} />
+          ) : null}
+        </View>
+      ) : null}
+    </View>
+  );
+}
+
+function BonusSplitBlock({
+  form,
+  updateField,
+}: {
+  form: CalculatorFormState;
+  updateField: <K extends keyof CalculatorFormState>(key: K, value: CalculatorFormState[K]) => void;
+}) {
+  const { t } = useTranslation();
+  const { colors, typography, spacing, radius } = useTheme();
+  const detailed = form.useDetailedSalary;
+  const monthlyBase = parseCurrencyInput(form.monthlyBaseSalaryInput);
+  const annualBonus = parseCurrencyInput(form.annualBonusInput);
+  const derivedAnnual = monthlyBase * 12 + annualBonus;
+
+  return (
+    <View style={{ gap: spacing.sm }}>
+      <Text style={[typography.headline, { color: colors.text }]}>
+        {t('calculator.detailed.bonus.title')}
+      </Text>
+      <Text style={[typography.caption, { color: colors.textSecondary }]}>
+        {t('calculator.detailed.bonus.subtitle')}
+      </Text>
+      <View style={{ flexDirection: 'row', gap: spacing.sm }}>
+        <BonusModeRadio
+          selected={!detailed}
+          label={t('calculator.detailed.bonus.simple')}
+          onPress={() => updateField('useDetailedSalary', false)}
+        />
+        <BonusModeRadio
+          selected={detailed}
+          label={t('calculator.detailed.bonus.detailed')}
+          onPress={() => updateField('useDetailedSalary', true)}
+        />
+      </View>
+      {detailed ? (
+        <View style={{ gap: spacing.sm, marginTop: spacing.xs }}>
+          <CurrencyInput
+            label={t('calculator.detailed.bonus.monthlyBaseLabel')}
+            value={form.monthlyBaseSalaryInput}
+            placeholder="¥400,000"
+            onChange={(next) => updateField('monthlyBaseSalaryInput', next)}
+          />
+          <CurrencyInput
+            label={t('calculator.detailed.bonus.annualBonusLabel')}
+            value={form.annualBonusInput}
+            placeholder="¥1,200,000"
+            onChange={(next) => updateField('annualBonusInput', next)}
+          />
+          <View style={{ gap: spacing.xs }}>
+            <Text style={[typography.callout, { color: colors.text }]}>
+              {t('calculator.detailed.bonus.countLabel')}
+            </Text>
+            <TextInput
+              value={form.bonusPaymentCountInput}
+              onChangeText={(value) =>
+                updateField('bonusPaymentCountInput', value.replace(/[^\d]/g, ''))
+              }
+              placeholder="2"
+              placeholderTextColor={colors.textSecondary}
+              keyboardType="numeric"
+              inputMode="numeric"
+              style={{
+                minHeight: 44,
+                borderWidth: 1,
+                borderColor: colors.border,
+                borderRadius: radius.sm,
+                paddingHorizontal: spacing.md,
+                backgroundColor: colors.background,
+                color: colors.text,
+                ...typography.body,
+              }}
+            />
+          </View>
+          {monthlyBase > 0 ? (
+            <Text style={[typography.caption, { color: colors.textSecondary }]}>
+              {t('calculator.detailed.bonus.derived', {
+                annual: formatCurrency(derivedAnnual),
+                base: formatCurrency(monthlyBase),
+                bonus: formatCurrency(annualBonus),
+              })}
+            </Text>
+          ) : null}
+        </View>
+      ) : null}
+    </View>
+  );
+}
+
+function BonusModeRadio({
+  selected,
+  label,
+  onPress,
+}: {
+  selected: boolean;
+  label: string;
+  onPress: () => void;
+}) {
+  const { colors, typography, spacing, radius } = useTheme();
+  return (
+    <Pressable
+      accessibilityRole="radio"
+      accessibilityState={{ checked: selected }}
+      onPress={onPress}
+      style={{
+        flex: 1,
+        minHeight: 44,
+        borderWidth: 1,
+        borderColor: selected ? colors.accent : colors.border,
+        borderRadius: radius.sm,
+        backgroundColor: selected ? colors.accentSubtle : colors.background,
+        paddingHorizontal: spacing.md,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <Text style={[typography.body, { color: colors.text }]}>{label}</Text>
+    </Pressable>
+  );
+}
+
+function IdecoBlock({
+  form,
+  updateField,
+}: {
+  form: CalculatorFormState;
+  updateField: <K extends keyof CalculatorFormState>(key: K, value: CalculatorFormState[K]) => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <View style={{ gap: 8 }}>
+      <CurrencyInput
+        label={t('calculator.detailed.ideco.label')}
+        helper={t('calculator.detailed.ideco.helper')}
+        value={form.idecoMonthlyInput}
+        placeholder="¥23,000"
+        onChange={(next) => updateField('idecoMonthlyInput', next)}
+      />
+    </View>
+  );
+}
+
+function LifeInsuranceBlock({
+  form,
+  updateField,
+}: {
+  form: CalculatorFormState;
+  updateField: <K extends keyof CalculatorFormState>(key: K, value: CalculatorFormState[K]) => void;
+}) {
+  const { t } = useTranslation();
+  const { colors, typography, spacing } = useTheme();
+  return (
+    <View style={{ gap: spacing.sm }}>
+      <Text style={[typography.headline, { color: colors.text }]}>
+        {t('calculator.detailed.lifeInsurance.title')}
+      </Text>
+      <Text style={[typography.caption, { color: colors.textSecondary }]}>
+        {t('calculator.detailed.lifeInsurance.subtitle')}
+      </Text>
+      <CurrencyInput
+        label={t('calculator.detailed.lifeInsurance.generalNew')}
+        value={form.lifeInsuranceGeneralNewInput}
+        placeholder="¥40,000"
+        onChange={(next) => updateField('lifeInsuranceGeneralNewInput', next)}
+      />
+      <CurrencyInput
+        label={t('calculator.detailed.lifeInsurance.careMedicalNew')}
+        value={form.lifeInsuranceCareMedicalNewInput}
+        placeholder="¥40,000"
+        onChange={(next) => updateField('lifeInsuranceCareMedicalNewInput', next)}
+      />
+      <CurrencyInput
+        label={t('calculator.detailed.lifeInsurance.personalPensionNew')}
+        value={form.lifeInsurancePersonalPensionNewInput}
+        placeholder="¥40,000"
+        onChange={(next) => updateField('lifeInsurancePersonalPensionNewInput', next)}
+      />
+    </View>
+  );
+}
+
+function SpouseIncomeBlock({
+  form,
+  updateField,
+}: {
+  form: CalculatorFormState;
+  updateField: <K extends keyof CalculatorFormState>(key: K, value: CalculatorFormState[K]) => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <View style={{ gap: 8 }}>
+      <CurrencyInput
+        label={t('calculator.detailed.spouseIncome.label')}
+        helper={t('calculator.detailed.spouseIncome.helper')}
+        value={form.spouseAnnualIncomeInput}
+        placeholder="¥1,030,000"
+        onChange={(next) => updateField('spouseAnnualIncomeInput', next)}
+      />
+    </View>
+  );
+}
+
+/** Reusable currency text input — wraps formatCurrencyInput + numeric keyboard. */
+function CurrencyInput({
+  label,
+  helper,
+  value,
+  placeholder,
+  onChange,
+}: {
+  label: string;
+  helper?: string;
+  value: string;
+  placeholder?: string;
+  onChange: (next: string) => void;
+}) {
+  const { colors, typography, spacing, radius } = useTheme();
+  return (
+    <View style={{ gap: spacing.xs }}>
+      <Text style={[typography.callout, { color: colors.text }]}>{label}</Text>
+      <TextInput
+        value={formatCurrencyInput(value)}
+        onChangeText={(raw) => onChange(raw.replace(/[^\d]/g, ''))}
+        placeholder={placeholder}
+        placeholderTextColor={colors.textSecondary}
+        keyboardType="numeric"
+        inputMode="numeric"
+        style={{
+          minHeight: 44,
+          borderWidth: 1,
+          borderColor: colors.border,
+          borderRadius: radius.sm,
+          paddingHorizontal: spacing.md,
+          backgroundColor: colors.background,
+          color: colors.text,
+          ...typography.body,
+        }}
+      />
+      {helper ? (
+        <Text style={[typography.caption, { color: colors.textSecondary }]}>{helper}</Text>
+      ) : null}
+    </View>
+  );
+}
+
 function HourlyFields({ calculator }: { calculator: UseCalculatorReturn }) {
   const { t } = useTranslation();
   const { form, errors, updateField } = calculator;
