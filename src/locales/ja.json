@@ -4,12 +4,48 @@
     "tagline": "日本での給与・税金・保険を計算"
   },
   "tabs": {
-    "dashboard": "ダッシュボード",
-    "calculator": "給与計算",
+    "home": "ホーム",
+    "kakeibo": "家計簿",
+    "calculator": "計算",
     "calendar": "カレンダー",
-    "history": "履歴",
-    "documents": "書類",
-    "settings": "設定"
+    "more": "その他",
+    "_dashboard_deprecated": "ダッシュボード",
+    "_history_deprecated": "履歴",
+    "_documents_deprecated": "書類",
+    "_settings_deprecated": "設定"
+  },
+  "more": {
+    "groups": {
+      "management": "管理",
+      "japanLife": "日本での生活",
+      "settings": "設定"
+    },
+    "items": {
+      "history": {
+        "title": "計算履歴",
+        "subtitle": "過去の計算結果を確認"
+      },
+      "documents": {
+        "title": "書類",
+        "subtitle": "在留カード・マイナンバー・健康保険証 など"
+      },
+      "goals": {
+        "title": "貯蓄目標",
+        "subtitle": "住宅購入・仕送りの進捗を管理"
+      },
+      "kakutei": {
+        "title": "確定申告",
+        "subtitle": "年末の確定申告書類を準備"
+      },
+      "tripBudget": {
+        "title": "旅行予算",
+        "subtitle": "旅行・帰省・出張の予算"
+      },
+      "settings": {
+        "title": "設定",
+        "subtitle": "言語・テーマ・バックアップ・データ削除"
+      }
+    }
   },
   "calendar": {
     "prevMonth": "前の月",

@@ -4,12 +4,48 @@
     "tagline": "Tính lương, thuế và bảo hiểm tại Nhật"
   },
   "tabs": {
-    "dashboard": "Tổng quan",
+    "home": "Trang chủ",
+    "kakeibo": "Chi tiêu",
     "calculator": "Tính lương",
     "calendar": "Lịch",
-    "history": "Lịch sử",
-    "documents": "Giấy tờ",
-    "settings": "Cài đặt"
+    "more": "Thêm",
+    "_dashboard_deprecated": "Tổng quan",
+    "_history_deprecated": "Lịch sử",
+    "_documents_deprecated": "Giấy tờ",
+    "_settings_deprecated": "Cài đặt"
+  },
+  "more": {
+    "groups": {
+      "management": "Quản lý",
+      "japanLife": "Đời sống ở Nhật",
+      "settings": "Cài đặt"
+    },
+    "items": {
+      "history": {
+        "title": "Lịch sử tính lương",
+        "subtitle": "Xem lại các lần tính trước"
+      },
+      "documents": {
+        "title": "Giấy tờ",
+        "subtitle": "Hạn 在留 / マイナンバー / 健康保険..."
+      },
+      "goals": {
+        "title": "Mục tiêu tiết kiệm",
+        "subtitle": "Theo dõi tiến độ mua nhà, gửi tiền về…"
+      },
+      "kakutei": {
+        "title": "Khai thuế 確定申告",
+        "subtitle": "Soạn hồ sơ khai thuế cuối năm"
+      },
+      "tripBudget": {
+        "title": "Quỹ chuyến đi",
+        "subtitle": "Ngân sách du lịch / về VN / công tác"
+      },
+      "settings": {
+        "title": "Cài đặt",
+        "subtitle": "Ngôn ngữ, theme, sao lưu, xóa dữ liệu"
+      }
+    }
   },
   "calendar": {
     "prevMonth": "Tháng trước",

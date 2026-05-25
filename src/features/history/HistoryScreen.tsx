@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
-import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, FlatList, Pressable, Text, useWindowDimensions, View } from 'react-native';
@@ -13,12 +13,15 @@ import { HistoryListItem } from '@/features/history/components/HistoryListItem';
 import { StatsCard } from '@/features/history/components/StatsCard';
 import { TrendChart } from '@/features/history/components/TrendChart';
 import { useHistoryStats } from '@/features/history/hooks/useHistoryStats';
-import type { MainTabParamList } from '@/navigation/MainTabs';
+import type { RootStackParamList } from '@/navigation/RootNavigator';
 import { useHistoryStore } from '@/store/historyStore';
 import { useTheme } from '@/theme';
 import type { HistoryEntry, HistoryFilter } from '@/types/history';
 
-type HistoryNavigationProp = BottomTabNavigationProp<MainTabParamList, 'History'>;
+// History was a tab pre-0.3.0; it now lives under RootStack reachable from
+// the More tab. Tab-level destinations (Calculator) must be addressed via
+// the nested-navigator form: `navigate('Main', { screen: 'Calculator' })`.
+type HistoryNavigationProp = NativeStackNavigationProp<RootStackParamList, 'History'>;
 
 export function HistoryScreen() {
   const { t } = useTranslation();
@@ -60,7 +63,11 @@ export function HistoryScreen() {
   }, [clearAll, t]);
 
   if (entries.length === 0) {
-    return <HistoryEmptyState onPressCta={() => navigation.navigate('Calculator')} />;
+    return (
+      <HistoryEmptyState
+        onPressCta={() => navigation.navigate('Main', { screen: 'Calculator' })}
+      />
+    );
   }
 
   const renderItem = ({ item }: { item: HistoryEntry }) => (

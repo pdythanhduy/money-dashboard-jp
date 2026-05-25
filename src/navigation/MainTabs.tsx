@@ -5,30 +5,35 @@ import { useTranslation } from 'react-i18next';
 import { CalculatorScreen } from '@/features/calculator/CalculatorScreen';
 import { CalendarScreen } from '@/features/calendar/CalendarScreen';
 import { DashboardScreen } from '@/features/dashboard/DashboardScreen';
-import { DocumentsScreen } from '@/features/documents/DocumentsScreen';
-import { HistoryScreen } from '@/features/history/HistoryScreen';
-import { SettingsScreen } from '@/features/settings/SettingsScreen';
+import { KakeiboScreen } from '@/features/kakeibo/KakeiboScreen';
+import { MoreScreen } from '@/features/more/MoreScreen';
 import { useTheme } from '@/theme';
 
+/**
+ * 5-tab bottom bar (0.3.0+). 6-tab crowding was solved by elevating
+ * Kakeibo from a root-stack screen → primary tab, demoting History /
+ * Documents / Settings into the "More" tab's grouped list, and renaming
+ * Dashboard → Home for label brevity. Goals / Kakutei / TripBudget /
+ * Medical / Furusato / Remittance remain root-stack screens reachable
+ * via Dashboard cards or via More (for the first three).
+ */
 export type MainTabParamList = {
-  Dashboard: undefined;
+  Home: undefined;
+  Kakeibo: undefined;
   Calculator: undefined;
   Calendar: undefined;
-  History: undefined;
-  Documents: undefined;
-  Settings: undefined;
+  More: undefined;
 };
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
 type TabName = keyof MainTabParamList;
 const TAB_ICONS: Record<TabName, keyof typeof Ionicons.glyphMap> = {
-  Dashboard:  'home-outline',
+  Home:       'home-outline',
+  Kakeibo:    'wallet-outline',
   Calculator: 'calculator-outline',
   Calendar:   'calendar-outline',
-  History:    'stats-chart-outline',
-  Documents:  'document-text-outline',
-  Settings:   'settings-outline',
+  More:       'ellipsis-horizontal-circle-outline',
 };
 
 export function MainTabs() {
@@ -51,12 +56,11 @@ export function MainTabs() {
         ),
       })}
     >
-      <Tab.Screen name="Dashboard"  component={DashboardScreen}  options={{ tabBarLabel: t('tabs.dashboard') }} />
+      <Tab.Screen name="Home"       component={DashboardScreen}  options={{ tabBarLabel: t('tabs.home') }} />
+      <Tab.Screen name="Kakeibo"    component={KakeiboScreen}    options={{ tabBarLabel: t('tabs.kakeibo') }} />
       <Tab.Screen name="Calculator" component={CalculatorScreen} options={{ tabBarLabel: t('tabs.calculator') }} />
       <Tab.Screen name="Calendar"   component={CalendarScreen}   options={{ tabBarLabel: t('tabs.calendar') }} />
-      <Tab.Screen name="History"    component={HistoryScreen}    options={{ tabBarLabel: t('tabs.history') }} />
-      <Tab.Screen name="Documents"  component={DocumentsScreen}  options={{ tabBarLabel: t('tabs.documents') }} />
-      <Tab.Screen name="Settings"   component={SettingsScreen}   options={{ tabBarLabel: t('tabs.settings') }} />
+      <Tab.Screen name="More"       component={MoreScreen}       options={{ tabBarLabel: t('tabs.more') }} />
     </Tab.Navigator>
   );
 }
