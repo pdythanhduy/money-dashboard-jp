@@ -52,6 +52,7 @@
     "nextMonth": "次の月",
     "todayButton": "今日に戻る",
     "tapDateHint": "日付をタップで詳細表示。月名タップで今日に戻ります。",
+    "addExpenseCta": "+ この日の支出を追加",
     "noEvents": "この日には予定がありません。",
     "weekdays": {
       "0": "日",

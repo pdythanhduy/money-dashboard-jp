@@ -23,6 +23,12 @@ import { useTheme } from '@/theme';
 interface Props {
   visible: boolean;
   onClose: () => void;
+  /**
+   * Pre-fill the entry's date (ISO `YYYY-MM-DD`). Defaults to today.
+   * Used by Calendar → DayDetailModal so the user can add an expense for
+   * the day they tapped, not for "today by mistake."
+   */
+  date?: string;
 }
 
 const QUICK_AMOUNTS = [500, 1_000, 3_000, 5_000, 10_000] as const;
@@ -38,10 +44,17 @@ function todayIso(): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
-export function QuickAddExpenseModal({ visible, onClose }: Props) {
+/** Display `YYYY-MM-DD` ISO date for the header subtitle. */
+function formatDisplayDate(iso: string): string {
+  const [y, m, d] = iso.split('-');
+  return `${d}/${m}/${y}`;
+}
+
+export function QuickAddExpenseModal({ visible, onClose, date }: Props) {
   const { t } = useTranslation();
   const { colors, typography, spacing, radius } = useTheme();
   const addEntry = useKakeiboStore((s) => s.addEntry);
+  const effectiveDate = date ?? todayIso();
 
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState<ExpenseCategory>('food');
@@ -60,7 +73,7 @@ export function QuickAddExpenseModal({ visible, onClose }: Props) {
   const handleSave = () => {
     if (!canSave) return;
     const result = addEntry({
-      date: todayIso(),
+      date: effectiveDate,
       amount: amountValue,
       category,
       ...(note.trim() ? { note: note.trim() } : {}),
@@ -94,7 +107,7 @@ export function QuickAddExpenseModal({ visible, onClose }: Props) {
                 {t('kakeibo.quickAdd.title')}
               </Text>
               <Text style={[typography.caption, { color: colors.textSecondary }]}>
-                {t('kakeibo.quickAdd.todayDate')}
+                {date ? formatDisplayDate(date) : t('kakeibo.quickAdd.todayDate')}
               </Text>
             </View>
             <Pressable accessibilityRole="button" accessibilityLabel={t('common.close')} onPress={onClose} hitSlop={8}>
