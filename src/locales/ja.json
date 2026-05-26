@@ -450,8 +450,10 @@
       "tax": "税金合計"
     },
     "trend": {
-      "title": "手取りトレンド",
-      "needsTwoPoints": "トレンドグラフには2回以上の計算が必要です。"
+      "title": "6ヶ月の手取り推移",
+      "needsTwoPoints": "6ヶ月グラフを表示するには1回以上の計算が必要です。",
+      "vsPrevMonth": "前月比",
+      "grossLabel": "額面"
     },
     "filter": {
       "all": "すべて",
@@ -517,7 +519,7 @@
     },
     "trend": {
       "title": "6ヶ月のトレンド",
-      "needsTwoPoints": "6ヶ月のトレンドを表示するには2回以上の計算が必要です"
+      "needsTwoPoints": "6ヶ月のトレンドを表示するには1回以上の計算が必要です"
     },
     "dailySpending": {
       "title": "今日の支出",

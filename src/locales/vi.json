@@ -450,8 +450,10 @@
       "tax": "Tổng thuế"
     },
     "trend": {
-      "title": "Xu hướng take-home",
-      "needsTwoPoints": "Cần ít nhất 2 lần tính để xem biểu đồ trend."
+      "title": "Xu hướng 6 tháng",
+      "needsTwoPoints": "Cần ít nhất 1 lần tính để xem biểu đồ 6 tháng.",
+      "vsPrevMonth": "so với tháng trước",
+      "grossLabel": "Lương gross"
     },
     "filter": {
       "all": "Tất cả",
@@ -517,7 +519,7 @@
     },
     "trend": {
       "title": "Xu hướng 6 tháng",
-      "needsTwoPoints": "Cần ít nhất 2 lần tính để xem xu hướng 6 tháng"
+      "needsTwoPoints": "Cần ít nhất 1 lần tính để xem xu hướng 6 tháng"
     },
     "dailySpending": {
       "title": "Chi tiêu hôm nay",

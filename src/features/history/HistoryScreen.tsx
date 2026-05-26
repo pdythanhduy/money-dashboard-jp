@@ -116,7 +116,7 @@ export function HistoryScreen() {
         <Text style={[typography.headline, { color: colors.text, marginBottom: spacing.xs }]}>
           {t('history.trend.title')}
         </Text>
-        <TrendChart data={stats.trendData} width={width - spacing.lg * 2 - spacing.md * 2} height={200} />
+        <TrendChart data={stats.monthlyTrend} width={width - spacing.lg * 2 - spacing.md * 2} height={200} />
       </View>
 
       <FilterBar value={filter} onChange={setFilter} />

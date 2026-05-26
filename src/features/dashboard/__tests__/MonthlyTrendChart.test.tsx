@@ -112,18 +112,20 @@ beforeEach(() => {
 });
 
 describe('MonthlyTrendChart on Dashboard', () => {
-  it('renders the needsTwoPoints copy when history has < 2 entries', () => {
-    useHistoryStore.setState({ entries: [entry('a', Date.now())] });
+  it('renders the empty-state copy when history is fully empty', () => {
+    // 0.3.0+: the chart renders with just 1 entry (one anchor point + average
+    // reference line), so the empty-state only triggers at truly-zero history.
+    useHistoryStore.setState({ entries: [] });
     const r = renderTree(<MonthlyTrendChart />);
     const tree = snapshot(r);
-    expect(tree).toContain('Cần ít nhất 2 lần tính');
+    expect(tree).toContain('Cần ít nhất 1 lần tính');
     // Old placeholder copy must be gone.
     expect(tree).not.toContain('開発中');
     expect(tree).not.toContain('đang phát triển');
     TestRenderer.act(() => r.unmount());
   });
 
-  it('renders the real TrendChart SVG when history has ≥ 2 entries', () => {
+  it('renders the real TrendChart SVG when history has ≥ 1 entry', () => {
     useHistoryStore.setState({
       entries: [
         entry('a', Date.now() - 30 * 86_400_000),
@@ -136,7 +138,7 @@ describe('MonthlyTrendChart on Dashboard', () => {
     // Title still present
     expect(tree).toContain('Xu hướng 6 tháng');
     // needsTwoPoints copy absent
-    expect(tree).not.toContain('Cần ít nhất 2 lần tính');
+    expect(tree).not.toContain('Cần ít nhất 1 lần tính');
     // Svg root rendered via our stub
     expect(tree).toContain('svg-root');
     // At least one dot (Circle) rendered per data point
