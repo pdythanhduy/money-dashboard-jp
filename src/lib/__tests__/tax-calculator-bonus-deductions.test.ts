@@ -440,6 +440,57 @@ describe('Earthquake insurance + medical deduction', () => {
   });
 });
 
+// ============================================================================
+// 'other' municipality — manual 国保 input (0.3.x bundle: any city in Japan)
+// ============================================================================
+
+describe('Other municipality — manual 国保 input', () => {
+  it('uses otherKokuhoAnnual directly when municipality === "other"', () => {
+    const result = calculateTakeHome({
+      annualIncome: 5_000_000,
+      age: 30,
+      category: 'business',
+      municipality: 'other',
+      otherKokuhoAnnual: 425_000,
+    });
+    expect(result.nationalHealthInsurance).toBe(425_000);
+  });
+
+  it('throws when municipality === "other" but otherKokuhoAnnual missing', () => {
+    expect(() =>
+      calculateTakeHome({
+        annualIncome: 5_000_000,
+        age: 30,
+        category: 'business',
+        municipality: 'other',
+      }),
+    ).toThrow(/requires otherKokuhoAnnual/);
+  });
+
+  it('throws when otherKokuhoAnnual is negative', () => {
+    expect(() =>
+      calculateTakeHome({
+        annualIncome: 5_000_000,
+        age: 30,
+        category: 'business',
+        municipality: 'other',
+        otherKokuhoAnnual: -1,
+      }),
+    ).toThrow(/requires otherKokuhoAnnual/);
+  });
+
+  it('osaka-shi unchanged when other branch added — regression check', () => {
+    const result = calculateTakeHome({
+      annualIncome: 5_000_000,
+      age: 30,
+      category: 'business',
+      municipality: 'osaka-shi',
+    });
+    // From the pre-existing osaka-shi 4-component fixture in tax-calculator.test.ts
+    expect(result.nationalHealthInsurance).toBe(679_563);
+  });
+});
+
 describe('Tokyo 23-ku 国保 — childcare component', () => {
   it('freelance ¥5,000,000 in tokyo-23ku gets all 4 components (incl. 子育て)', () => {
     // 旧ただし書き所得 = 5,000,000 - 430,000 = ¥4,570,000

@@ -209,16 +209,48 @@ export function SalaryForm({ calculator }: SalaryFormProps) {
             ) : null}
 
             {form.jobType === 'freelance' ? (
-              <PrefecturePicker
-                label={t('calculator.fields.municipality.label')}
-                subLabel={t('calculator.fields.municipality.jp')}
-                placeholder={t('calculator.fields.municipality.placeholder')}
-                closeLabel={t('common.close')}
-                value={form.municipality}
-                options={municipalityOptions}
-                error={errors.municipality ? t(`calculator.errors.${errors.municipality}`) : undefined}
-                onChange={(value) => updateField('municipality', value)}
-              />
+              <>
+                <PrefecturePicker
+                  label={t('calculator.fields.municipality.label')}
+                  subLabel={t('calculator.fields.municipality.jp')}
+                  placeholder={t('calculator.fields.municipality.placeholder')}
+                  closeLabel={t('common.close')}
+                  value={form.municipality}
+                  options={municipalityOptions}
+                  error={errors.municipality ? t(`calculator.errors.${errors.municipality}`) : undefined}
+                  onChange={(value) => updateField('municipality', value)}
+                />
+                {form.municipality === 'other' ? (
+                  <View style={{ gap: spacing.xs }}>
+                    <Text style={[typography.headline, { color: colors.text }]}>
+                      {t('calculator.fields.otherKokuhoAnnual.label')}
+                    </Text>
+                    <Text style={[typography.caption, { color: colors.textSecondary }]}>
+                      {t('calculator.fields.otherKokuhoAnnual.helper')}
+                    </Text>
+                    <TextInput
+                      value={formatCurrencyInput(form.otherKokuhoAnnualInput)}
+                      onChangeText={(raw) =>
+                        updateField('otherKokuhoAnnualInput', raw.replace(/[^\d]/g, ''))
+                      }
+                      placeholder="¥350,000"
+                      placeholderTextColor={colors.textSecondary}
+                      keyboardType="numeric"
+                      inputMode="numeric"
+                      style={{
+                        minHeight: 52,
+                        borderWidth: 1,
+                        borderColor: colors.border,
+                        borderRadius: radius.sm,
+                        paddingHorizontal: spacing.md,
+                        backgroundColor: colors.surface,
+                        color: colors.text,
+                        ...typography.body,
+                      }}
+                    />
+                  </View>
+                ) : null}
+              </>
             ) : null}
           </View>
         </Section>

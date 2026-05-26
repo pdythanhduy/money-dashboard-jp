@@ -87,6 +87,11 @@ export interface CalculatorFormState {
   /** 医療費控除 amount (yen) AFTER reimbursements + floor. Empty = no
    *  deduction. Users typically copy from Medical screen summary. */
   medicalDeductibleInput: string;
+
+  /** Required when `municipality === 'other'` (freelance only). Manual
+   *  annual 国保 amount the user copies from their 通知書. Skips the
+   *  4-component rate calc — we trust the official total. */
+  otherKokuhoAnnualInput: string;
 }
 
 export type CalculatorField =
@@ -148,6 +153,7 @@ export const DEFAULT_CALCULATOR_FORM: CalculatorFormState = {
   spouseAnnualIncomeInput: '',
   earthquakeInsurancePremiumInput: '',
   medicalDeductibleInput: '',
+  otherKokuhoAnnualInput: '',
 };
 
 /**
@@ -173,7 +179,7 @@ export const PREFECTURE_VALUES: readonly Prefecture[] = [
   'fukuoka', 'saga', 'nagasaki', 'kumamoto', 'oita', 'miyazaki', 'kagoshima', 'okinawa',
 ];
 
-export const MUNICIPALITY_VALUES: readonly FreelanceMunicipality[] = ['osaka-shi', 'tokyo-23ku'];
+export const MUNICIPALITY_VALUES: readonly FreelanceMunicipality[] = ['osaka-shi', 'tokyo-23ku', 'other'];
 export const BLUE_RETURN_DEDUCTIONS: readonly BlueReturnDeduction[] = [0, 100_000, 550_000, 650_000];
 
 function stripToDigits(value: string): string {
@@ -405,10 +411,14 @@ export function buildSalaryInput(
     };
   }
 
+  const otherKokuhoAnnualRaw = parseCurrencyInput(form.otherKokuhoAnnualInput);
+  const otherKokuhoAnnual =
+    form.municipality === 'other' && otherKokuhoAnnualRaw > 0 ? otherKokuhoAnnualRaw : undefined;
   return {
     ...baseInput,
     municipality: form.municipality,
     blueReturnDeduction: form.blueReturnDeduction,
+    ...(otherKokuhoAnnual !== undefined ? { otherKokuhoAnnual } : {}),
   };
 }
 
@@ -483,6 +493,7 @@ function formFromSalaryInput(
       ? String(input.earthquakeInsurancePremium)
       : '',
     medicalDeductibleInput: input.medicalDeductible ? String(input.medicalDeductible) : '',
+    otherKokuhoAnnualInput: input.otherKokuhoAnnual ? String(input.otherKokuhoAnnual) : '',
   };
 }
 

@@ -201,6 +201,10 @@
         "jp": "市区町村",
         "placeholder": "地域を選択"
       },
+      "otherKokuhoAnnual": {
+        "label": "国保 年間合計",
+        "helper": "市区町村から届いた国保通知書の年間合計額を入力"
+      },
       "pensionType": {
         "label": "保険の種類",
         "helper": "年金保険の種類を選択します。",
@@ -278,6 +282,10 @@
       "osaka-shi": {
         "label": "大阪市",
         "description": "大阪市の国民健康保険"
+      },
+      "other": {
+        "label": "その他",
+        "description": "国保通知書から年間総額を入力"
       },
       "tokyo-23ku": {
         "label": "東京23区",
@@ -947,6 +955,12 @@
   "furusato": {
     "title": "ふるさと納税",
     "subtitle": "自己負担¥2,000で寄付の上限を計算",
+    "manual": {
+      "toggle": "手動入力",
+      "toggleHint": "ONにすると給与計算の結果を無視して、課税所得と限界税率を直接入力できます",
+      "taxableIncomeLabel": "課税所得（住民税）/ 年間",
+      "marginalRateLabel": "限界税率（所得税）"
+    },
     "calculator": {
       "title": "最適寄付額",
       "subtitle": "課税所得＋限界税率から計算",

@@ -63,7 +63,11 @@ import {
   LONG_TERM_CARE_AGE_MAX,
   LONG_TERM_CARE_AGE_MIN,
 } from './tax-data/kenpo-rates';
-import { KOKUHO_BASIC_DEDUCTION, KOKUHO_RATES } from './tax-data/kokuho-rates';
+import {
+  KOKUHO_BASIC_DEDUCTION,
+  KOKUHO_RATES,
+  type RatedMunicipality,
+} from './tax-data/kokuho-rates';
 import type { KokuhoComponentRate } from '@/types/tax';
 import {
   DEPENDENT_DEDUCTION,
@@ -115,7 +119,15 @@ const floorTo100 = (value: number): number => Math.floor(value / 100) * 100;
 // ---------------------------------------------------------------------------
 
 const SUPPORTED_PREFECTURES = Object.keys(KENPO_RATES) as readonly Prefecture[];
-const SUPPORTED_MUNICIPALITIES = Object.keys(KOKUHO_RATES) as readonly FreelanceMunicipality[];
+/**
+ * Municipalities the calculator accepts. `'other'` is a sentinel — the
+ * user supplies `otherKokuhoAnnual` directly and we skip the
+ * 4-component rate calc.
+ */
+const SUPPORTED_MUNICIPALITIES: readonly FreelanceMunicipality[] = [
+  ...(Object.keys(KOKUHO_RATES) as readonly FreelanceMunicipality[]),
+  'other',
+];
 
 function validateInput(input: SalaryInput): void {
   if (!Number.isFinite(input.annualIncome) || input.annualIncome <= 0) {
@@ -139,8 +151,19 @@ function validateInput(input: SalaryInput): void {
     }
     if (!SUPPORTED_MUNICIPALITIES.includes(input.municipality)) {
       throw new Error(
-        `Municipality '${input.municipality}' không được hỗ trợ. Phase 1 chỉ support: ${SUPPORTED_MUNICIPALITIES.join(', ')}`,
+        `Municipality '${input.municipality}' không được hỗ trợ. Hiện hỗ trợ: ${SUPPORTED_MUNICIPALITIES.join(', ')}`,
       );
+    }
+    if (input.municipality === 'other') {
+      if (
+        input.otherKokuhoAnnual === undefined ||
+        !Number.isFinite(input.otherKokuhoAnnual) ||
+        input.otherKokuhoAnnual < 0
+      ) {
+        throw new Error(
+          `municipality='other' requires otherKokuhoAnnual >= 0 (paste from your 国保通知書), got ${input.otherKokuhoAnnual}`,
+        );
+      }
     }
   } else {
     throw new Error(`Unknown category: ${input.category as string}`);
@@ -384,9 +407,16 @@ export function calculateHealthInsurance(input: SalaryInput): number {
       input.age,
     );
   }
+  // 'other' municipality: skip the 4-component calc; the user has copied
+  // the official 国保 annual total from their 通知書 and supplied it
+  // directly as otherKokuhoAnnual. validateInput already ensured the
+  // value exists and is ≥ 0 when municipality === 'other'.
+  if (input.municipality === 'other') {
+    return Math.floor(input.otherKokuhoAnnual!);
+  }
   return calculateNationalHealthInsurance(
     calculateBusinessIncome(input),
-    input.municipality as FreelanceMunicipality,
+    input.municipality as RatedMunicipality,
     input.age,
   );
 }
@@ -460,7 +490,7 @@ function calculateKokuhoComponent(
 
 function calculateNationalHealthInsurance(
   businessIncome: number,
-  municipality: FreelanceMunicipality,
+  municipality: RatedMunicipality,
   age: number,
 ): number {
   const rates = KOKUHO_RATES[municipality];
