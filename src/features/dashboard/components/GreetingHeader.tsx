@@ -22,8 +22,10 @@ export function GreetingHeader({ greeting, today, daysUntilPayday, isPayday }: G
   const { t, i18n } = useTranslation();
   const { colors, typography, spacing, radius } = useTheme();
 
-  // Navy gradient — slightly lighter at the top so the avatar pops.
-  const gradientStops: [string, string] = ['#2c5282', '#1a365d'];
+  // Use theme tokens so the gradient inverts correctly in dark mode
+  // instead of staying navy. brand → brandStrong gives a subtle vertical
+  // shade that draws the eye to the headline.
+  const gradientStops: [string, string] = [colors.brand, colors.brandStrong];
 
   return (
     <LinearGradient colors={gradientStops} start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}>
@@ -43,7 +45,7 @@ export function GreetingHeader({ greeting, today, daysUntilPayday, isPayday }: G
               marginBottom: spacing.sm,
             }}
           >
-            <Text style={[typography.title2, { color: '#ffffff' }]}>
+            <Text style={[typography.title2, { color: colors.textInverse }]}>
               {t(`dashboard.greeting.${greeting}`)}, {t('dashboard.greeting.name')}
             </Text>
             <View
@@ -56,7 +58,7 @@ export function GreetingHeader({ greeting, today, daysUntilPayday, isPayday }: G
                 justifyContent: 'center',
               }}
             >
-              <Ionicons name="person-outline" size={22} color="#ffffff" />
+              <Ionicons name="person-outline" size={22} color={colors.textInverse} />
             </View>
           </View>
 

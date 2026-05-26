@@ -1,9 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Modal, Pressable, ScrollView, Text, View } from 'react-native';
+import { Alert, Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import { formatCurrency } from '@/lib/format';
+import { useKakeiboStore } from '@/store/kakeiboStore';
 import { useTheme } from '@/theme';
 
 import { lookupHoliday } from '../lib/jp-holidays';
@@ -157,8 +158,35 @@ export function DayDetailModal({ visible, date, events, onClose, onAddExpense }:
 function EventRow({ event }: { event: CalendarEvent }) {
   const { t } = useTranslation();
   const { colors, typography, spacing } = useTheme();
+  const removeKakeiboEntry = useKakeiboStore((s) => s.removeEntry);
   const text = t(event.labelKey, event.labelParams);
   const amount = event.amountJpy;
+
+  // Only user-created kakeibo expenses can be deleted from the Calendar.
+  // Holidays / payday / tax dates / document expiries etc. live elsewhere
+  // (or are computed) — surfacing a delete affordance on them would be
+  // misleading.
+  const isDeletable = event.kind === 'kakeibo_expense';
+  const onDelete = isDeletable
+    ? () => {
+        // Extract the raw kakeibo id from `kakeibo-${rawId}` composite id.
+        const rawId = event.id.startsWith('kakeibo-') ? event.id.slice('kakeibo-'.length) : null;
+        if (!rawId) return;
+        Alert.alert(
+          t('calendar.deleteConfirm.title'),
+          t('calendar.deleteConfirm.body', { label: text }),
+          [
+            { text: t('common.cancel'), style: 'cancel' },
+            {
+              text: t('calendar.deleteConfirm.confirm'),
+              style: 'destructive',
+              onPress: () => removeKakeiboEntry(rawId),
+            },
+          ],
+        );
+      }
+    : null;
+
   return (
     <View
       style={{
@@ -187,6 +215,23 @@ function EventRow({ event }: { event: CalendarEvent }) {
           {amount < 0 ? '-' : '+'}
           {formatCurrency(Math.abs(amount))}
         </Text>
+      ) : null}
+      {onDelete ? (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t('calendar.deleteCta')}
+          onPress={onDelete}
+          hitSlop={10}
+          style={({ pressed }) => ({
+            width: 32,
+            height: 32,
+            alignItems: 'center',
+            justifyContent: 'center',
+            opacity: pressed ? 0.5 : 1,
+          })}
+        >
+          <Ionicons name="trash-outline" size={18} color={colors.danger} />
+        </Pressable>
       ) : null}
     </View>
   );
