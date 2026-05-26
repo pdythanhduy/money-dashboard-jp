@@ -141,15 +141,27 @@ export const DEFAULT_CALCULATOR_FORM: CalculatorFormState = {
   spouseAnnualIncomeInput: '',
 };
 
+/**
+ * All 47 prefectures (0.3+). Order: north → south by 都道府県コード — the
+ * order users encounter on Japanese paper forms and dropdowns.
+ */
 export const PREFECTURE_VALUES: readonly Prefecture[] = [
-  'tokyo',
-  'osaka',
-  'aichi',
-  'kanagawa',
-  'saitama',
-  'chiba',
-  'hyogo',
-  'fukuoka',
+  // Hokkaido / Tohoku
+  'hokkaido',
+  'aomori', 'iwate', 'miyagi', 'akita', 'yamagata', 'fukushima',
+  // Kanto
+  'ibaraki', 'tochigi', 'gunma', 'saitama', 'chiba', 'tokyo', 'kanagawa',
+  // Chubu
+  'niigata', 'toyama', 'ishikawa', 'fukui', 'yamanashi', 'nagano',
+  'gifu', 'shizuoka', 'aichi', 'mie',
+  // Kansai
+  'shiga', 'kyoto', 'osaka', 'hyogo', 'nara', 'wakayama',
+  // Chugoku
+  'tottori', 'shimane', 'okayama', 'hiroshima', 'yamaguchi',
+  // Shikoku
+  'tokushima', 'kagawa', 'ehime', 'kochi',
+  // Kyushu / Okinawa
+  'fukuoka', 'saga', 'nagasaki', 'kumamoto', 'oita', 'miyazaki', 'kagoshima', 'okinawa',
 ];
 
 export const MUNICIPALITY_VALUES: readonly FreelanceMunicipality[] = ['osaka-shi', 'tokyo-23ku'];

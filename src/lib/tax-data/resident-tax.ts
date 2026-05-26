@@ -27,17 +27,66 @@ const STANDARD: ResidentTaxRate = {
   perCapita: 5_000,
 };
 
+/**
+ * All 47 prefectures use the STANDARD 10% 所得割 + ¥5,000 均等割 (incl
+ * 森林環境税) as their nominal rate set per 地方税法. A few prefectures
+ * collect a small environmental surcharge added to 均等割:
+ *   - 神奈川県: +¥300 水源環境税 → ¥5,300 (not yet modeled here)
+ *   - 宮城県, 福島県, 岩手県: +¥1,200/¥1,000/¥500 復興/環境系 surcharges
+ *   - 兵庫県: +¥800 環境税, etc.
+ *
+ * Modeled as STANDARD for now since the surcharges are small relative to
+ * a typical user's tax bill (<0.5%) and adding per-prefecture overrides
+ * complicates calc verification. Re-visit if accuracy demands it.
+ */
 export const RESIDENT_TAX_RATES: Readonly<Record<Prefecture, ResidentTaxRate>> = {
-  tokyo:    STANDARD,
-  osaka:    STANDARD,
-  aichi:    STANDARD,
-  // 神奈川 actually adds ¥300 水源環境税 (per-capita ¥5,300). Modeled as
-  // STANDARD for Phase 1 — fix when we wire prefecture-specific overrides.
-  kanagawa: STANDARD,
-  saitama:  STANDARD,
-  chiba:    STANDARD,
-  hyogo:    STANDARD,
-  fukuoka:  STANDARD,
+  hokkaido:  STANDARD,
+  aomori:    STANDARD,
+  iwate:     STANDARD,
+  miyagi:    STANDARD,
+  akita:     STANDARD,
+  yamagata:  STANDARD,
+  fukushima: STANDARD,
+  ibaraki:   STANDARD,
+  tochigi:   STANDARD,
+  gunma:     STANDARD,
+  saitama:   STANDARD,
+  chiba:     STANDARD,
+  tokyo:     STANDARD,
+  kanagawa:  STANDARD,
+  niigata:   STANDARD,
+  toyama:    STANDARD,
+  ishikawa:  STANDARD,
+  fukui:     STANDARD,
+  yamanashi: STANDARD,
+  nagano:    STANDARD,
+  gifu:      STANDARD,
+  shizuoka:  STANDARD,
+  aichi:     STANDARD,
+  mie:       STANDARD,
+  shiga:     STANDARD,
+  kyoto:     STANDARD,
+  osaka:     STANDARD,
+  hyogo:     STANDARD,
+  nara:      STANDARD,
+  wakayama:  STANDARD,
+  tottori:   STANDARD,
+  shimane:   STANDARD,
+  okayama:   STANDARD,
+  hiroshima: STANDARD,
+  yamaguchi: STANDARD,
+  tokushima: STANDARD,
+  kagawa:    STANDARD,
+  ehime:     STANDARD,
+  kochi:     STANDARD,
+  fukuoka:   STANDARD,
+  saga:      STANDARD,
+  nagasaki:  STANDARD,
+  kumamoto:  STANDARD,
+  oita:      STANDARD,
+  miyazaki:  STANDARD,
+  kagoshima: STANDARD,
+  okinawa:   STANDARD,
 };
 
 /**

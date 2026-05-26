@@ -220,38 +220,53 @@
       }
     },
     "prefectures": {
-      "tokyo": {
-        "label": "Tokyo / 東京都",
-        "description": "Khu vực Tokyo"
-      },
-      "osaka": {
-        "label": "Osaka / 大阪府",
-        "description": "Khu vực Osaka"
-      },
-      "aichi": {
-        "label": "Aichi / 愛知県",
-        "description": "Nagoya và khu vực lân cận"
-      },
-      "kanagawa": {
-        "label": "Kanagawa / 神奈川県",
-        "description": "Yokohama, Kawasaki"
-      },
-      "saitama": {
-        "label": "Saitama / 埼玉県",
-        "description": "Khu vực Saitama"
-      },
-      "chiba": {
-        "label": "Chiba / 千葉県",
-        "description": "Khu vực Chiba"
-      },
-      "hyogo": {
-        "label": "Hyogo / 兵庫県",
-        "description": "Kobe và khu vực lân cận"
-      },
-      "fukuoka": {
-        "label": "Fukuoka / 福岡県",
-        "description": "Khu vực Fukuoka"
-      }
+      "hokkaido":  { "label": "Hokkaido / 北海道",     "description": "Sapporo và khu vực Hokkaido" },
+      "aomori":    { "label": "Aomori / 青森県",       "description": "Khu vực Aomori" },
+      "iwate":     { "label": "Iwate / 岩手県",        "description": "Morioka và khu vực Iwate" },
+      "miyagi":    { "label": "Miyagi / 宮城県",       "description": "Sendai và khu vực Tohoku" },
+      "akita":     { "label": "Akita / 秋田県",        "description": "Khu vực Akita" },
+      "yamagata":  { "label": "Yamagata / 山形県",     "description": "Khu vực Yamagata" },
+      "fukushima": { "label": "Fukushima / 福島県",    "description": "Khu vực Fukushima" },
+      "ibaraki":   { "label": "Ibaraki / 茨城県",      "description": "Khu vực Ibaraki" },
+      "tochigi":   { "label": "Tochigi / 栃木県",      "description": "Khu vực Tochigi" },
+      "gunma":     { "label": "Gunma / 群馬県",        "description": "Khu vực Gunma" },
+      "saitama":   { "label": "Saitama / 埼玉県",      "description": "Khu vực Saitama" },
+      "chiba":     { "label": "Chiba / 千葉県",        "description": "Khu vực Chiba" },
+      "tokyo":     { "label": "Tokyo / 東京都",        "description": "Khu vực Tokyo" },
+      "kanagawa":  { "label": "Kanagawa / 神奈川県",   "description": "Yokohama, Kawasaki" },
+      "niigata":   { "label": "Niigata / 新潟県",      "description": "Khu vực Niigata" },
+      "toyama":    { "label": "Toyama / 富山県",       "description": "Khu vực Toyama" },
+      "ishikawa":  { "label": "Ishikawa / 石川県",     "description": "Kanazawa và khu vực Hokuriku" },
+      "fukui":     { "label": "Fukui / 福井県",        "description": "Khu vực Fukui" },
+      "yamanashi": { "label": "Yamanashi / 山梨県",    "description": "Khu vực Yamanashi" },
+      "nagano":    { "label": "Nagano / 長野県",       "description": "Khu vực Nagano" },
+      "gifu":      { "label": "Gifu / 岐阜県",         "description": "Khu vực Gifu" },
+      "shizuoka":  { "label": "Shizuoka / 静岡県",     "description": "Khu vực Shizuoka, Hamamatsu" },
+      "aichi":     { "label": "Aichi / 愛知県",        "description": "Nagoya và khu vực lân cận" },
+      "mie":       { "label": "Mie / 三重県",          "description": "Khu vực Mie" },
+      "shiga":     { "label": "Shiga / 滋賀県",        "description": "Khu vực Shiga" },
+      "kyoto":     { "label": "Kyoto / 京都府",        "description": "Khu vực Kyoto" },
+      "osaka":     { "label": "Osaka / 大阪府",        "description": "Khu vực Osaka" },
+      "hyogo":     { "label": "Hyogo / 兵庫県",        "description": "Kobe và khu vực lân cận" },
+      "nara":      { "label": "Nara / 奈良県",         "description": "Khu vực Nara" },
+      "wakayama":  { "label": "Wakayama / 和歌山県",   "description": "Khu vực Wakayama" },
+      "tottori":   { "label": "Tottori / 鳥取県",      "description": "Khu vực Tottori" },
+      "shimane":   { "label": "Shimane / 島根県",      "description": "Khu vực Shimane" },
+      "okayama":   { "label": "Okayama / 岡山県",      "description": "Khu vực Okayama" },
+      "hiroshima": { "label": "Hiroshima / 広島県",    "description": "Khu vực Hiroshima" },
+      "yamaguchi": { "label": "Yamaguchi / 山口県",    "description": "Khu vực Yamaguchi" },
+      "tokushima": { "label": "Tokushima / 徳島県",    "description": "Khu vực Tokushima" },
+      "kagawa":    { "label": "Kagawa / 香川県",       "description": "Takamatsu và Shikoku" },
+      "ehime":     { "label": "Ehime / 愛媛県",        "description": "Matsuyama và khu vực Ehime" },
+      "kochi":     { "label": "Kochi / 高知県",        "description": "Khu vực Kochi" },
+      "fukuoka":   { "label": "Fukuoka / 福岡県",      "description": "Khu vực Fukuoka" },
+      "saga":      { "label": "Saga / 佐賀県",         "description": "Khu vực Saga" },
+      "nagasaki":  { "label": "Nagasaki / 長崎県",     "description": "Khu vực Nagasaki" },
+      "kumamoto":  { "label": "Kumamoto / 熊本県",     "description": "Khu vực Kumamoto" },
+      "oita":      { "label": "Oita / 大分県",         "description": "Khu vực Oita" },
+      "miyazaki":  { "label": "Miyazaki / 宮崎県",     "description": "Khu vực Miyazaki" },
+      "kagoshima": { "label": "Kagoshima / 鹿児島県",  "description": "Khu vực Kagoshima" },
+      "okinawa":   { "label": "Okinawa / 沖縄県",      "description": "Naha và khu vực Okinawa" }
     },
     "municipalities": {
       "osaka-shi": {
