@@ -37,6 +37,10 @@
         "title": "確定申告",
         "subtitle": "年末の確定申告書類を準備"
       },
+      "furusato": {
+        "title": "ふるさと納税",
+        "subtitle": "寄付して返礼品をもらい、税額控除を受ける"
+      },
       "tripBudget": {
         "title": "旅行予算",
         "subtitle": "旅行・帰省・出張の予算"
@@ -491,6 +495,12 @@
     "limitReached": "履歴が上限（{{max}}件）に達しました。古い記録を削除してください。"
   },
   "dashboard": {
+    "sections": {
+      "today": "今日",
+      "salary": "今月の給与",
+      "spending": "支出",
+      "tracking": "進捗・記録"
+    },
     "greeting": {
       "morning": "おはようございます",
       "afternoon": "こんにちは",

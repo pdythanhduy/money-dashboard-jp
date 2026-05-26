@@ -84,13 +84,14 @@ describe('MoreScreen — group rendering', () => {
     TestRenderer.act(() => r.unmount());
   });
 
-  it('renders all 6 secondary screen rows', () => {
+  it('renders all 7 secondary screen rows', () => {
     const r = renderTree(<MoreScreen />);
     const tree = JSON.stringify(r.toJSON());
     expect(tree).toContain('Lịch sử tính lương');
     expect(tree).toContain('Giấy tờ');
     expect(tree).toContain('Mục tiêu tiết kiệm');
     expect(tree).toContain('Khai thuế 確定申告');
+    expect(tree).toContain('ふるさと納税');
     expect(tree).toContain('Quỹ chuyến đi');
     // Settings title appears as a row title — to avoid collision with the
     // group heading of the same name, just verify the icon button rendered.
@@ -122,7 +123,7 @@ describe('MoreScreen — navigation', () => {
 
     // Tap each unique row in order and verify navigate was called with the
     // expected route name once per tap.
-    const expectedRoutes = ['History', 'Documents', 'Goals', 'Kakutei', 'TripBudget', 'Settings'];
+    const expectedRoutes = ['History', 'Documents', 'Goals', 'Kakutei', 'Furusato', 'TripBudget', 'Settings'];
     for (let i = 0; i < expectedRoutes.length; i += 1) {
       TestRenderer.act(() => {
         rowPressables[i]!.props.onPress!();

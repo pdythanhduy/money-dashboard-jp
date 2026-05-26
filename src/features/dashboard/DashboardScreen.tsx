@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Pressable, RefreshControl, ScrollView, Text, View } from 'react-native';
 
 import { DailySpendingCard } from '@/features/dashboard/components/DailySpendingCard';
+import { DashboardSection } from '@/features/dashboard/components/DashboardSection';
 import { TaxChecklistReminderCard } from '@/features/dashboard/components/TaxChecklistReminderCard';
 import { WeeklyReviewCard } from '@/features/dashboard/components/WeeklyReviewCard';
 import { EmptyState } from '@/features/dashboard/components/EmptyState';
@@ -16,8 +17,6 @@ import { TakeHomeProgressCard } from '@/features/dashboard/components/TakeHomePr
 import { TripBudgetCard } from '@/features/dashboard/components/TripBudgetCard';
 import { UpcomingEventsCard } from '@/features/dashboard/components/UpcomingEventsCard';
 import { useDashboardData } from '@/features/dashboard/hooks/useDashboardData';
-import { isFurusatoUseful } from '@/features/furusato/furusato-eligibility';
-import { useFurusatoSummary } from '@/features/furusato/hooks/useFurusatoSummary';
 import { iconNameFor } from '@/features/goals/components/IconPicker';
 import { QuickAddExpenseModal } from '@/features/kakeibo/components/QuickAddExpenseModal';
 import { GuidedSetupCard } from '@/features/onboarding/components/GuidedSetupCard';
@@ -30,7 +29,6 @@ import { activeWalls } from '@/lib/wall-warnings';
 import type { MainTabParamList } from '@/navigation/MainTabs';
 import type { RootStackParamList } from '@/navigation/RootNavigator';
 import { useCalculatorStore } from '@/store/calculatorStore';
-import { useFurusatoStore } from '@/store/furusatoStore';
 import { useGoalsStore } from '@/store/goalsStore';
 import { useKakeiboStore } from '@/store/kakeiboStore';
 import { useOnboardingStore } from '@/store/onboardingStore';
@@ -49,8 +47,6 @@ export function DashboardScreen() {
   const walls = activeWalls(lastInputAnnual);
   const topWall = walls[0];
   const medical = useMedicalSummary();
-  const furusato = useFurusatoSummary();
-  const furusatoDonations = useFurusatoStore((s) => s.donations);
   const goals = useGoalsStore((s) => s.goals);
   const kakeiboEntries = useKakeiboStore((s) => s.entries);
   const kakeiboRecurrings = useKakeiboStore((s) => s.recurrings);
@@ -114,10 +110,6 @@ export function DashboardScreen() {
     // root-typed parent navigator.
     const parent = navigation.getParent<{ navigate: (route: keyof RootStackParamList) => void }>();
     parent?.navigate('Medical');
-  };
-  const goToFurusato = () => {
-    const parent = navigation.getParent<{ navigate: (route: keyof RootStackParamList) => void }>();
-    parent?.navigate('Furusato');
   };
   const goToGoals = () => {
     const parent = navigation.getParent<{ navigate: (route: keyof RootStackParamList) => void }>();
@@ -257,27 +249,40 @@ export function DashboardScreen() {
             <Ionicons name="chevron-forward" size={16} color={colors.textSecondary} />
           </Pressable>
         ) : null}
-        <TakeHomeProgressCard
-          proportionalTakeHome={data.proportionalTakeHome}
-          monthlyTakeHome={data.monthlyTakeHome}
-          averageDaily={data.averageDaily}
-          daysInMonth={data.daysInMonth}
-          daysPassed={data.daysPassed}
-        />
-        <DailySpendingCard onPress={goToKakeibo} />
-        <WeeklyReviewCard onPress={goToKakeibo} />
-        <TaxChecklistReminderCard onPress={goToKakutei} />
-        {/* Date-sensitive deadlines (residence card, visa, payday)
-            belong above the at-a-glance stats — they're action items,
-            not status. Used to render at the very bottom of the
-            Dashboard which buried them. */}
-        <UpcomingEventsCard reminders={data.upcomingReminders} />
-        <QuickStatsRow
-          proportionalTax={data.proportionalTax}
-          proportionalInsurance={data.proportionalInsurance}
-          retentionRate={data.retentionRate}
-          onPressTax={goToCalculator}
-        />
+
+        {/* ── HÔM NAY / 今日 ─────────────────────────────────────
+            Action items first: date-sensitive deadlines + warnings.
+            Render above stats because they need action, not glance. */}
+        <DashboardSection title={t('dashboard.sections.today')}>
+          <UpcomingEventsCard reminders={data.upcomingReminders} />
+        </DashboardSection>
+
+        {/* ── LƯƠNG THÁNG / 今月の給与 ──────────────────────────
+            Hero number + at-a-glance ratios + 6-month trend (moved up
+            from bottom — modern dashboards put data viz prominently). */}
+        <DashboardSection title={t('dashboard.sections.salary')}>
+          <TakeHomeProgressCard
+            proportionalTakeHome={data.proportionalTakeHome}
+            monthlyTakeHome={data.monthlyTakeHome}
+            averageDaily={data.averageDaily}
+            daysInMonth={data.daysInMonth}
+            daysPassed={data.daysPassed}
+          />
+          <QuickStatsRow
+            proportionalTax={data.proportionalTax}
+            proportionalInsurance={data.proportionalInsurance}
+            retentionRate={data.retentionRate}
+            onPressTax={goToCalculator}
+          />
+          <MonthlyTrendChart />
+        </DashboardSection>
+
+        {/* ── CHI TIÊU / 支出 ──────────────────────────────────
+            Daily snapshot + weekly review + Medical refund tracker
+            (when user has logged at least one medical receipt). */}
+        <DashboardSection title={t('dashboard.sections.spending')}>
+          <DailySpendingCard onPress={goToKakeibo} />
+          <WeeklyReviewCard onPress={goToKakeibo} />
         {medical.total > 0 ? (
           <Pressable
             accessibilityRole="button"
@@ -314,39 +319,14 @@ export function DashboardScreen() {
             </Text>
           </Pressable>
         ) : null}
-        {furusato.hasCalculatorResult &&
-        isFurusatoUseful(takeHomeMonthly, furusatoDonations.length > 0) ? (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={t('furusato.dashboard.cardTitle')}
-            onPress={goToFurusato}
-            style={({ pressed }) => ({
-              marginHorizontal: spacing.lg,
-              marginTop: spacing.md,
-              padding: spacing.md,
-              borderRadius: 16,
-              backgroundColor: colors.surfaceElevated,
-              opacity: pressed ? 0.85 : 1,
-            })}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: spacing.xs }}>
-              <Ionicons name="gift-outline" size={18} color={colors.brand} />
-              <Text style={[typography.headline, { color: colors.text, flex: 1 }]}>
-                {t('furusato.dashboard.cardTitle')}
-              </Text>
-              <Ionicons name="chevron-forward" size={18} color={colors.textSecondary} />
-            </View>
-            <Text style={[typography.title3, { color: colors.brand, fontWeight: '800' }]}>
-              {formatCurrency(furusato.remainingCapacity)}
-            </Text>
-            <Text style={[typography.caption, { color: colors.textSecondary, marginTop: 2 }]}>
-              {t('furusato.dashboard.remaining', {
-                remaining: formatCurrency(furusato.remainingCapacity),
-                max: formatCurrency(furusato.limit.maxDonation),
-              })}
-            </Text>
-          </Pressable>
-        ) : null}
+        </DashboardSection>
+
+        {/* ── THEO DÕI / 進捗・記録 ────────────────────────────
+            Long-running things the user is monitoring: savings goal,
+            trip planning, remittance to family, 確定申告 checklist.
+            ふるさと納税 used to surface here but was demoted to the
+            More tab (most users don't engage with it month-to-month). */}
+        <DashboardSection title={t('dashboard.sections.tracking')}>
         {featuredGoal ? (
           <Pressable
             accessibilityRole="button"
@@ -505,7 +485,8 @@ export function DashboardScreen() {
           </Pressable>
         ) : null}
         <TripBudgetCard onPress={goToTripBudget} />
-        <MonthlyTrendChart />
+        <TaxChecklistReminderCard onPress={goToKakutei} />
+        </DashboardSection>
 
         <View style={{ alignItems: 'center', marginTop: spacing.xl, paddingHorizontal: spacing.lg }}>
           <Text
