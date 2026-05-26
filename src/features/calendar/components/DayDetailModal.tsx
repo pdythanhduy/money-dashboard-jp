@@ -14,9 +14,16 @@ interface DayDetailModalProps {
   date: string | null;
   events: readonly CalendarEvent[];
   onClose: () => void;
+  /**
+   * Fires when user taps "+ Thêm chi tiêu cho ngày này". Caller is
+   * expected to open the kakeibo QuickAddExpenseModal pre-filled with
+   * `date` and to close this modal as part of the same gesture so the
+   * user lands directly on the expense form.
+   */
+  onAddExpense?: (date: string) => void;
 }
 
-export function DayDetailModal({ visible, date, events, onClose }: DayDetailModalProps) {
+export function DayDetailModal({ visible, date, events, onClose, onAddExpense }: DayDetailModalProps) {
   const { t, i18n } = useTranslation();
   const { colors, typography, spacing, radius } = useTheme();
   const insets = useSafeAreaInsets();
@@ -115,6 +122,32 @@ export function DayDetailModal({ visible, date, events, onClose }: DayDetailModa
               ))}
             </ScrollView>
           )}
+
+          {/* Quick "+ Add expense for this day" CTA. Shown whenever the
+              caller wired the onAddExpense handler. The kakeibo quick-add
+              modal accepts a date prop and pre-fills it. */}
+          {onAddExpense ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t('calendar.addExpenseCta')}
+              onPress={() => onAddExpense(date)}
+              style={({ pressed }) => ({
+                marginTop: spacing.md,
+                minHeight: 48,
+                borderRadius: radius.sm,
+                backgroundColor: pressed ? colors.brand : colors.brandSubtle,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: spacing.xs,
+              })}
+            >
+              <Ionicons name="add-circle-outline" size={20} color={colors.brand} />
+              <Text style={[typography.body, { color: colors.brand, fontWeight: '600' }]}>
+                {t('calendar.addExpenseCta')}
+              </Text>
+            </Pressable>
+          ) : null}
         </Pressable>
       </Pressable>
     </Modal>

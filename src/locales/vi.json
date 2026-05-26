@@ -52,6 +52,7 @@
     "nextMonth": "Tháng sau",
     "todayButton": "Về hôm nay",
     "tapDateHint": "Chạm vào ngày để xem chi tiết — chạm tên tháng để về hôm nay.",
+    "addExpenseCta": "+ Thêm chi tiêu cho ngày này",
     "noEvents": "Không có sự kiện nào trong ngày này.",
     "weekdays": {
       "0": "CN",

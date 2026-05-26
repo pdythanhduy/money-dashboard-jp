@@ -4,6 +4,7 @@ import { Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
+import { QuickAddExpenseModal } from '@/features/kakeibo/components/QuickAddExpenseModal';
 import { useDocumentDeadlineStore } from '@/store/documentDeadlineStore';
 import { useDocumentsStore } from '@/store/documentsStore';
 import { useFurusatoStore } from '@/store/furusatoStore';
@@ -37,6 +38,8 @@ export function CalendarScreen() {
   const [year, setYear] = useState(todayYear);
   const [month, setMonth] = useState(todayMonth);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  /** Date forwarded to QuickAddExpenseModal when user taps "+ Thêm chi tiêu". */
+  const [quickAddDate, setQuickAddDate] = useState<string | null>(null);
   const isOnToday = year === todayYear && month === todayMonth;
 
   const kakeibo = useKakeiboStore((s) => s.entries);
@@ -156,11 +159,14 @@ export function CalendarScreen() {
               paddingHorizontal: spacing.sm,
             }}
           >
+            {/* No adjustsFontSizeToFit: on first render the Pressable hasn't
+                measured its width yet, so RN shrinks the label to its initial
+                (narrow) guess, then leaves it small until a re-layout. The
+                longest label is "2026年12月" (≈8 chars) which fits comfortably
+                in title3 even on a 320px-wide notch device. */}
             <Text
               style={[typography.title3, { color: colors.text, textAlign: 'center' }]}
               numberOfLines={1}
-              adjustsFontSizeToFit
-              minimumFontScale={0.85}
             >
               {monthLabel}
             </Text>
@@ -225,6 +231,19 @@ export function CalendarScreen() {
         date={selectedDate}
         events={selectedEvents}
         onClose={() => setSelectedDate(null)}
+        onAddExpense={(date) => {
+          // Close the day modal first, then open the quick-add modal pre-
+          // filled with the tapped date. Two-step: avoids a brief flash of
+          // both modals on screen at once.
+          setSelectedDate(null);
+          setQuickAddDate(date);
+        }}
+      />
+
+      <QuickAddExpenseModal
+        visible={quickAddDate !== null}
+        date={quickAddDate ?? undefined}
+        onClose={() => setQuickAddDate(null)}
       />
     </SafeAreaView>
   );

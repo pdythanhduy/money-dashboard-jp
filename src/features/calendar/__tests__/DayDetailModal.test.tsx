@@ -130,6 +130,46 @@ describe('DayDetailModal', () => {
     TestRenderer.act(() => r.unmount());
   });
 
+  it('renders the "+ Thêm chi tiêu" CTA only when onAddExpense is provided', () => {
+    const r1 = renderTree(
+      <DayDetailModal visible date="2026-06-15" events={[]} onClose={jest.fn()} />,
+    );
+    expect(JSON.stringify(r1.toJSON())).not.toContain('Thêm chi tiêu');
+    TestRenderer.act(() => r1.unmount());
+
+    const onAdd = jest.fn();
+    const r2 = renderTree(
+      <DayDetailModal
+        visible
+        date="2026-06-15"
+        events={[]}
+        onClose={jest.fn()}
+        onAddExpense={onAdd}
+      />,
+    );
+    expect(JSON.stringify(r2.toJSON())).toContain('Thêm chi tiêu');
+    TestRenderer.act(() => r2.unmount());
+  });
+
+  it('CTA tap fires onAddExpense with the modal date', () => {
+    const onAdd = jest.fn();
+    const r = renderTree(
+      <DayDetailModal
+        visible
+        date="2026-06-15"
+        events={[]}
+        onClose={jest.fn()}
+        onAddExpense={onAdd}
+      />,
+    );
+    const buttons = r.root.findAllByProps({ accessibilityRole: 'button' });
+    const cta = buttons.find((b: any) => b.props.accessibilityLabel?.includes('Thêm chi tiêu'));
+    expect(cta).toBeDefined();
+    TestRenderer.act(() => cta!.props.onPress!());
+    expect(onAdd).toHaveBeenCalledWith('2026-06-15');
+    TestRenderer.act(() => r.unmount());
+  });
+
   it('survives empty→populated event-list transition without crash', () => {
     const r = renderTree(
       <DayDetailModal
