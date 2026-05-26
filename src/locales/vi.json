@@ -499,7 +499,12 @@
       "today": "Hôm nay",
       "salary": "Lương tháng",
       "spending": "Chi tiêu",
-      "tracking": "Theo dõi"
+      "tracking": "Theo dõi",
+      "trend": "Xu hướng"
+    },
+    "statsLine": {
+      "summary": "Thuế ~{{tax}} · BH ~{{insurance}} · Giữ lại {{retention}}%",
+      "a11y": "Xem chi tiết thuế và bảo hiểm trong Calculator"
     },
     "greeting": {
       "morning": "Chào buổi sáng",
