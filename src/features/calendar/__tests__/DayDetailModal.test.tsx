@@ -42,6 +42,7 @@ const TestRenderer = require('react-test-renderer') as {
   create: (el: React.ReactElement) => {
     unmount: () => void;
     toJSON: () => unknown;
+    root: { findAllByProps: (props: object) => Array<{ props: Record<string, unknown> }> };
   };
 };
 
@@ -163,9 +164,12 @@ describe('DayDetailModal', () => {
       />,
     );
     const buttons = r.root.findAllByProps({ accessibilityRole: 'button' });
-    const cta = buttons.find((b: any) => b.props.accessibilityLabel?.includes('Thêm chi tiêu'));
+    const cta = buttons.find(
+      (b) => typeof b.props.accessibilityLabel === 'string' &&
+        (b.props.accessibilityLabel as string).includes('Thêm chi tiêu'),
+    );
     expect(cta).toBeDefined();
-    TestRenderer.act(() => cta!.props.onPress!());
+    TestRenderer.act(() => (cta!.props.onPress as () => void)());
     expect(onAdd).toHaveBeenCalledWith('2026-06-15');
     TestRenderer.act(() => r.unmount());
   });
