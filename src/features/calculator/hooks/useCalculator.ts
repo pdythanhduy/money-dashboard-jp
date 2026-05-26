@@ -516,6 +516,28 @@ export function useCalculator() {
   );
   const canSubmit = !hasValidationErrors(currentValidation);
 
+  /**
+   * Live take-home preview (0.3.x): re-derived inline whenever the form
+   * is currently valid. Modern dashboards (Stripe, Linear) update the
+   * estimated number as the user types instead of hiding it behind a
+   * "Calculate" button. We keep the button (submit still saves to
+   * history) but render the live number above the form so the user
+   * sees their estimate update without an explicit action.
+   *
+   * `null` when the form is invalid OR when calculation throws (e.g.
+   * monthlyBaseSalary × 12 + bonus doesn't match annualIncome — the
+   * lib enforces ±¥12 consistency).
+   */
+  const livePreview = useMemo<TakeHomeResult | null>(() => {
+    if (!canSubmit) return null;
+    try {
+      const out = computeCalculatorResult(form, multiJobInputs);
+      return out.result;
+    } catch {
+      return null;
+    }
+  }, [canSubmit, form, multiJobInputs]);
+
   const updateField = useCallback(
     <K extends keyof CalculatorFormState>(key: K, value: CalculatorFormState[K]) => {
       setForm((current) => {
@@ -586,6 +608,7 @@ export function useCalculator() {
     result,
     submittedInput,
     canSubmit,
+    livePreview,
     updateField,
     setAnnualIncomeText,
     setAgeText,

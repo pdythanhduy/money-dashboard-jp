@@ -71,6 +71,7 @@ export function SalaryForm({ calculator }: SalaryFormProps) {
           gap: spacing.lg,
         }}
       >
+        <LivePreviewBar preview={calculator.livePreview} />
         <Section title={t('calculator.sections.jobType')}>
           <IncomeTypeSelector
             value={form.jobType}
@@ -367,12 +368,108 @@ export function SalaryForm({ calculator }: SalaryFormProps) {
   );
 }
 
-function Section({ title, children }: { title: string; children: ReactNode }) {
-  const { colors, typography, spacing } = useTheme();
+/**
+ * Live take-home preview rendered at the top of the calculator form
+ * (0.3.x). Updates as the user types valid inputs so they see the
+ * estimate without an explicit "Calculate" tap. Renders a muted hint
+ * instead when the form is incomplete or hits a validation snag (e.g.
+ * monthlyBaseSalary × 12 + bonus disagrees with annualIncome).
+ */
+function LivePreviewBar({
+  preview,
+}: {
+  preview: import('@/types/tax').TakeHomeResult | null;
+}) {
+  const { t } = useTranslation();
+  const { colors, typography, spacing, radius } = useTheme();
+
+  if (!preview) {
+    return (
+      <View
+        style={{
+          backgroundColor: colors.surface,
+          borderRadius: radius.md,
+          borderWidth: 1,
+          borderColor: colors.border,
+          paddingHorizontal: spacing.md,
+          paddingVertical: spacing.sm,
+        }}
+      >
+        <Text style={[typography.caption, { color: colors.textSecondary, textAlign: 'center' }]}>
+          {t('calculator.livePreview.incomplete')}
+        </Text>
+      </View>
+    );
+  }
+
   return (
-    <View style={{ gap: spacing.md }}>
-      <Text style={[typography.title3, { color: colors.text }]}>{title}</Text>
-      {children}
+    <View
+      style={{
+        backgroundColor: colors.brandSubtle,
+        borderRadius: radius.md,
+        borderWidth: 1,
+        borderColor: colors.brand,
+        paddingHorizontal: spacing.md,
+        paddingVertical: spacing.sm,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: spacing.sm,
+      }}
+    >
+      <Text style={[typography.caption, { color: colors.brand, fontWeight: '600' }]}>
+        {t('calculator.livePreview.label')}
+      </Text>
+      <Text
+        style={[typography.title3, { color: colors.brand, fontWeight: '800' }]}
+        numberOfLines={1}
+        adjustsFontSizeToFit
+      >
+        ≈ {formatCurrency(preview.takeHomeMonthly)}
+        <Text style={[typography.caption, { color: colors.brand, fontWeight: '400' }]}>
+          {' / '}
+          {t('calculator.livePreview.perMonth')}
+        </Text>
+      </Text>
+    </View>
+  );
+}
+
+/**
+ * Calculator form section with card chrome (0.3.x). Section header sits
+ * above the card so the card itself reads as a tappable / focused unit.
+ * Matches the visual rhythm SettingsSection uses across the rest of the
+ * app (small uppercase headers + grouped surface card).
+ */
+function Section({ title, children }: { title: string; children: ReactNode }) {
+  const { colors, typography, spacing, radius } = useTheme();
+  return (
+    <View style={{ gap: spacing.sm }}>
+      <Text
+        style={[
+          typography.footnote,
+          {
+            color: colors.textSecondary,
+            textTransform: 'uppercase',
+            letterSpacing: 0.6,
+            paddingHorizontal: spacing.xs,
+          },
+        ]}
+      >
+        {title}
+      </Text>
+      <View
+        style={{
+          backgroundColor: colors.surface,
+          borderRadius: radius.md,
+          borderWidth: 1,
+          borderColor: colors.border,
+          padding: spacing.md,
+          gap: spacing.md,
+        }}
+      >
+        {children}
+      </View>
     </View>
   );
 }
