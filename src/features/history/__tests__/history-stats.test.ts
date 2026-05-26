@@ -33,6 +33,8 @@ function makeResult(overrides: Partial<TakeHomeResult> = {}): TakeHomeResult {
       idecoDeduction:                     0,
       lifeInsuranceDeductionNational:     0,
       lifeInsuranceDeductionResident:     0,
+      earthquakeInsuranceDeduction:       0,
+      medicalDeduction:                   0,
       taxableIncomeForNationalTax: 1_335_000,
       taxableIncomeForResidentTax: 1_485_000,
       baseIncomeTax:                 66_750,

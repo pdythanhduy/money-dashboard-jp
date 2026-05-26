@@ -159,6 +159,23 @@ export interface SalaryInput {
    * is ≤ ¥1.03M (full 配偶者控除).
    */
   spouseAnnualIncome?: number;
+
+  /**
+   * Optional. 地震保険料 annual premium (yen). 100% of premium is
+   * deductible, capped at ¥50,000 for both 所得税 and 住民税.
+   * Source: NTA 1145.
+   */
+  earthquakeInsurancePremium?: number;
+
+  /**
+   * Optional. 医療費控除 amount (yen) — the deductible portion AFTER
+   * the user has subtracted insurance reimbursements + the
+   * `min(¥100,000, 5% of total income)` floor. The Medical screen
+   * exposes this number via its summary; users paste it here to roll
+   * it into the calculator's tax estimate. Capped at ¥2,000,000.
+   * Applied to both 所得税 and 住民税. Source: NTA 1120.
+   */
+  medicalDeductible?: number;
 }
 
 export interface Dependent {
@@ -230,6 +247,10 @@ export interface TakeHomeBreakdown {
   lifeInsuranceDeductionNational: number;
   /** 生命保険料控除 applied to 住民税 (新制度, total cap ¥70,000). */
   lifeInsuranceDeductionResident: number;
+  /** 地震保険料控除 (100% of premium, capped ¥50,000). Same for 所得税 + 住民税. */
+  earthquakeInsuranceDeduction: number;
+  /** 医療費控除 amount applied (already net of reimbursements + floor; capped ¥2M). */
+  medicalDeduction: number;
 
   /** 課税所得 for 所得税 (rounded down to nearest ¥1,000). */
   taxableIncomeForNationalTax: number;

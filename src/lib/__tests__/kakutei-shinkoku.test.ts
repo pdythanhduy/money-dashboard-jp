@@ -35,6 +35,8 @@ function makeSalaryResult(overrides: Partial<TakeHomeResult> = {}): TakeHomeResu
       idecoDeduction: 0,
       lifeInsuranceDeductionNational: 0,
       lifeInsuranceDeductionResident: 0,
+      earthquakeInsuranceDeduction: 0,
+      medicalDeduction: 0,
       taxableIncomeForNationalTax: 1_005_000,
       taxableIncomeForResidentTax: 1_155_000,
       baseIncomeTax: 50_250,

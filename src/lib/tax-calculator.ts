@@ -194,6 +194,38 @@ function validateInput(input: SalaryInput): void {
       throw new Error(`spouseAnnualIncome must be >= 0, got ${input.spouseAnnualIncome}`);
     }
   }
+  if (input.earthquakeInsurancePremium !== undefined) {
+    if (!Number.isFinite(input.earthquakeInsurancePremium) || input.earthquakeInsurancePremium < 0) {
+      throw new Error(
+        `earthquakeInsurancePremium must be >= 0, got ${input.earthquakeInsurancePremium}`,
+      );
+    }
+  }
+  if (input.medicalDeductible !== undefined) {
+    if (!Number.isFinite(input.medicalDeductible) || input.medicalDeductible < 0) {
+      throw new Error(`medicalDeductible must be >= 0, got ${input.medicalDeductible}`);
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Earthquake + medical deduction helpers (small, inlined here since they're
+// straightforward enough to not warrant a separate file).
+// ---------------------------------------------------------------------------
+
+/** 100% of premium, capped at ¥50,000. Same for 所得税 + 住民税. NTA 1145. */
+const EARTHQUAKE_INSURANCE_CAP = 50_000;
+function earthquakeInsuranceDeduction(premium: number | undefined): number {
+  if (!premium || premium <= 0) return 0;
+  return Math.min(Math.floor(premium), EARTHQUAKE_INSURANCE_CAP);
+}
+
+/** Pass-through with a ¥2M ceiling — user already did the floor /
+ *  reimbursement math on the Medical screen. Source: NTA 1120. */
+const MEDICAL_DEDUCTION_CAP = 2_000_000;
+function medicalDeduction(amount: number | undefined): number {
+  if (!amount || amount <= 0) return 0;
+  return Math.min(Math.floor(amount), MEDICAL_DEDUCTION_CAP);
 }
 
 // ---------------------------------------------------------------------------
@@ -547,6 +579,8 @@ export function calculateTaxableIncomeForNationalTax(
   );
   const ideco = (input.idecoMonthlyContribution ?? 0) * 12;
   const lifeInsurance = calculateLifeInsuranceDeductionNational(input.lifeInsurancePremiums);
+  const earthquake = earthquakeInsuranceDeduction(input.earthquakeInsurancePremium);
+  const medical = medicalDeduction(input.medicalDeductible);
   const taxable =
     totalIncome -
     socialInsuranceAnnual -
@@ -555,7 +589,9 @@ export function calculateTaxableIncomeForNationalTax(
     dependent -
     workingStudent -
     ideco -
-    lifeInsurance;
+    lifeInsurance -
+    earthquake -
+    medical;
   return floorTo1000(Math.max(0, taxable));
 }
 
@@ -583,6 +619,8 @@ export function calculateTaxableIncomeForResidentTax(
   );
   const ideco = (input.idecoMonthlyContribution ?? 0) * 12;
   const lifeInsurance = calculateLifeInsuranceDeductionResident(input.lifeInsurancePremiums);
+  const earthquake = earthquakeInsuranceDeduction(input.earthquakeInsurancePremium);
+  const medical = medicalDeduction(input.medicalDeductible);
   const taxable =
     totalIncome -
     socialInsuranceAnnual -
@@ -591,7 +629,9 @@ export function calculateTaxableIncomeForResidentTax(
     dependent -
     workingStudent -
     ideco -
-    lifeInsurance;
+    lifeInsurance -
+    earthquake -
+    medical;
   return floorTo1000(Math.max(0, taxable));
 }
 
@@ -720,6 +760,8 @@ export function calculateTakeHome(input: SalaryInput): TakeHomeResult {
     idecoDeduction: idecoAnnual,
     lifeInsuranceDeductionNational: lifeInsuranceNational,
     lifeInsuranceDeductionResident: lifeInsuranceResident,
+    earthquakeInsuranceDeduction: earthquakeInsuranceDeduction(input.earthquakeInsurancePremium),
+    medicalDeduction: medicalDeduction(input.medicalDeductible),
     taxableIncomeForNationalTax: taxableNational,
     taxableIncomeForResidentTax: taxableResident,
     baseIncomeTax: incomeTaxBreakdown.baseIncomeTax,
