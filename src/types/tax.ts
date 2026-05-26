@@ -11,19 +11,23 @@
 // ---------------------------------------------------------------------------
 
 /**
- * Prefectures supported in Phase 1 — the 8 with the largest Vietnamese
- * communities in Japan. Adding a prefecture requires adding its 協会けんぽ
- * rate to `kenpo-rates.ts`.
+ * All 47 prefectures supported as of 0.3+. Each entry must have a
+ * matching 協会けんぽ rate in `kenpo-rates.ts` (verified against the
+ * official FY2026 / 令和8年度 prefecture table).
+ *
+ * Order: north → south (Hokkaido → Okinawa), matching the official
+ * 都道府県コード ordering that JP forms / users expect.
  */
 export type Prefecture =
-  | 'tokyo'
-  | 'osaka'
-  | 'aichi'
-  | 'kanagawa'
-  | 'saitama'
-  | 'chiba'
-  | 'hyogo'
-  | 'fukuoka';
+  | 'hokkaido'
+  | 'aomori' | 'iwate' | 'miyagi' | 'akita' | 'yamagata' | 'fukushima'
+  | 'ibaraki' | 'tochigi' | 'gunma' | 'saitama' | 'chiba' | 'tokyo' | 'kanagawa'
+  | 'niigata' | 'toyama' | 'ishikawa' | 'fukui' | 'yamanashi' | 'nagano'
+  | 'gifu' | 'shizuoka' | 'aichi' | 'mie'
+  | 'shiga' | 'kyoto' | 'osaka' | 'hyogo' | 'nara' | 'wakayama'
+  | 'tottori' | 'shimane' | 'okayama' | 'hiroshima' | 'yamaguchi'
+  | 'tokushima' | 'kagawa' | 'ehime' | 'kochi'
+  | 'fukuoka' | 'saga' | 'nagasaki' | 'kumamoto' | 'oita' | 'miyazaki' | 'kagoshima' | 'okinawa';
 
 /**
  * Municipalities supported for 国民健康保険 (freelance only). Each city sets

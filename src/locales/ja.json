@@ -220,38 +220,53 @@
       }
     },
     "prefectures": {
-      "tokyo": {
-        "label": "東京都",
-        "description": "東京エリア"
-      },
-      "osaka": {
-        "label": "大阪府",
-        "description": "大阪エリア"
-      },
-      "aichi": {
-        "label": "愛知県",
-        "description": "名古屋周辺"
-      },
-      "kanagawa": {
-        "label": "神奈川県",
-        "description": "横浜、川崎"
-      },
-      "saitama": {
-        "label": "埼玉県",
-        "description": "埼玉エリア"
-      },
-      "chiba": {
-        "label": "千葉県",
-        "description": "千葉エリア"
-      },
-      "hyogo": {
-        "label": "兵庫県",
-        "description": "神戸周辺"
-      },
-      "fukuoka": {
-        "label": "福岡県",
-        "description": "福岡エリア"
-      }
+      "hokkaido":  { "label": "北海道",       "description": "札幌・北海道エリア" },
+      "aomori":    { "label": "青森県",       "description": "青森エリア" },
+      "iwate":     { "label": "岩手県",       "description": "盛岡・岩手エリア" },
+      "miyagi":    { "label": "宮城県",       "description": "仙台・東北エリア" },
+      "akita":     { "label": "秋田県",       "description": "秋田エリア" },
+      "yamagata":  { "label": "山形県",       "description": "山形エリア" },
+      "fukushima": { "label": "福島県",       "description": "福島エリア" },
+      "ibaraki":   { "label": "茨城県",       "description": "茨城エリア" },
+      "tochigi":   { "label": "栃木県",       "description": "栃木エリア" },
+      "gunma":     { "label": "群馬県",       "description": "群馬エリア" },
+      "saitama":   { "label": "埼玉県",       "description": "埼玉エリア" },
+      "chiba":     { "label": "千葉県",       "description": "千葉エリア" },
+      "tokyo":     { "label": "東京都",       "description": "東京エリア" },
+      "kanagawa":  { "label": "神奈川県",     "description": "横浜・川崎" },
+      "niigata":   { "label": "新潟県",       "description": "新潟エリア" },
+      "toyama":    { "label": "富山県",       "description": "富山エリア" },
+      "ishikawa":  { "label": "石川県",       "description": "金沢・北陸エリア" },
+      "fukui":     { "label": "福井県",       "description": "福井エリア" },
+      "yamanashi": { "label": "山梨県",       "description": "山梨エリア" },
+      "nagano":    { "label": "長野県",       "description": "長野エリア" },
+      "gifu":      { "label": "岐阜県",       "description": "岐阜エリア" },
+      "shizuoka":  { "label": "静岡県",       "description": "静岡・浜松エリア" },
+      "aichi":     { "label": "愛知県",       "description": "名古屋周辺" },
+      "mie":       { "label": "三重県",       "description": "三重エリア" },
+      "shiga":     { "label": "滋賀県",       "description": "滋賀エリア" },
+      "kyoto":     { "label": "京都府",       "description": "京都エリア" },
+      "osaka":     { "label": "大阪府",       "description": "大阪エリア" },
+      "hyogo":     { "label": "兵庫県",       "description": "神戸周辺" },
+      "nara":      { "label": "奈良県",       "description": "奈良エリア" },
+      "wakayama":  { "label": "和歌山県",     "description": "和歌山エリア" },
+      "tottori":   { "label": "鳥取県",       "description": "鳥取エリア" },
+      "shimane":   { "label": "島根県",       "description": "島根エリア" },
+      "okayama":   { "label": "岡山県",       "description": "岡山エリア" },
+      "hiroshima": { "label": "広島県",       "description": "広島エリア" },
+      "yamaguchi": { "label": "山口県",       "description": "山口エリア" },
+      "tokushima": { "label": "徳島県",       "description": "徳島エリア" },
+      "kagawa":    { "label": "香川県",       "description": "高松・四国エリア" },
+      "ehime":     { "label": "愛媛県",       "description": "松山・愛媛エリア" },
+      "kochi":     { "label": "高知県",       "description": "高知エリア" },
+      "fukuoka":   { "label": "福岡県",       "description": "福岡エリア" },
+      "saga":      { "label": "佐賀県",       "description": "佐賀エリア" },
+      "nagasaki":  { "label": "長崎県",       "description": "長崎エリア" },
+      "kumamoto":  { "label": "熊本県",       "description": "熊本エリア" },
+      "oita":      { "label": "大分県",       "description": "大分エリア" },
+      "miyazaki":  { "label": "宮崎県",       "description": "宮崎エリア" },
+      "kagoshima": { "label": "鹿児島県",     "description": "鹿児島エリア" },
+      "okinawa":   { "label": "沖縄県",       "description": "那覇・沖縄エリア" }
     },
     "municipalities": {
       "osaka-shi": {

@@ -358,15 +358,17 @@ describe('edge cases — validation throws', () => {
     ).toThrow(/age must be in \[0, 120\]/);
   });
   it('unsupported prefecture throws with supported list', () => {
+    // All 47 真都道府県 are now supported (0.3.x). The validation check
+    // remains in place for guard against typos / future schema changes.
     expect(() =>
       calculateTakeHome({
         annualIncome: 3_000_000,
         age: 30,
         category: 'salary',
-        // @ts-expect-error -- intentionally invalid for runtime test
-        prefecture: 'hokkaido',
+        // @ts-expect-error -- not a real prefecture key (typo simulation)
+        prefecture: 'unknown_prefecture_zz',
       }),
-    ).toThrow(/Prefecture 'hokkaido' không được hỗ trợ.*tokyo, osaka/);
+    ).toThrow(/Prefecture 'unknown_prefecture_zz' không được hỗ trợ/);
   });
   it('business category without municipality throws', () => {
     expect(() =>
