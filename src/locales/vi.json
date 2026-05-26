@@ -37,6 +37,10 @@
         "title": "Khai thuế 確定申告",
         "subtitle": "Soạn hồ sơ khai thuế cuối năm"
       },
+      "furusato": {
+        "title": "ふるさと納税",
+        "subtitle": "Đổi thuế lấy quà từ các tỉnh thành Nhật"
+      },
       "tripBudget": {
         "title": "Quỹ chuyến đi",
         "subtitle": "Ngân sách du lịch / về VN / công tác"
@@ -491,6 +495,12 @@
     "limitReached": "Lịch sử đầy ({{max}} entries). Vui lòng xóa bớt trước khi lưu thêm."
   },
   "dashboard": {
+    "sections": {
+      "today": "Hôm nay",
+      "salary": "Lương tháng",
+      "spending": "Chi tiêu",
+      "tracking": "Theo dõi"
+    },
     "greeting": {
       "morning": "Chào buổi sáng",
       "afternoon": "Chào buổi chiều",

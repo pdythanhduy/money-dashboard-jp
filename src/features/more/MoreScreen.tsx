@@ -25,7 +25,7 @@ type MoreNavigation = NativeStackNavigationProp<RootStackParamList>;
 interface MoreRow {
   key: keyof Pick<
     RootStackParamList,
-    'History' | 'Documents' | 'Goals' | 'Kakutei' | 'TripBudget' | 'Settings'
+    'History' | 'Documents' | 'Goals' | 'Kakutei' | 'TripBudget' | 'Furusato' | 'Settings'
   >;
   icon: keyof typeof Ionicons.glyphMap;
   titleKey: string;
@@ -47,7 +47,8 @@ const GROUPS: ReadonlyArray<{
   {
     titleKey: 'more.groups.japanLife',
     rows: [
-      { key: 'Kakutei',    icon: 'calculator-outline',  titleKey: 'more.items.kakutei.title',   subtitleKey: 'more.items.kakutei.subtitle' },
+      { key: 'Kakutei',    icon: 'calculator-outline',  titleKey: 'more.items.kakutei.title',    subtitleKey: 'more.items.kakutei.subtitle' },
+      { key: 'Furusato',   icon: 'gift-outline',        titleKey: 'more.items.furusato.title',   subtitleKey: 'more.items.furusato.subtitle' },
       { key: 'TripBudget', icon: 'airplane-outline',    titleKey: 'more.items.tripBudget.title', subtitleKey: 'more.items.tripBudget.subtitle' },
     ],
   },
