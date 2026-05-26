@@ -375,6 +375,71 @@ describe('Spouse special deduction', () => {
 // was under-estimated by ¥3-30k/yr.
 // ============================================================================
 
+// ============================================================================
+// 地震保険料控除 + 医療費控除 — Section 6 (added in 0.3.x bundle A2)
+// ============================================================================
+
+describe('Earthquake insurance + medical deduction', () => {
+  const baseInput: SalaryInput = {
+    annualIncome: 6_000_000,
+    age: 30,
+    category: 'salary',
+    prefecture: 'tokyo',
+  };
+
+  it('地震保険料 ¥30,000 → deduction ¥30,000 (under cap), applied to both 所得税 + 住民税', () => {
+    const baseline = calculateTakeHome(baseInput);
+    const withEq = calculateTakeHome({ ...baseInput, earthquakeInsurancePremium: 30_000 });
+    expect(
+      baseline.breakdown.taxableIncomeForNationalTax - withEq.breakdown.taxableIncomeForNationalTax,
+    ).toBe(30_000);
+    expect(
+      baseline.breakdown.taxableIncomeForResidentTax - withEq.breakdown.taxableIncomeForResidentTax,
+    ).toBe(30_000);
+    expect(withEq.breakdown.earthquakeInsuranceDeduction).toBe(30_000);
+  });
+
+  it('地震保険料 ¥80,000 → capped at ¥50,000', () => {
+    const result = calculateTakeHome({ ...baseInput, earthquakeInsurancePremium: 80_000 });
+    expect(result.breakdown.earthquakeInsuranceDeduction).toBe(50_000);
+  });
+
+  it('地震保険料 negative throws', () => {
+    expect(() =>
+      calculateTakeHome({ ...baseInput, earthquakeInsurancePremium: -1 }),
+    ).toThrow(/earthquakeInsurancePremium must be >= 0/);
+  });
+
+  it('医療費控除 ¥150,000 → deduction ¥150,000, applied to both taxes', () => {
+    const baseline = calculateTakeHome(baseInput);
+    const withMed = calculateTakeHome({ ...baseInput, medicalDeductible: 150_000 });
+    expect(
+      baseline.breakdown.taxableIncomeForNationalTax - withMed.breakdown.taxableIncomeForNationalTax,
+    ).toBe(150_000);
+    expect(
+      baseline.breakdown.taxableIncomeForResidentTax - withMed.breakdown.taxableIncomeForResidentTax,
+    ).toBe(150_000);
+    expect(withMed.breakdown.medicalDeduction).toBe(150_000);
+  });
+
+  it('医療費控除 ¥3,000,000 → capped at ¥2,000,000', () => {
+    const result = calculateTakeHome({ ...baseInput, medicalDeductible: 3_000_000 });
+    expect(result.breakdown.medicalDeduction).toBe(2_000_000);
+  });
+
+  it('医療費控除 negative throws', () => {
+    expect(() => calculateTakeHome({ ...baseInput, medicalDeductible: -1 })).toThrow(
+      /medicalDeductible must be >= 0/,
+    );
+  });
+
+  it('undefined fields → 0 in breakdown', () => {
+    const result = calculateTakeHome(baseInput);
+    expect(result.breakdown.earthquakeInsuranceDeduction).toBe(0);
+    expect(result.breakdown.medicalDeduction).toBe(0);
+  });
+});
+
 describe('Tokyo 23-ku 国保 — childcare component', () => {
   it('freelance ¥5,000,000 in tokyo-23ku gets all 4 components (incl. 子育て)', () => {
     // 旧ただし書き所得 = 5,000,000 - 430,000 = ¥4,570,000

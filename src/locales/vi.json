@@ -318,6 +318,14 @@
       "spouseIncome": {
         "label": "Thu nhập 年収 của vợ/chồng",
         "helper": "Để trống nếu vợ/chồng < ¥103万 (đủ 配偶者控除). Nhập số nếu lương ¥103万-¥201万 → tự áp 配偶者特別控除."
+      },
+      "earthquake": {
+        "label": "地震保険料 / năm",
+        "helper": "Khấu trừ 100% phí, tối đa ¥50,000. Cùng giá trị cho cả 所得税 + 住民税."
+      },
+      "medical": {
+        "label": "医療費控除 / năm (sau khi trừ BHYT)",
+        "helper": "Copy từ tab Y tế khi đã vượt ngưỡng. Trống nếu chưa đủ điều kiện."
       }
     },
     "actions": {

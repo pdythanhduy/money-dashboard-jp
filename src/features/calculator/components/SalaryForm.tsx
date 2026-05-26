@@ -548,6 +548,8 @@ function DetailedDeductionsSection({
           ) : null}
           <IdecoBlock form={form} updateField={updateField} />
           <LifeInsuranceBlock form={form} updateField={updateField} />
+          <EarthquakeInsuranceBlock form={form} updateField={updateField} />
+          <MedicalDeductionBlock form={form} updateField={updateField} />
           {showSpouseIncome ? (
             <SpouseIncomeBlock form={form} updateField={updateField} />
           ) : null}
@@ -753,6 +755,48 @@ function SpouseIncomeBlock({
         value={form.spouseAnnualIncomeInput}
         placeholder="¥1,030,000"
         onChange={(next) => updateField('spouseAnnualIncomeInput', next)}
+      />
+    </View>
+  );
+}
+
+function EarthquakeInsuranceBlock({
+  form,
+  updateField,
+}: {
+  form: CalculatorFormState;
+  updateField: <K extends keyof CalculatorFormState>(key: K, value: CalculatorFormState[K]) => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <View style={{ gap: 8 }}>
+      <CurrencyInput
+        label={t('calculator.detailed.earthquake.label')}
+        helper={t('calculator.detailed.earthquake.helper')}
+        value={form.earthquakeInsurancePremiumInput}
+        placeholder="¥30,000"
+        onChange={(next) => updateField('earthquakeInsurancePremiumInput', next)}
+      />
+    </View>
+  );
+}
+
+function MedicalDeductionBlock({
+  form,
+  updateField,
+}: {
+  form: CalculatorFormState;
+  updateField: <K extends keyof CalculatorFormState>(key: K, value: CalculatorFormState[K]) => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <View style={{ gap: 8 }}>
+      <CurrencyInput
+        label={t('calculator.detailed.medical.label')}
+        helper={t('calculator.detailed.medical.helper')}
+        value={form.medicalDeductibleInput}
+        placeholder="¥0"
+        onChange={(next) => updateField('medicalDeductibleInput', next)}
       />
     </View>
   );

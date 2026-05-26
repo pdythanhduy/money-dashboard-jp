@@ -80,6 +80,13 @@ export interface CalculatorFormState {
    *  applies. Leave empty to fall back to the legacy assumption (spouse
    *  qualifies for full 配偶者控除). */
   spouseAnnualIncomeInput: string;
+
+  /** 地震保険料 annual premium (yen). Empty = no deduction. */
+  earthquakeInsurancePremiumInput: string;
+
+  /** 医療費控除 amount (yen) AFTER reimbursements + floor. Empty = no
+   *  deduction. Users typically copy from Medical screen summary. */
+  medicalDeductibleInput: string;
 }
 
 export type CalculatorField =
@@ -139,6 +146,8 @@ export const DEFAULT_CALCULATOR_FORM: CalculatorFormState = {
   lifeInsuranceCareMedicalNewInput: '',
   lifeInsurancePersonalPensionNewInput: '',
   spouseAnnualIncomeInput: '',
+  earthquakeInsurancePremiumInput: '',
+  medicalDeductibleInput: '',
 };
 
 /**
@@ -363,6 +372,11 @@ export function buildSalaryInput(
   const spouseAnnualIncome =
     hasSpouse && form.spouseAnnualIncomeInput ? spouseAnnualIncomeRaw : undefined;
 
+  const earthquakeRaw = parseCurrencyInput(form.earthquakeInsurancePremiumInput);
+  const earthquakeInsurancePremium = earthquakeRaw > 0 ? earthquakeRaw : undefined;
+  const medicalRaw = parseCurrencyInput(form.medicalDeductibleInput);
+  const medicalDeductible = medicalRaw > 0 ? medicalRaw : undefined;
+
   const baseInput: SalaryInput = {
     annualIncome,
     age: Number.parseInt(form.ageInput, 10),
@@ -375,6 +389,8 @@ export function buildSalaryInput(
     ...(idecoMonthlyContribution !== undefined ? { idecoMonthlyContribution } : {}),
     ...(lifeInsurancePremiums !== undefined ? { lifeInsurancePremiums } : {}),
     ...(spouseAnnualIncome !== undefined ? { spouseAnnualIncome } : {}),
+    ...(earthquakeInsurancePremium !== undefined ? { earthquakeInsurancePremium } : {}),
+    ...(medicalDeductible !== undefined ? { medicalDeductible } : {}),
   };
 
   if (baseInput.hasSpouse) {
@@ -463,6 +479,10 @@ function formFromSalaryInput(
     spouseAnnualIncomeInput: input.spouseAnnualIncome
       ? String(input.spouseAnnualIncome)
       : '',
+    earthquakeInsurancePremiumInput: input.earthquakeInsurancePremium
+      ? String(input.earthquakeInsurancePremium)
+      : '',
+    medicalDeductibleInput: input.medicalDeductible ? String(input.medicalDeductible) : '',
   };
 }
 
