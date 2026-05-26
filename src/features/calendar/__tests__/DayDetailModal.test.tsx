@@ -37,6 +37,11 @@ jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 47, bottom: 34, left: 0, right: 0 }),
 }));
 
+// Spy on react-native's Alert.alert so we can assert the delete confirm
+// dialog without actually triggering a native modal.
+import { Alert as RNAlert } from 'react-native';
+const mockAlert = jest.spyOn(RNAlert, 'alert').mockImplementation(jest.fn());
+
 const TestRenderer = require('react-test-renderer') as {
   act: (cb: () => void) => void;
   create: (el: React.ReactElement) => {
@@ -171,6 +176,63 @@ describe('DayDetailModal', () => {
     expect(cta).toBeDefined();
     TestRenderer.act(() => (cta!.props.onPress as () => void)());
     expect(onAdd).toHaveBeenCalledWith('2026-06-15');
+    TestRenderer.act(() => r.unmount());
+  });
+
+  it('shows trash icon on kakeibo_expense rows but NOT on holidays / payday', () => {
+    const events: CalendarEvent[] = [
+      {
+        id: 'kakeibo-abc',
+        date: '2026-06-15',
+        kind: 'kakeibo_expense',
+        labelKey: 'calendar.events.kakeibo',
+        labelParams: { label: 'Lawson' },
+        amountJpy: -1_200,
+      },
+      {
+        id: 'payday-2026-6',
+        date: '2026-06-15',
+        kind: 'payday',
+        labelKey: 'calendar.events.payday',
+      },
+    ];
+    const r = renderTree(
+      <DayDetailModal visible date="2026-06-15" events={events} onClose={jest.fn()} />,
+    );
+    const tree = JSON.stringify(r.toJSON());
+    expect(tree).toContain('[icon:trash-outline]');
+    // Only ONE trash icon since only ONE row is deletable (kakeibo).
+    const matches = tree.match(/trash-outline/g) ?? [];
+    expect(matches).toHaveLength(1);
+    TestRenderer.act(() => r.unmount());
+  });
+
+  it('tap trash → Alert confirmation surfaces "Xóa chi tiêu?"', () => {
+    mockAlert.mockReset();
+    const events: CalendarEvent[] = [
+      {
+        id: 'kakeibo-abc',
+        date: '2026-06-15',
+        kind: 'kakeibo_expense',
+        labelKey: 'calendar.events.kakeibo',
+        labelParams: { label: 'Lawson' },
+        amountJpy: -1_200,
+      },
+    ];
+    const r = renderTree(
+      <DayDetailModal visible date="2026-06-15" events={events} onClose={jest.fn()} />,
+    );
+    const buttons = r.root.findAllByProps({ accessibilityRole: 'button' });
+    const trashBtn = buttons.find(
+      (b) =>
+        typeof b.props.accessibilityLabel === 'string' &&
+        (b.props.accessibilityLabel as string).includes('Xóa chi tiêu'),
+    );
+    expect(trashBtn).toBeDefined();
+    TestRenderer.act(() => (trashBtn!.props.onPress as () => void)());
+    expect(mockAlert).toHaveBeenCalledTimes(1);
+    // Title is the first arg.
+    expect((mockAlert.mock.calls[0]![0] as string)).toContain('Xóa chi tiêu');
     TestRenderer.act(() => r.unmount());
   });
 

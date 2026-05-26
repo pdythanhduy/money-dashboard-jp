@@ -57,6 +57,12 @@
     "todayButton": "今日に戻る",
     "tapDateHint": "日付をタップで詳細表示。月名タップで今日に戻ります。",
     "addExpenseCta": "+ この日の支出を追加",
+    "deleteCta": "この支出を削除",
+    "deleteConfirm": {
+      "title": "支出を削除しますか?",
+      "body": "「{{label}}」を家計簿から削除します。元に戻せません。",
+      "confirm": "削除"
+    },
     "noEvents": "この日には予定がありません。",
     "weekdays": {
       "0": "日",

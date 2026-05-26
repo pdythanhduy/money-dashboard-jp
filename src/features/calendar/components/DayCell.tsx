@@ -32,9 +32,12 @@ export function DayCell({
   const { colors, typography } = useTheme();
   const holiday = lookupHoliday(date);
 
-  // Color hierarchy: today > holiday > Sunday > Saturday > weekday.
+  // Color hierarchy: today (filled brand) > holiday > Sunday > Saturday > weekday.
+  // `isToday` now uses a SOLID brand background with inverse text — the old
+  // `brandSubtle` tint was too faint to spot at a glance on real devices.
   let textColor: string = colors.text;
-  if (!inCurrentMonth) textColor = colors.textSecondary;
+  if (isToday) textColor = colors.textInverse;
+  else if (!inCurrentMonth) textColor = colors.textSecondary;
   else if (holiday) textColor = colors.danger;
   else if (dayOfWeek === 0) textColor = colors.danger;
   else if (dayOfWeek === 6) textColor = colors.brand;
@@ -50,8 +53,8 @@ export function DayCell({
         flex: 1,
         aspectRatio: 1,
         padding: 4,
-        borderRadius: 6,
-        backgroundColor: isToday ? colors.brandSubtle : 'transparent',
+        borderRadius: 8,
+        backgroundColor: isToday ? colors.brand : 'transparent',
         opacity: inCurrentMonth ? 1 : 0.35,
       }}
     >
@@ -71,27 +74,37 @@ export function DayCell({
         <View
           style={{
             position: 'absolute',
-            bottom: 4,
+            bottom: 5,
             left: 0,
             right: 0,
             flexDirection: 'row',
             justifyContent: 'center',
-            gap: 2,
+            gap: 3,
           }}
         >
           {events.slice(0, 3).map((e, idx) => (
             <View
               key={`${e.id}-${idx}`}
               style={{
-                width: 5,
-                height: 5,
-                borderRadius: 2.5,
-                backgroundColor: dotColorFor(e, colors),
+                width: 6,
+                height: 6,
+                borderRadius: 3,
+                // On today's cell (brand background), use inverse so dots are visible.
+                backgroundColor: isToday ? colors.textInverse : dotColorFor(e, colors),
               }}
             />
           ))}
           {events.length > 3 ? (
-            <Text style={[typography.caption, { color: colors.textSecondary, fontSize: 9, lineHeight: 9 }]}>
+            <Text
+              style={[
+                typography.caption,
+                {
+                  color: isToday ? colors.textInverse : colors.textSecondary,
+                  fontSize: 9,
+                  lineHeight: 9,
+                },
+              ]}
+            >
               +{events.length - 3}
             </Text>
           ) : null}

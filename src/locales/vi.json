@@ -57,6 +57,12 @@
     "todayButton": "Về hôm nay",
     "tapDateHint": "Chạm vào ngày để xem chi tiết — chạm tên tháng để về hôm nay.",
     "addExpenseCta": "+ Thêm chi tiêu cho ngày này",
+    "deleteCta": "Xóa chi tiêu này",
+    "deleteConfirm": {
+      "title": "Xóa chi tiêu?",
+      "body": "Xóa \"{{label}}\" khỏi 家計簿? Không thể hoàn tác.",
+      "confirm": "Xóa"
+    },
     "noEvents": "Không có sự kiện nào trong ngày này.",
     "weekdays": {
       "0": "CN",
