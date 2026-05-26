@@ -499,7 +499,12 @@
       "today": "今日",
       "salary": "今月の給与",
       "spending": "支出",
-      "tracking": "進捗・記録"
+      "tracking": "進捗・記録",
+      "trend": "推移"
+    },
+    "statsLine": {
+      "summary": "税金 約{{tax}} · 社保 約{{insurance}} · 手取り率 {{retention}}%",
+      "a11y": "計算機で税金・社会保険の内訳を見る"
     },
     "greeting": {
       "morning": "おはようございます",

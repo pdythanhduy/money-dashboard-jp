@@ -7,12 +7,10 @@ import { Pressable, RefreshControl, ScrollView, Text, View } from 'react-native'
 
 import { DailySpendingCard } from '@/features/dashboard/components/DailySpendingCard';
 import { DashboardSection } from '@/features/dashboard/components/DashboardSection';
-import { TaxChecklistReminderCard } from '@/features/dashboard/components/TaxChecklistReminderCard';
 import { WeeklyReviewCard } from '@/features/dashboard/components/WeeklyReviewCard';
 import { EmptyState } from '@/features/dashboard/components/EmptyState';
 import { GreetingHeader } from '@/features/dashboard/components/GreetingHeader';
 import { MonthlyTrendChart } from '@/features/dashboard/components/MonthlyTrendChart';
-import { QuickStatsRow } from '@/features/dashboard/components/QuickStatsRow';
 import { TakeHomeProgressCard } from '@/features/dashboard/components/TakeHomeProgressCard';
 import { TripBudgetCard } from '@/features/dashboard/components/TripBudgetCard';
 import { UpcomingEventsCard } from '@/features/dashboard/components/UpcomingEventsCard';
@@ -258,8 +256,10 @@ export function DashboardScreen() {
         </DashboardSection>
 
         {/* ── LƯƠNG THÁNG / 今月の給与 ──────────────────────────
-            Hero number + at-a-glance ratios + 6-month trend (moved up
-            from bottom — modern dashboards put data viz prominently). */}
+            Hero number + compact stats line (tax / insurance / retention
+            collapsed from a separate card into a 1-line caption — same
+            info, less visual weight). 6-month trend moved to its own
+            bottom section so this one stays scannable. */}
         <DashboardSection title={t('dashboard.sections.salary')}>
           <TakeHomeProgressCard
             proportionalTakeHome={data.proportionalTakeHome}
@@ -268,13 +268,24 @@ export function DashboardScreen() {
             daysInMonth={data.daysInMonth}
             daysPassed={data.daysPassed}
           />
-          <QuickStatsRow
-            proportionalTax={data.proportionalTax}
-            proportionalInsurance={data.proportionalInsurance}
-            retentionRate={data.retentionRate}
-            onPressTax={goToCalculator}
-          />
-          <MonthlyTrendChart />
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t('dashboard.statsLine.a11y')}
+            onPress={goToCalculator}
+            style={({ pressed }) => ({
+              marginHorizontal: spacing.lg,
+              marginTop: spacing.sm,
+              opacity: pressed ? 0.6 : 1,
+            })}
+          >
+            <Text style={[typography.caption, { color: colors.textSecondary }]}>
+              {t('dashboard.statsLine.summary', {
+                tax: formatCurrency(data.proportionalTax),
+                insurance: formatCurrency(data.proportionalInsurance),
+                retention: data.retentionRate,
+              })}
+            </Text>
+          </Pressable>
         </DashboardSection>
 
         {/* ── CHI TIÊU / 支出 ──────────────────────────────────
@@ -365,32 +376,7 @@ export function DashboardScreen() {
               </Text>
             ) : null}
           </Pressable>
-        ) : (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={t('goals.dashboard.openHub')}
-            onPress={goToGoals}
-            style={({ pressed }) => ({
-              marginHorizontal: spacing.lg,
-              marginTop: spacing.md,
-              padding: spacing.md,
-              borderRadius: 16,
-              backgroundColor: colors.surfaceElevated,
-              opacity: pressed ? 0.85 : 1,
-            })}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}>
-              <Ionicons name="flag-outline" size={18} color={colors.brand} />
-              <Text style={[typography.headline, { color: colors.text, flex: 1 }]}>
-                {t('goals.empty.title')}
-              </Text>
-              <Ionicons name="chevron-forward" size={18} color={colors.textSecondary} />
-            </View>
-            <Text style={[typography.caption, { color: colors.textSecondary, marginTop: spacing.xs }]}>
-              {t('goals.empty.body')}
-            </Text>
-          </Pressable>
-        )}
+        ) : null /* empty-CTA dropped 0.3.x: discoverable via More → Mục tiêu */}
         {kakeiboThisMonth ? (
           <Pressable
             accessibilityRole="button"
@@ -485,7 +471,14 @@ export function DashboardScreen() {
           </Pressable>
         ) : null}
         <TripBudgetCard onPress={goToTripBudget} />
-        <TaxChecklistReminderCard onPress={goToKakutei} />
+        </DashboardSection>
+
+        {/* ── XU HƯỚNG / 推移 ─────────────────────────────────
+            6-month chart parked at the very end as a summary glance.
+            Per user feedback the chart belongs as the closing summary,
+            not as a salary-section hero (it competes with TakeHome). */}
+        <DashboardSection title={t('dashboard.sections.trend')}>
+          <MonthlyTrendChart />
         </DashboardSection>
 
         <View style={{ alignItems: 'center', marginTop: spacing.xl, paddingHorizontal: spacing.lg }}>
