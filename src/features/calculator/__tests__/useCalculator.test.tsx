@@ -56,7 +56,7 @@ describe('useCalculator', () => {
     });
 
     expect(submitted).toBe(true);
-    expect(hook?.result?.takeHomeAnnual).toBe(2_853_700);
+    expect(hook?.result?.takeHomeAnnual).toBe(2_850_160);
     expect(hook?.mode).toBe('result');
     TestRenderer.act(() => {
       renderer?.unmount();
@@ -160,7 +160,7 @@ describe('computeCalculatorResult', () => {
     expect(output.errors).toEqual({});
     expect(output.input?.annualIncome).toBe(3_600_000);
     expect(output.input?.pensionType).toBe('employee');
-    expect(output.result?.takeHomeAnnual).toBe(2_853_700);
+    expect(output.result?.takeHomeAnnual).toBe(2_850_160);
   });
 
   it('maps seishain national pension selection into the tax input', () => {

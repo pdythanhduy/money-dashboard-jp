@@ -10,7 +10,7 @@ import { useTheme } from '@/theme';
 
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 
-type Nav = BottomTabNavigationProp<MainTabParamList, 'Dashboard'>;
+type Nav = BottomTabNavigationProp<MainTabParamList, 'Home'>;
 
 export function IncomeStep() {
   const { t } = useTranslation();

@@ -82,6 +82,131 @@ export const SPOUSE_DEDUCTION_NATIONAL_TAX: readonly SpouseDeductionRow[] = [
 export const SPOUSE_INCOME_CEILING = 580_000;
 
 // ---------------------------------------------------------------------------
+// 配偶者特別控除 (spouse special deduction) — 令和7年改正 後 (FY2026)
+// ---------------------------------------------------------------------------
+
+/**
+ * 配偶者特別控除 is a 2D table: rows by taxpayer 合計所得金額, columns by
+ * spouse 合計所得金額. It kicks in when spouse 合計所得 > ¥580,000 (the
+ * 配偶者控除 ceiling, raised from ¥480k in 令和7年改正). Upper limit on
+ * spouse 合計所得 = ¥1,330,000. Taxpayer 合計所得 must be ≤ ¥10,000,000.
+ *
+ * @see https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1195.htm
+ */
+export interface SpouseSpecialDeductionTier {
+  spouseIncomeUpperBound: number;
+  deduction: number;
+}
+
+export interface SpouseSpecialDeductionRow {
+  taxpayerIncomeUpperBound: number;
+  /** Per-spouse-income tier deductions. Iterate; first matching tier wins. */
+  tiers: readonly SpouseSpecialDeductionTier[];
+}
+
+/** Spouse 合計所得金額 ceiling above which 配偶者特別控除 = 0. */
+export const SPOUSE_SPECIAL_INCOME_CEILING = 1_330_000;
+/** Taxpayer 合計所得金額 ceiling above which both spouse deductions = 0. */
+export const TAXPAYER_SPOUSE_INCOME_CEILING = 10_000_000;
+
+export const SPOUSE_SPECIAL_DEDUCTION_NATIONAL_TAX: readonly SpouseSpecialDeductionRow[] = [
+  {
+    taxpayerIncomeUpperBound: 9_000_000,
+    tiers: [
+      { spouseIncomeUpperBound:   950_000, deduction: 380_000 },
+      { spouseIncomeUpperBound: 1_000_000, deduction: 360_000 },
+      { spouseIncomeUpperBound: 1_050_000, deduction: 310_000 },
+      { spouseIncomeUpperBound: 1_100_000, deduction: 260_000 },
+      { spouseIncomeUpperBound: 1_150_000, deduction: 210_000 },
+      { spouseIncomeUpperBound: 1_200_000, deduction: 160_000 },
+      { spouseIncomeUpperBound: 1_250_000, deduction: 110_000 },
+      { spouseIncomeUpperBound: 1_300_000, deduction:  60_000 },
+      { spouseIncomeUpperBound: 1_330_000, deduction:  30_000 },
+    ],
+  },
+  {
+    taxpayerIncomeUpperBound: 9_500_000,
+    tiers: [
+      { spouseIncomeUpperBound:   950_000, deduction: 260_000 },
+      { spouseIncomeUpperBound: 1_000_000, deduction: 240_000 },
+      { spouseIncomeUpperBound: 1_050_000, deduction: 210_000 },
+      { spouseIncomeUpperBound: 1_100_000, deduction: 180_000 },
+      { spouseIncomeUpperBound: 1_150_000, deduction: 140_000 },
+      { spouseIncomeUpperBound: 1_200_000, deduction: 110_000 },
+      { spouseIncomeUpperBound: 1_250_000, deduction:  80_000 },
+      { spouseIncomeUpperBound: 1_300_000, deduction:  40_000 },
+      { spouseIncomeUpperBound: 1_330_000, deduction:  20_000 },
+    ],
+  },
+  {
+    taxpayerIncomeUpperBound: 10_000_000,
+    tiers: [
+      { spouseIncomeUpperBound:   950_000, deduction: 130_000 },
+      { spouseIncomeUpperBound: 1_000_000, deduction: 120_000 },
+      { spouseIncomeUpperBound: 1_050_000, deduction: 110_000 },
+      { spouseIncomeUpperBound: 1_100_000, deduction:  90_000 },
+      { spouseIncomeUpperBound: 1_150_000, deduction:  70_000 },
+      { spouseIncomeUpperBound: 1_200_000, deduction:  60_000 },
+      { spouseIncomeUpperBound: 1_250_000, deduction:  40_000 },
+      { spouseIncomeUpperBound: 1_300_000, deduction:  20_000 },
+      { spouseIncomeUpperBound: 1_330_000, deduction:  10_000 },
+    ],
+  },
+];
+
+/**
+ * 住民税 配偶者特別控除 — top tier capped at ¥330k (vs national ¥380k).
+ * Lower tiers mirror the national table once the resident-tax cap is binding.
+ * Standardized nationwide via 地方税法.
+ *
+ * @see https://www.tax.metro.tokyo.lg.jp/kazei/kojin_ju.html
+ */
+export const SPOUSE_SPECIAL_DEDUCTION_RESIDENT_TAX: readonly SpouseSpecialDeductionRow[] = [
+  {
+    taxpayerIncomeUpperBound: 9_000_000,
+    tiers: [
+      { spouseIncomeUpperBound:   950_000, deduction: 330_000 },
+      { spouseIncomeUpperBound: 1_000_000, deduction: 330_000 },
+      { spouseIncomeUpperBound: 1_050_000, deduction: 310_000 },
+      { spouseIncomeUpperBound: 1_100_000, deduction: 260_000 },
+      { spouseIncomeUpperBound: 1_150_000, deduction: 210_000 },
+      { spouseIncomeUpperBound: 1_200_000, deduction: 160_000 },
+      { spouseIncomeUpperBound: 1_250_000, deduction: 110_000 },
+      { spouseIncomeUpperBound: 1_300_000, deduction:  60_000 },
+      { spouseIncomeUpperBound: 1_330_000, deduction:  30_000 },
+    ],
+  },
+  {
+    taxpayerIncomeUpperBound: 9_500_000,
+    tiers: [
+      { spouseIncomeUpperBound:   950_000, deduction: 220_000 },
+      { spouseIncomeUpperBound: 1_000_000, deduction: 220_000 },
+      { spouseIncomeUpperBound: 1_050_000, deduction: 210_000 },
+      { spouseIncomeUpperBound: 1_100_000, deduction: 180_000 },
+      { spouseIncomeUpperBound: 1_150_000, deduction: 140_000 },
+      { spouseIncomeUpperBound: 1_200_000, deduction: 110_000 },
+      { spouseIncomeUpperBound: 1_250_000, deduction:  80_000 },
+      { spouseIncomeUpperBound: 1_300_000, deduction:  40_000 },
+      { spouseIncomeUpperBound: 1_330_000, deduction:  20_000 },
+    ],
+  },
+  {
+    taxpayerIncomeUpperBound: 10_000_000,
+    tiers: [
+      { spouseIncomeUpperBound:   950_000, deduction: 110_000 },
+      { spouseIncomeUpperBound: 1_000_000, deduction: 110_000 },
+      { spouseIncomeUpperBound: 1_050_000, deduction: 110_000 },
+      { spouseIncomeUpperBound: 1_100_000, deduction:  90_000 },
+      { spouseIncomeUpperBound: 1_150_000, deduction:  70_000 },
+      { spouseIncomeUpperBound: 1_200_000, deduction:  60_000 },
+      { spouseIncomeUpperBound: 1_250_000, deduction:  40_000 },
+      { spouseIncomeUpperBound: 1_300_000, deduction:  20_000 },
+      { spouseIncomeUpperBound: 1_330_000, deduction:  10_000 },
+    ],
+  },
+];
+
+// ---------------------------------------------------------------------------
 // 扶養控除 (dependent deduction)
 // ---------------------------------------------------------------------------
 

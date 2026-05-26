@@ -4,11 +4,115 @@
     "tagline": "Tính lương, thuế và bảo hiểm tại Nhật"
   },
   "tabs": {
-    "dashboard": "Tổng quan",
+    "home": "Trang chủ",
+    "kakeibo": "Chi tiêu",
     "calculator": "Tính lương",
-    "history": "Lịch sử",
-    "documents": "Giấy tờ",
-    "settings": "Cài đặt"
+    "calendar": "Lịch",
+    "more": "Thêm",
+    "_dashboard_deprecated": "Tổng quan",
+    "_history_deprecated": "Lịch sử",
+    "_documents_deprecated": "Giấy tờ",
+    "_settings_deprecated": "Cài đặt"
+  },
+  "more": {
+    "groups": {
+      "management": "Quản lý",
+      "japanLife": "Đời sống ở Nhật",
+      "settings": "Cài đặt"
+    },
+    "items": {
+      "history": {
+        "title": "Lịch sử tính lương",
+        "subtitle": "Xem lại các lần tính trước"
+      },
+      "documents": {
+        "title": "Giấy tờ",
+        "subtitle": "Hạn 在留 / マイナンバー / 健康保険..."
+      },
+      "goals": {
+        "title": "Mục tiêu tiết kiệm",
+        "subtitle": "Theo dõi tiến độ mua nhà, gửi tiền về…"
+      },
+      "kakutei": {
+        "title": "Khai thuế 確定申告",
+        "subtitle": "Soạn hồ sơ khai thuế cuối năm"
+      },
+      "tripBudget": {
+        "title": "Quỹ chuyến đi",
+        "subtitle": "Ngân sách du lịch / về VN / công tác"
+      },
+      "settings": {
+        "title": "Cài đặt",
+        "subtitle": "Ngôn ngữ, theme, sao lưu, xóa dữ liệu"
+      }
+    }
+  },
+  "calendar": {
+    "prevMonth": "Tháng trước",
+    "nextMonth": "Tháng sau",
+    "todayButton": "Về hôm nay",
+    "tapDateHint": "Chạm vào ngày để xem chi tiết — chạm tên tháng để về hôm nay.",
+    "noEvents": "Không có sự kiện nào trong ngày này.",
+    "weekdays": {
+      "0": "CN",
+      "1": "T2",
+      "2": "T3",
+      "3": "T4",
+      "4": "T5",
+      "5": "T6",
+      "6": "T7"
+    },
+    "months": {
+      "1": "Tháng 1",
+      "2": "Tháng 2",
+      "3": "Tháng 3",
+      "4": "Tháng 4",
+      "5": "Tháng 5",
+      "6": "Tháng 6",
+      "7": "Tháng 7",
+      "8": "Tháng 8",
+      "9": "Tháng 9",
+      "10": "Tháng 10",
+      "11": "Tháng 11",
+      "12": "Tháng 12"
+    },
+    "kinds": {
+      "kakeibo_expense": "Chi tiêu (家計簿)",
+      "medical_expense": "Y tế",
+      "furusato_donation": "ふるさと納税",
+      "remittance": "Chuyển tiền về VN",
+      "trip": "Chuyến đi",
+      "document_expiry": "Giấy tờ hết hạn",
+      "recurring_expense": "Chi định kỳ",
+      "payday": "Ngày lương",
+      "tax_filing": "確定申告",
+      "resident_tax": "住民税",
+      "year_end_adjustment": "年末調整",
+      "bonus_typical": "Bonus 賞与 (thường lệ)"
+    },
+    "events": {
+      "kakeibo": "{{label}}",
+      "medical": "Khám/thuốc — {{category}}",
+      "furusato": "Quyên góp {{municipality}}",
+      "remittance": "Chuyển tiền",
+      "trip": "{{title}}",
+      "documentExpiry": "{{kind}} — hết hạn",
+      "recurring": "{{name}} (định kỳ)",
+      "payday": "Ngày lương",
+      "taxFiling": "Hạn 確定申告 cho thu nhập năm {{fiscalYear}}",
+      "residentTax": "住民税 đợt {{quarter}}",
+      "yearEndAdjustment": "年末調整 — bắt đầu nộp giấy tờ",
+      "bonusTypicalSummer": "Bonus mùa hè (thường lệ)",
+      "bonusTypicalWinter": "Bonus mùa đông (thường lệ)"
+    },
+    "legend": {
+      "title": "Chú thích màu",
+      "taxDeadline": "Hạn thuế",
+      "payday": "Ngày lương / bonus",
+      "documentExpiry": "Giấy tờ hết hạn",
+      "trip": "Chuyến đi",
+      "expense": "Chi tiêu / khác"
+    }
   },
   "screens": {
     "dashboard": {
@@ -167,6 +271,35 @@
       "blueReturnDeduction": "青色申告控除",
       "blueReturnExplain": "Chọn mức khấu trừ khai thuế xanh nếu bạn đủ điều kiện."
     },
+    "detailed": {
+      "title": "Tính chi tiết & Khấu trừ thêm",
+      "subtitle": "Tách 月給 + 賞与, iDeCo, 生命保険料, thu nhập vợ/chồng — chính xác hơn cho hầu hết người làm công.",
+      "bonus": {
+        "title": "Lương tháng + Bonus (賞与)",
+        "subtitle": "Mặc định: chia đều thu nhập năm cho 12 tháng. Chọn Chi tiết để app tính 健保/厚年 đúng với cấu trúc thực tế (月給 + 賞与) theo cap pháp định FY2026.",
+        "simple": "Đơn giản (年収÷12)",
+        "detailed": "Chi tiết (月給 + 賞与)",
+        "monthlyBaseLabel": "月給 cơ bản / tháng",
+        "annualBonusLabel": "賞与 tổng / năm",
+        "countLabel": "Số lần 賞与 / năm",
+        "derived": "Tổng thu nhập năm = {{annual}} ({{base}}/月 × 12 + {{bonus}} 賞与)"
+      },
+      "ideco": {
+        "label": "iDeCo / 小規模企業共済 (per tháng)",
+        "helper": "Khấu trừ toàn bộ vào cả 所得税 và 住民税."
+      },
+      "lifeInsurance": {
+        "title": "生命保険料控除 (新制度)",
+        "subtitle": "Hợp đồng ký 2012-01 trở đi. Mỗi loại tối đa khấu trừ ¥40,000 (国税) / ¥28,000 (住民税); tổng 3 loại tối đa ¥120,000 / ¥70,000.",
+        "generalNew": "一般生命保険料 / năm",
+        "careMedicalNew": "介護医療保険料 / năm",
+        "personalPensionNew": "個人年金保険料 / năm"
+      },
+      "spouseIncome": {
+        "label": "Thu nhập 年収 của vợ/chồng",
+        "helper": "Để trống nếu vợ/chồng < ¥103万 (đủ 配偶者控除). Nhập số nếu lương ¥103万-¥201万 → tự áp 配偶者特別控除."
+      }
+    },
     "actions": {
       "calculate": "TÍNH TOÁN",
       "editInput": "Sửa thông tin",
@@ -317,8 +450,10 @@
       "tax": "Tổng thuế"
     },
     "trend": {
-      "title": "Xu hướng take-home",
-      "needsTwoPoints": "Cần ít nhất 2 lần tính để xem biểu đồ trend."
+      "title": "Xu hướng 6 tháng",
+      "needsTwoPoints": "Cần ít nhất 1 lần tính để xem biểu đồ 6 tháng.",
+      "vsPrevMonth": "so với tháng trước",
+      "grossLabel": "Lương gross"
     },
     "filter": {
       "all": "Tất cả",
@@ -384,7 +519,7 @@
     },
     "trend": {
       "title": "Xu hướng 6 tháng",
-      "needsTwoPoints": "Cần ít nhất 2 lần tính để xem xu hướng 6 tháng"
+      "needsTwoPoints": "Cần ít nhất 1 lần tính để xem xu hướng 6 tháng"
     },
     "dailySpending": {
       "title": "Chi tiêu hôm nay",

@@ -53,6 +53,33 @@ export interface CalculatorFormState {
   studentChildren16To22: number;
   elderlyDependents70Plus: number;
   blueReturnDeduction: BlueReturnDeduction;
+
+  // ---- 0.3.0 — accurate detailed inputs (all optional in calc; '' = unused) ----
+
+  /** When true (and category='salary'), 健保/厚年 use monthlyBaseSalary +
+   *  annualBonus + bonusPaymentCount with FY2026 caps. When false, falls
+   *  back to legacy annualIncome/12 grade. */
+  useDetailedSalary: boolean;
+  /** 月給 (monthly base salary, yen). Required when useDetailedSalary. */
+  monthlyBaseSalaryInput: string;
+  /** 賞与年間合計 (annual total bonus, yen). 0 means no bonus. */
+  annualBonusInput: string;
+  /** Number of bonus payments per year. Default '2'. */
+  bonusPaymentCountInput: string;
+
+  /** iDeCo 月額 (small-business etc. mutual aid monthly contribution, yen). */
+  idecoMonthlyInput: string;
+
+  /** 生命保険料 — 新制度, 3 categories. */
+  lifeInsuranceGeneralNewInput: string;
+  lifeInsuranceCareMedicalNewInput: string;
+  lifeInsurancePersonalPensionNewInput: string;
+
+  /** 配偶者 年収 (spouse's gross annual salary). Only consumed when
+   *  `hasSpouse` is true; determines whether 配偶者控除 or 配偶者特別控除
+   *  applies. Leave empty to fall back to the legacy assumption (spouse
+   *  qualifies for full 配偶者控除). */
+  spouseAnnualIncomeInput: string;
 }
 
 export type CalculatorField =
@@ -103,6 +130,15 @@ export const DEFAULT_CALCULATOR_FORM: CalculatorFormState = {
   studentChildren16To22: 0,
   elderlyDependents70Plus: 0,
   blueReturnDeduction: 0,
+  useDetailedSalary: false,
+  monthlyBaseSalaryInput: '',
+  annualBonusInput: '',
+  bonusPaymentCountInput: '2',
+  idecoMonthlyInput: '',
+  lifeInsuranceGeneralNewInput: '',
+  lifeInsuranceCareMedicalNewInput: '',
+  lifeInsurancePersonalPensionNewInput: '',
+  spouseAnnualIncomeInput: '',
 };
 
 export const PREFECTURE_VALUES: readonly Prefecture[] = [
@@ -277,12 +313,56 @@ export function buildSalaryInput(
     annualIncome = parseCurrencyInput(form.annualIncomeInput);
   }
 
+  // When detailed salary breakdown is active for a salary worker, derive the
+  // annual total from monthly base × 12 + annualBonus to keep all three
+  // numbers consistent (lib `validateInput` enforces this).
+  const detailedActive =
+    form.useDetailedSalary &&
+    category === 'salary' &&
+    form.incomeMode === 'annual' &&
+    !!form.monthlyBaseSalaryInput;
+  let monthlyBaseSalary: number | undefined;
+  let annualBonus: number | undefined;
+  let bonusPaymentCount: number | undefined;
+  if (detailedActive) {
+    monthlyBaseSalary = parseCurrencyInput(form.monthlyBaseSalaryInput);
+    annualBonus = parseCurrencyInput(form.annualBonusInput);
+    const count = Number.parseInt(form.bonusPaymentCountInput, 10);
+    bonusPaymentCount = Number.isFinite(count) && count > 0 ? count : 2;
+    annualIncome = monthlyBaseSalary * 12 + annualBonus;
+  }
+
+  // Optional new deductions (apply to both salary + freelance).
+  const idecoMonthly = parseCurrencyInput(form.idecoMonthlyInput);
+  const idecoMonthlyContribution = idecoMonthly > 0 ? idecoMonthly : undefined;
+  const liGeneral = parseCurrencyInput(form.lifeInsuranceGeneralNewInput);
+  const liCareMedical = parseCurrencyInput(form.lifeInsuranceCareMedicalNewInput);
+  const liPersonalPension = parseCurrencyInput(form.lifeInsurancePersonalPensionNewInput);
+  const lifeInsurancePremiums =
+    liGeneral > 0 || liCareMedical > 0 || liPersonalPension > 0
+      ? {
+          ...(liGeneral > 0 ? { generalNew: liGeneral } : {}),
+          ...(liCareMedical > 0 ? { careMedicalNew: liCareMedical } : {}),
+          ...(liPersonalPension > 0 ? { personalPensionNew: liPersonalPension } : {}),
+        }
+      : undefined;
+  const spouseAnnualIncomeRaw = parseCurrencyInput(form.spouseAnnualIncomeInput);
+  const hasSpouse = form.hasDependents && form.hasSpouse;
+  const spouseAnnualIncome =
+    hasSpouse && form.spouseAnnualIncomeInput ? spouseAnnualIncomeRaw : undefined;
+
   const baseInput: SalaryInput = {
     annualIncome,
     age: Number.parseInt(form.ageInput, 10),
     category,
-    hasSpouse: form.hasDependents && form.hasSpouse,
+    hasSpouse,
     dependents,
+    ...(monthlyBaseSalary !== undefined ? { monthlyBaseSalary } : {}),
+    ...(annualBonus !== undefined ? { annualBonus } : {}),
+    ...(bonusPaymentCount !== undefined ? { bonusPaymentCount } : {}),
+    ...(idecoMonthlyContribution !== undefined ? { idecoMonthlyContribution } : {}),
+    ...(lifeInsurancePremiums !== undefined ? { lifeInsurancePremiums } : {}),
+    ...(spouseAnnualIncome !== undefined ? { spouseAnnualIncome } : {}),
   };
 
   if (baseInput.hasSpouse) {
@@ -343,6 +423,8 @@ function formFromSalaryInput(
     return seeded;
   }
 
+  const hasDetailed = input.monthlyBaseSalary !== undefined;
+  const lifePremiums = input.lifeInsurancePremiums;
   return {
     ...DEFAULT_CALCULATOR_FORM,
     jobType: input.category === 'business' ? 'freelance' : 'seishain',
@@ -352,6 +434,23 @@ function formFromSalaryInput(
     pensionType: input.pensionType === 'national' ? 'kokumin' : 'kosei',
     municipality: input.municipality,
     blueReturnDeduction: input.blueReturnDeduction ?? 0,
+    useDetailedSalary: hasDetailed,
+    monthlyBaseSalaryInput: hasDetailed ? String(input.monthlyBaseSalary) : '',
+    annualBonusInput: hasDetailed ? String(input.annualBonus ?? 0) : '',
+    bonusPaymentCountInput: hasDetailed ? String(input.bonusPaymentCount ?? 2) : '2',
+    idecoMonthlyInput: input.idecoMonthlyContribution
+      ? String(input.idecoMonthlyContribution)
+      : '',
+    lifeInsuranceGeneralNewInput: lifePremiums?.generalNew ? String(lifePremiums.generalNew) : '',
+    lifeInsuranceCareMedicalNewInput: lifePremiums?.careMedicalNew
+      ? String(lifePremiums.careMedicalNew)
+      : '',
+    lifeInsurancePersonalPensionNewInput: lifePremiums?.personalPensionNew
+      ? String(lifePremiums.personalPensionNew)
+      : '',
+    spouseAnnualIncomeInput: input.spouseAnnualIncome
+      ? String(input.spouseAnnualIncome)
+      : '',
   };
 }
 

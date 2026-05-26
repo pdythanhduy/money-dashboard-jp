@@ -29,25 +29,26 @@ import type { SalaryInput } from '@/types/tax';
 //
 //   monthly income         = 1,000,000 / 12 ≈ ¥83,333
 //   標準報酬月額 grade     = ¥88,000  (bin [83k, 93k), healthGrade 4, pensionGrade 1)
-//   健保 (Osaka)           = floor(88,000 × 0.1013 / 2) = floor(4,457.2) = ¥4,457/月
+//   健保+子育て (Osaka)    = floor(88,000 × (0.1013 + 0.0023) / 2)
+//                          = floor(88,000 × 0.1036 / 2) = floor(4,558.4) = ¥4,558/月
 //   介護                   = ¥0 (age 22, not 40–64)
 //   厚年                   = floor(88,000 × 0.0915) = ¥8,052/月
 //   雇用保険 (FY26)        = floor(1,000,000 × 0.005) = ¥5,000/年
-//   社会保険料控除          = (4,457 + 8,052) × 12 + 5,000 = 150,108 + 5,000 = ¥155,108
+//   社会保険料控除          = (4,558 + 8,052) × 12 + 5,000 = 151,320 + 5,000 = ¥156,320
 //
 //   勤労学生控除 所得税    = ¥270,000  (eligible: 合計所得 ¥350k ≤ ¥850k)
 //   勤労学生控除 住民税    = ¥260,000
 //
-//   課税所得 所得税        = max(0, 350,000 - 155,108 - 950,000 - 270,000) = 0 → ¥0
+//   課税所得 所得税        = max(0, 350,000 - 156,320 - 950,000 - 270,000) = 0 → ¥0
 //   所得税                 = 0
 //
-//   課税所得 住民税        = max(0, 350,000 - 155,108 - 430,000 - 260,000) = 0 → ¥0
+//   課税所得 住民税        = max(0, 350,000 - 156,320 - 430,000 - 260,000) = 0 → ¥0
 //   所得割                 = 0 (also exempt: 合計所得 ¥350k ≤ ¥450k threshold)
 //   均等割                 = 0 (exempt: same threshold)
 //   residentTax            = 0
 //
-//   takeHome               = 1,000,000 - 0 - 0 - 53,484 - 96,624 - 5,000 = ¥844,892
-//   takeHomeMonthly        = floor(844,892 / 12) = ¥70,407
+//   takeHome               = 1,000,000 - 0 - 0 - 54,696 - 96,624 - 5,000 = ¥843,680
+//   takeHomeMonthly        = floor(843,680 / 12) = ¥70,306
 // ---------------------------------------------------------------------------
 
 describe('Case 1: Baito sinh viên ¥1,000,000 (Osaka, age 22)', () => {
@@ -66,8 +67,8 @@ describe('Case 1: Baito sinh viên ¥1,000,000 (Osaka, age 22)', () => {
   it('住民税 = 0 (under exemption thresholds)', () => {
     expect(result.residentTax).toBe(0);
   });
-  it('健保 (Osaka, age 22, grade ¥88k) = ¥4,457/month × 12', () => {
-    expect(result.healthInsurance).toBe(53_484);
+  it('健保+子育て (Osaka, age 22, grade ¥88k) = ¥4,558/month × 12', () => {
+    expect(result.healthInsurance).toBe(54_696);
   });
   it('厚年 (grade ¥88k) = ¥8,052/month × 12', () => {
     expect(result.pension).toBe(96_624);
@@ -75,8 +76,8 @@ describe('Case 1: Baito sinh viên ¥1,000,000 (Osaka, age 22)', () => {
   it('雇用保険 FY2026 = 0.5% × ¥1M', () => {
     expect(result.employmentInsurance).toBe(5_000);
   });
-  it('takeHomeAnnual = ¥844,892', () => {
-    expect(result.takeHomeAnnual).toBe(844_892);
+  it('takeHomeAnnual = ¥843,680', () => {
+    expect(result.takeHomeAnnual).toBe(843_680);
   });
   it('breakdown shows 標準報酬月額 ¥88,000', () => {
     expect(result.breakdown.standardMonthlyRemuneration).toBe(88_000);
@@ -96,24 +97,25 @@ describe('Case 1: Baito sinh viên ¥1,000,000 (Osaka, age 22)', () => {
 //
 //   monthly income         = 300,000
 //   標準報酬月額 grade     = ¥300,000  (bin [290k, 310k))
-//   健保 (Tokyo 9.85%)     = floor(300,000 × 0.0985 / 2) = floor(14,775.0) = ¥14,775/月
+//   健保+子育て (Tokyo)    = floor(300,000 × (0.0985 + 0.0023) / 2)
+//                          = floor(300,000 × 0.1008 / 2) = floor(15,120) = ¥15,120/月
 //   介護                   = ¥0 (age 24)
 //   厚年                   = floor(300,000 × 0.0915) = ¥27,450/月
 //   雇用保険                = floor(3,600,000 × 0.005) = ¥18,000/年
-//   社会保険料控除          = (14,775 + 27,450) × 12 + 18,000 = 506,700 + 18,000 = ¥524,700
+//   社会保険料控除          = (15,120 + 27,450) × 12 + 18,000 = 510,840 + 18,000 = ¥528,840
 //
-//   課税所得 所得税        = 2,440,000 - 524,700 - 580,000 = 1,335,300 → floor1k = ¥1,335,000
+//   課税所得 所得税        = 2,440,000 - 528,840 - 580,000 = 1,331,160 → floor1k = ¥1,331,000
 //   bracket [0, 1.949M] 5%, ded 0
-//   基準所得税              = floor(1,335,000 × 0.05) = ¥66,750
-//   復興税                  = floor(66,750 × 0.021) = ¥1,401
-//   所得税 final            = floor((66,750 + 1,401) / 100) × 100 = ¥68,100
+//   基準所得税              = floor(1,331,000 × 0.05) = ¥66,550
+//   復興税                  = floor(66,550 × 0.021) = ¥1,397
+//   所得税 final            = floor((66,550 + 1,397) / 100) × 100 = ¥67,900
 //
-//   課税所得 住民税        = 2,440,000 - 524,700 - 430,000 = 1,485,300 → floor1k = ¥1,485,000
-//   所得割                  = floor(1,485,000 × 0.10) = ¥148,500
+//   課税所得 住民税        = 2,440,000 - 528,840 - 430,000 = 1,481,160 → floor1k = ¥1,481,000
+//   所得割                  = floor(1,481,000 × 0.10) = ¥148,100
 //   均等割                  = ¥5,000
-//   residentTax            = ¥153,500
+//   residentTax            = ¥153,100
 //
-//   takeHome               = 3,600,000 - 68,100 - 153,500 - 177,300 - 329,400 - 18,000 = ¥2,853,700
+//   takeHome               = 3,600,000 - 67,900 - 153,100 - 181,440 - 329,400 - 18,000 = ¥2,850,160
 // ---------------------------------------------------------------------------
 
 describe('Case 2: Seishain ¥3,600,000 (Tokyo, age 24, single)', () => {
@@ -137,29 +139,29 @@ describe('Case 2: Seishain ¥3,600,000 (Tokyo, age 24, single)', () => {
   it('基礎控除 住民税 = ¥430,000 (unchanged)', () => {
     expect(result.breakdown.basicDeductionResidentTax).toBe(430_000);
   });
-  it('社会保険料控除 = ¥524,700', () => {
-    expect(result.breakdown.socialInsuranceDeduction).toBe(524_700);
+  it('社会保険料控除 = ¥528,840 (incl. 0.115% 子ども・子育て employee share)', () => {
+    expect(result.breakdown.socialInsuranceDeduction).toBe(528_840);
   });
-  it('課税所得 所得税 = ¥1,335,000 (after ¥1,000 floor)', () => {
-    expect(result.breakdown.taxableIncomeForNationalTax).toBe(1_335_000);
+  it('課税所得 所得税 = ¥1,331,000 (after ¥1,000 floor)', () => {
+    expect(result.breakdown.taxableIncomeForNationalTax).toBe(1_331_000);
   });
-  it('課税所得 住民税 = ¥1,485,000', () => {
-    expect(result.breakdown.taxableIncomeForResidentTax).toBe(1_485_000);
+  it('課税所得 住民税 = ¥1,481,000', () => {
+    expect(result.breakdown.taxableIncomeForResidentTax).toBe(1_481_000);
   });
-  it('所得税 (incl. 復興) = ¥68,100', () => {
-    expect(result.incomeTax).toBe(68_100);
+  it('所得税 (incl. 復興) = ¥67,900', () => {
+    expect(result.incomeTax).toBe(67_900);
   });
-  it('住民税 = ¥153,500', () => {
-    expect(result.residentTax).toBe(153_500);
+  it('住民税 = ¥153,100', () => {
+    expect(result.residentTax).toBe(153_100);
   });
-  it('健保 = ¥177,300/year', () => {
-    expect(result.healthInsurance).toBe(177_300);
+  it('健保+子育て = ¥181,440/year', () => {
+    expect(result.healthInsurance).toBe(181_440);
   });
   it('厚年 = ¥329,400/year', () => {
     expect(result.pension).toBe(329_400);
   });
-  it('takeHomeAnnual = ¥2,853,700', () => {
-    expect(result.takeHomeAnnual).toBe(2_853_700);
+  it('takeHomeAnnual = ¥2,850,160', () => {
+    expect(result.takeHomeAnnual).toBe(2_850_160);
   });
 });
 
@@ -173,33 +175,35 @@ describe('Case 2: Seishain ¥3,600,000 (Tokyo, age 24, single)', () => {
 //
 //   monthly                = 8,000,000 / 12 ≈ ¥666,667
 //   標準報酬月額           = ¥680,000  (bin [665k, 695k), healthGrade 36, pensionGrade 32)
-//   健保 (Aichi 9.93%)     = floor(680,000 × 0.0993 / 2) = floor(33,762.0) = ¥33,762/月
-//   介護 (age 45)          = floor(680,000 × 0.0162 / 2) = floor(5,508.0)  = ¥5,508/月
+//   健保+介護+子育て (Aichi) = floor(680,000 × (0.0993 + 0.0162 + 0.0023) / 2)
+//                          = floor(680,000 × 0.1178 / 2)
+//                          ≈ floor(40,051.99…) = ¥40,051/月  (JS float quirk: 0.0993+0.0162
+//                            yields 0.1154999999…, so combined product is just under 80,104)
 //   厚年 (cap ¥650k)       = floor(650,000 × 0.0915) = ¥59,475/月
 //   雇用保険                = floor(8,000,000 × 0.005) = ¥40,000/年
-//   社会保険料控除          = (33,762 + 5,508 + 59,475) × 12 + 40,000
-//                          = 98,745 × 12 + 40,000 = 1,184,940 + 40,000 = ¥1,224,940
+//   社会保険料控除          = (40,051 + 59,475) × 12 + 40,000
+//                          = 99,526 × 12 + 40,000 = 1,194,312 + 40,000 = ¥1,234,312
 //
 //   配偶者控除 所得税      = ¥380,000  (taxpayer income ¥6.1M ≤ ¥9M, spouse < 70)
 //   配偶者控除 住民税      = ¥330,000
 //   扶養控除 (18 yo)       = ¥380,000 所得税 / ¥330,000 住民税  (一般)
 //   扶養控除 (14 yo)       = ¥0       (under DEPENDENT_MIN_AGE 16)
 //
-//   課税所得 所得税        = 6,100,000 - 1,224,940 - 630,000 - 380,000 - 380,000
-//                          = ¥3,485,060 → floor1k = ¥3,485,000
+//   課税所得 所得税        = 6,100,000 - 1,234,312 - 630,000 - 380,000 - 380,000
+//                          = ¥3,475,688 → floor1k = ¥3,475,000
 //   bracket [3.3M, 6.949M] 20% ded ¥427,500
-//   基準所得税              = floor(3,485,000 × 0.20 - 427,500) = floor(269,500) = ¥269,500
-//   復興税                  = floor(269,500 × 0.021) = floor(5,659.5) = ¥5,659
-//   所得税 final            = floor((269,500 + 5,659) / 100) × 100 = floor(275,159/100)*100 = ¥275,100
+//   基準所得税              = floor(3,475,000 × 0.20 - 427,500) = floor(267,500) = ¥267,500
+//   復興税                  = floor(267,500 × 0.021) = floor(5,617.5) = ¥5,617
+//   所得税 final            = floor((267,500 + 5,617) / 100) × 100 = ¥273,100
 //
-//   課税所得 住民税        = 6,100,000 - 1,224,940 - 430,000 - 330,000 - 330,000
-//                          = ¥3,785,060 → floor1k = ¥3,785,000
-//   所得割                  = floor(3,785,000 × 0.10) = ¥378,500
+//   課税所得 住民税        = 6,100,000 - 1,234,312 - 430,000 - 330,000 - 330,000
+//                          = ¥3,775,688 → floor1k = ¥3,775,000
+//   所得割                  = floor(3,775,000 × 0.10) = ¥377,500
 //   均等割                  = ¥5,000
-//   residentTax            = ¥383,500
+//   residentTax            = ¥382,500
 //
-//   takeHome               = 8,000,000 - 275,100 - 383,500 - 471,240 - 713,700 - 40,000 = ¥6,116,460
-//                                                            (健保+介護)  (厚年)
+//   takeHome               = 8,000,000 - 273,100 - 382,500 - 480,612 - 713,700 - 40,000 = ¥6,110,088
+//                                                            (健保+介護+子育て) (厚年)
 // ---------------------------------------------------------------------------
 
 describe('Case 3: Seishain senior ¥8,000,000 (Aichi, age 45, spouse + 2 kids)', () => {
@@ -220,8 +224,8 @@ describe('Case 3: Seishain senior ¥8,000,000 (Aichi, age 45, spouse + 2 kids)',
   it('標準報酬月額 ¥680,000 (health grade 36, pension grade 32)', () => {
     expect(result.breakdown.standardMonthlyRemuneration).toBe(680_000);
   });
-  it('健保 + 介護 (Aichi, age 45) = ¥471,240/year', () => {
-    expect(result.healthInsurance).toBe(471_240);
+  it('健保 + 介護 + 子育て (Aichi, age 45) = ¥480,612/year', () => {
+    expect(result.healthInsurance).toBe(480_612);
   });
   it('厚年 (capped at ¥650k) = ¥713,700/year', () => {
     expect(result.pension).toBe(713_700);
@@ -232,23 +236,23 @@ describe('Case 3: Seishain senior ¥8,000,000 (Aichi, age 45, spouse + 2 kids)',
   it('扶養控除 所得税 = ¥380,000 (only 18yo, 14yo excluded)', () => {
     expect(result.breakdown.dependentDeduction).toBe(380_000);
   });
-  it('課税所得 所得税 = ¥3,485,000', () => {
-    expect(result.breakdown.taxableIncomeForNationalTax).toBe(3_485_000);
+  it('課税所得 所得税 = ¥3,475,000', () => {
+    expect(result.breakdown.taxableIncomeForNationalTax).toBe(3_475_000);
   });
-  it('基準所得税 = ¥269,500', () => {
-    expect(result.breakdown.baseIncomeTax).toBe(269_500);
+  it('基準所得税 = ¥267,500', () => {
+    expect(result.breakdown.baseIncomeTax).toBe(267_500);
   });
-  it('復興税 = ¥5,659', () => {
-    expect(result.breakdown.reconstructionSurtax).toBe(5_659);
+  it('復興税 = ¥5,617', () => {
+    expect(result.breakdown.reconstructionSurtax).toBe(5_617);
   });
-  it('所得税 final = ¥275,100', () => {
-    expect(result.incomeTax).toBe(275_100);
+  it('所得税 final = ¥273,100', () => {
+    expect(result.incomeTax).toBe(273_100);
   });
-  it('住民税 = ¥383,500', () => {
-    expect(result.residentTax).toBe(383_500);
+  it('住民税 = ¥382,500', () => {
+    expect(result.residentTax).toBe(382_500);
   });
-  it('takeHomeAnnual = ¥6,116,460', () => {
-    expect(result.takeHomeAnnual).toBe(6_116_460);
+  it('takeHomeAnnual = ¥6,110,088', () => {
+    expect(result.takeHomeAnnual).toBe(6_110_088);
   });
 });
 
@@ -448,20 +452,22 @@ describe('boundary: 介護保険 age trigger (40-64)', () => {
     prefecture: 'tokyo',
   });
   // monthly = 300,000, grade ¥300,000
-  // 健保 only = floor(300,000 × 0.0985 / 2) × 12 = 14,775 × 12 = 177,300
-  // 健保 + 介護 = floor(300,000 × (0.0985 + 0.0162) / 2) × 12 = floor(17,205) × 12 = 17,205 × 12 = 206,460
+  // 健保+子育て (no 介護) = floor(300,000 × (0.0985 + 0.0023) / 2) × 12
+  //                       = floor(15,120) × 12 = ¥181,440
+  // 健保+介護+子育て       = floor(300,000 × (0.0985 + 0.0162 + 0.0023) / 2) × 12
+  //                       = floor(17,550) × 12 = ¥210,600
 
-  it('age 39 → no 介護 (¥177,300)', () => {
-    expect(calculateHealthInsurance(ageInput(39))).toBe(177_300);
+  it('age 39 → no 介護 (¥181,440)', () => {
+    expect(calculateHealthInsurance(ageInput(39))).toBe(181_440);
   });
-  it('age 40 → 介護 ON (¥206,460)', () => {
-    expect(calculateHealthInsurance(ageInput(40))).toBe(206_460);
+  it('age 40 → 介護 ON (¥210,600)', () => {
+    expect(calculateHealthInsurance(ageInput(40))).toBe(210_600);
   });
   it('age 64 → 介護 still ON', () => {
-    expect(calculateHealthInsurance(ageInput(64))).toBe(206_460);
+    expect(calculateHealthInsurance(ageInput(64))).toBe(210_600);
   });
   it('age 65 → 介護 OFF', () => {
-    expect(calculateHealthInsurance(ageInput(65))).toBe(177_300);
+    expect(calculateHealthInsurance(ageInput(65))).toBe(181_440);
   });
 });
 

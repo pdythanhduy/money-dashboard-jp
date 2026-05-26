@@ -37,7 +37,7 @@ import { useOnboardingStore } from '@/store/onboardingStore';
 import { useRemittanceStore } from '@/store/remittanceStore';
 import { useTheme } from '@/theme';
 
-type DashboardNavigationProp = BottomTabNavigationProp<MainTabParamList, 'Dashboard'>;
+type DashboardNavigationProp = BottomTabNavigationProp<MainTabParamList, 'Home'>;
 
 export function DashboardScreen() {
   const { t } = useTranslation();
@@ -101,7 +101,14 @@ export function DashboardScreen() {
   })();
 
   const goToCalculator = () => navigation.navigate('Calculator');
-  const goToDocuments = () => navigation.navigate('Documents');
+  // Kakeibo is a primary tab as of 0.3.0 — tab-level nav, not root push.
+  const goToKakeibo = () => navigation.navigate('Kakeibo');
+  // Documents was demoted from a tab to a root-stack screen in 0.3.0; reach
+  // it via the parent (RootNavigator) since it now lives outside MainTabs.
+  const goToDocuments = () => {
+    const parent = navigation.getParent<{ navigate: (route: keyof RootStackParamList) => void }>();
+    parent?.navigate('Documents');
+  };
   const goToMedical = () => {
     // RootNavigator hosts Medical as a sibling of Main → reach it via the
     // root-typed parent navigator.
@@ -115,10 +122,6 @@ export function DashboardScreen() {
   const goToGoals = () => {
     const parent = navigation.getParent<{ navigate: (route: keyof RootStackParamList) => void }>();
     parent?.navigate('Goals');
-  };
-  const goToKakeibo = () => {
-    const parent = navigation.getParent<{ navigate: (route: keyof RootStackParamList) => void }>();
-    parent?.navigate('Kakeibo');
   };
   const goToRemittance = () => {
     const parent = navigation.getParent<{ navigate: (route: keyof RootStackParamList) => void }>();

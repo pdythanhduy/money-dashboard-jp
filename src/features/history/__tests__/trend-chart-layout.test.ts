@@ -1,83 +1,109 @@
 import { buildTrendChartLayout } from '@/features/history/trend-chart-layout';
-import type { TrendPoint } from '@/features/history/history-stats';
+import type { MonthlyTrendPoint } from '@/features/history/history-stats';
 
-const tp = (date: number, takeHome: number, gross: number): TrendPoint => ({ date, takeHome, gross });
+/** Helper: build a non-null monthly-trend point with sequential year-months. */
+const pt = (
+  yearMonth: string,
+  takeHome: number | null,
+  gross: number | null,
+): MonthlyTrendPoint => {
+  const [y, m] = yearMonth.split('-');
+  return {
+    yearMonth,
+    year: Number.parseInt(y!, 10),
+    month: Number.parseInt(m!, 10),
+    takeHome,
+    gross,
+  };
+};
 
-describe('buildTrendChartLayout — empty', () => {
+describe('buildTrendChartLayout — empty / all-null', () => {
   it('returns null for empty data', () => {
     expect(buildTrendChartLayout([], 300, 200)).toBeNull();
   });
+  it('returns null when every point is null', () => {
+    const allNull = [pt('2026-01', null, null), pt('2026-02', null, null)];
+    expect(buildTrendChartLayout(allNull, 300, 200)).toBeNull();
+  });
 });
 
-describe('buildTrendChartLayout — single point', () => {
-  it('renders one dot in horizontal center; band ±10%', () => {
-    const layout = buildTrendChartLayout([tp(1000, 200, 300)], 300, 200);
+describe('buildTrendChartLayout — single non-null point', () => {
+  it('places dot at correct slot position; band ±10% around value', () => {
+    const data = [pt('2026-06', 200_000, 300_000)];
+    const layout = buildTrendChartLayout(data, 300, 200)!;
     expect(layout).not.toBeNull();
-    expect(layout!.dots).toHaveLength(1);
-    expect(layout!.dots[0]!.x).toBeCloseTo((300 - 56 - 16) / 2 + 56, 1); // padding left=56, right=16
-    // Both takeHome (200) and gross (300) considered; min=200 max=300
-    // span=100, yMin = max(0, 200-10) = 190, yMax = 310
-    expect(layout!.yMin).toBeCloseTo(190, 0);
-    expect(layout!.yMax).toBeCloseTo(310, 0);
-  });
-
-  it('all-equal values: synthesizes ±10% band so line is not on top axis', () => {
-    const layout = buildTrendChartLayout([tp(1000, 100, 100)], 300, 200);
-    expect(layout!.yMin).toBeCloseTo(90, 1);
-    expect(layout!.yMax).toBeCloseTo(110, 1);
+    expect(layout.dots).toHaveLength(1);
+    // single point → centered
+    expect(layout.dots[0]!.x).toBeCloseTo((300 - 56 - 16) / 2 + 56, 1);
+    // Y bounds: only TAKEHOME drives bounds in 0.3+ (gross is popover-only).
+    // value=200_000, pad = 200_000 * 0.1 = 20_000 → yMin=180_000, yMax=220_000.
+    expect(layout.yMin).toBeCloseTo(180_000, 0);
+    expect(layout.yMax).toBeCloseTo(220_000, 0);
   });
 });
 
-describe('buildTrendChartLayout — multi-point spacing', () => {
+describe('buildTrendChartLayout — 6-month sparse trend', () => {
+  // 2 of 6 slots populated; rest null → gap connectors expected.
   const data = [
-    tp(1000, 100, 150),
-    tp(2000, 200, 250),
-    tp(3000, 300, 350),
+    pt('2026-01', 220_000, 275_000),
+    pt('2026-02', null, null),
+    pt('2026-03', null, null),
+    pt('2026-04', 260_000, 325_000),
+    pt('2026-05', null, null),
+    pt('2026-06', 280_000, 350_000),
   ];
 
-  it('x positions span full inner width', () => {
-    const layout = buildTrendChartLayout(data, 300, 200);
-    expect(layout!.dots).toHaveLength(3);
-    expect(layout!.dots[0]!.x).toBeCloseTo(56, 1); // padding.left
-    expect(layout!.dots[2]!.x).toBeCloseTo(300 - 16, 1); // width - padding.right
-    expect(layout!.dots[1]!.x).toBeCloseTo((56 + (300 - 16)) / 2, 1);
+  it('emits one solid sub-path per contiguous run', () => {
+    const layout = buildTrendChartLayout(data, 300, 200)!;
+    // 3 isolated non-null months → 3 sub-paths each starting with M.
+    expect(layout.takeHomePaths).toHaveLength(3);
+    for (const p of layout.takeHomePaths) expect(p.startsWith('M ')).toBe(true);
   });
 
-  it('y bounds include 10% headroom on top and floor at 0', () => {
-    const layout = buildTrendChartLayout(data, 300, 200);
-    // overall min=100, max=350, span=250
-    // yMin = max(0, 100 - 25) = 75
-    // yMax = 350 + 25 = 375
-    expect(layout!.yMin).toBeCloseTo(75, 0);
-    expect(layout!.yMax).toBeCloseTo(375, 0);
-  });
-
-  it('takeHomePath starts with M and chains L for each subsequent point', () => {
-    const layout = buildTrendChartLayout(data, 300, 200);
-    expect(layout!.takeHomePath.startsWith('M ')).toBe(true);
-    expect(layout!.takeHomePath.match(/L /g)?.length).toBe(2);
-  });
-
-  it('yAxis has 5 evenly spaced labels in descending value order', () => {
-    const layout = buildTrendChartLayout(data, 300, 200);
-    expect(layout!.yAxis).toHaveLength(5);
-    const values = layout!.yAxis.map((p) => p.value);
-    for (let i = 1; i < values.length; i++) {
-      expect(values[i]!).toBeLessThan(values[i - 1]!);
+  it('emits dashed gap connectors between adjacent non-null points across nulls', () => {
+    const layout = buildTrendChartLayout(data, 300, 200)!;
+    // gaps: 2026-01 → 2026-04 (3-month gap), 2026-04 → 2026-06 (1-month gap)
+    // → 2 connectors expected.
+    expect(layout.takeHomeGapPaths).toHaveLength(2);
+    for (const p of layout.takeHomeGapPaths) {
+      expect(p.startsWith('M ')).toBe(true);
+      expect(p.match(/L /g)?.length).toBe(1);
     }
   });
 
-  it('xAxis label count = min(5, data length)', () => {
-    expect(buildTrendChartLayout(data, 300, 200)!.xAxis).toHaveLength(3);
-    const big = Array.from({ length: 20 }, (_, i) => tp(i, i * 10, i * 12));
-    expect(buildTrendChartLayout(big, 300, 200)!.xAxis).toHaveLength(5);
+  it('dots array only contains non-null months, keyed by original slot index', () => {
+    const layout = buildTrendChartLayout(data, 300, 200)!;
+    expect(layout.dots).toHaveLength(3);
+    expect(layout.dots.map((d) => d.index)).toEqual([0, 3, 5]);
+  });
+
+  it('xAxis covers all 6 slots even when most are empty (stable calendar)', () => {
+    const layout = buildTrendChartLayout(data, 300, 200)!;
+    expect(layout.xAxis).toHaveLength(6);
+    expect(layout.xAxis.map((t) => t.month)).toEqual([1, 2, 3, 4, 5, 6]);
+  });
+
+  it('averageTakeHome = mean of non-null months only', () => {
+    const layout = buildTrendChartLayout(data, 300, 200)!;
+    expect(layout.averageTakeHome).toBe(Math.floor((220_000 + 260_000 + 280_000) / 3));
+    expect(layout.averageY).not.toBeNull();
+  });
+
+  it('yAxis has 5 labels in descending value order', () => {
+    const layout = buildTrendChartLayout(data, 300, 200)!;
+    expect(layout.yAxis).toHaveLength(5);
+    const values = layout.yAxis.map((p) => p.value);
+    for (let i = 1; i < values.length; i += 1) {
+      expect(values[i]!).toBeLessThan(values[i - 1]!);
+    }
   });
 });
 
 describe('buildTrendChartLayout — degenerate sizes', () => {
-  it('inner width/height clamp to 0 (not negative) for very small canvas', () => {
-    const layout = buildTrendChartLayout([tp(1, 100, 150), tp(2, 200, 250)], 10, 10);
-    expect(layout!.innerWidth).toBe(0);
-    expect(layout!.innerHeight).toBe(0);
+  it('inner width/height clamp to 0 for very small canvas', () => {
+    const data = [pt('2026-05', 100_000, 125_000), pt('2026-06', 200_000, 250_000)];
+    const layout = buildTrendChartLayout(data, 10, 10)!;
+    expect(layout.innerWidth).toBe(0);
+    expect(layout.innerHeight).toBe(0);
   });
 });

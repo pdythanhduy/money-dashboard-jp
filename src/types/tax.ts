@@ -83,6 +83,78 @@ export interface SalaryInput {
    * keeping + e-tax). Defaults to 0 if undefined.
    */
   blueReturnDeduction?: 0 | 100_000 | 550_000 | 650_000;
+
+  /**
+   * Optional. 月給 (monthly base salary, yen) used as the 標準報酬月額 base
+   * for 健保/厚年/介護 instead of `annualIncome / 12`. When set, the bonus
+   * portion of social insurance is calculated separately from `annualBonus`
+   * and `bonusPaymentCount` with statutory per-payment / annual caps.
+   *
+   * Consistency requirement (enforced in `validateInput`):
+   *   monthlyBaseSalary * 12 + (annualBonus ?? 0) === annualIncome (±¥12).
+   *
+   * When undefined, calculator falls back to legacy `annualIncome / 12` grade
+   * with no bonus split — preserves backward compatibility for entries from
+   * versions ≤ 0.2.x.
+   */
+  monthlyBaseSalary?: number;
+
+  /** Optional. Total annual bonus in yen. Default 0 (no bonus). Ignored if `monthlyBaseSalary` is undefined. */
+  annualBonus?: number;
+
+  /**
+   * Optional. Number of bonus payments per year. Typical JP pattern is 2
+   * (summer + winter). Default 2. Ignored if `annualBonus` is 0.
+   */
+  bonusPaymentCount?: number;
+
+  /**
+   * Optional. iDeCo / 小規模企業共済 / 企業型DC monthly contribution (yen).
+   * 全額所得控除 — annual sum (×12) is subtracted from taxable income for
+   * BOTH 所得税 and 住民税 (per 小規模企業共済等掛金控除). No formula, no
+   * per-deduction cap on the deduction side; the monthly cap is enforced
+   * by the iDeCo provider, not by the tax calc.
+   *
+   * Typical FY2026 caps (for UI hint only — not validated here):
+   *   第1号被保険者 (freelance): ¥68,000/月
+   *   第2号 企業年金なし: ¥23,000/月
+   *   第2号 企業年金あり: ¥20,000/月
+   *   第3号被保険者: ¥23,000/月
+   */
+  idecoMonthlyContribution?: number;
+
+  /**
+   * Optional. 生命保険料控除 annual premiums by category, 新制度 only
+   * (contracts signed 2012-01-01+). Each category is deducted independently
+   * via a piecewise formula, then summed with an overall cap.
+   *
+   * National per-category cap: ¥40,000; total cap: ¥120,000.
+   * Resident per-category cap: ¥28,000; total cap: ¥70,000.
+   *
+   * 旧制度 (pre-2012) policies are not modeled in Phase 1.
+   */
+  lifeInsurancePremiums?: {
+    /** 一般生命保険料 (新制度) annual premium in yen. */
+    generalNew?: number;
+    /** 介護医療保険料 (新制度) annual premium in yen. */
+    careMedicalNew?: number;
+    /** 個人年金保険料 (新制度) annual premium in yen. */
+    personalPensionNew?: number;
+  };
+
+  /**
+   * Optional. Spouse's gross annual SALARY income (yen) — `年収` from
+   * payslips. When set together with `hasSpouse: true`, the calculator
+   * computes spouse 合計所得 (via 給与所得控除) and dispatches:
+   *   合計所得 ≤ ¥580,000      → 配偶者控除 (existing)
+   *   ¥580,000 < x ≤ ¥1,330,000 → 配偶者特別控除 (sliding table)
+   *   x > ¥1,330,000            → no spouse deduction
+   *
+   * When `hasSpouse: true` and `spouseAnnualIncome` is undefined, the
+   * calculator falls back to the legacy assumption that spouse income
+   * is ≤ ¥1.03M (full 配偶者控除).
+   */
+  spouseAnnualIncome?: number;
 }
 
 export interface Dependent {
@@ -138,10 +210,22 @@ export interface TakeHomeBreakdown {
   /** 社会保険料控除 (deducted from taxable income — sum of insurance + pension employee payments). */
   socialInsuranceDeduction: number;
 
-  /** Other 所得控除 — spouse, dependents, working student. */
+  /**
+   * Spouse deduction applied — represents EITHER 配偶者控除 OR 配偶者特別控除
+   * (mutually exclusive). The breakdown does not distinguish which applied
+   * since the user-facing meaning ("how much was deducted for spouse") is
+   * the same; UI can hint based on `spouseAnnualIncome > ¥580k` if needed.
+   */
   spouseDeduction: number;
   dependentDeduction: number;
   workingStudentDeduction: number;
+
+  /** 小規模企業共済等掛金控除 (iDeCo etc., 全額所得控除). Same value for 所得税 + 住民税. */
+  idecoDeduction: number;
+  /** 生命保険料控除 applied to 所得税 (新制度, total cap ¥120,000). */
+  lifeInsuranceDeductionNational: number;
+  /** 生命保険料控除 applied to 住民税 (新制度, total cap ¥70,000). */
+  lifeInsuranceDeductionResident: number;
 
   /** 課税所得 for 所得税 (rounded down to nearest ¥1,000). */
   taxableIncomeForNationalTax: number;

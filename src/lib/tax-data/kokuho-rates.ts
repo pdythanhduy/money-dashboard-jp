@@ -76,6 +76,11 @@ export const KOKUHO_RATES: Readonly<Record<FreelanceMunicipality, KokuhoRateSet>
       perHouseholdAmount:    null,
       annualCap:         170_000,
     },
-    childcareSupport: null,
+    childcareSupport: {
+      incomeRate:        0.0027,
+      perPersonAmount:    1_873,
+      perHouseholdAmount:    null,
+      annualCap:          30_000,
+    },
   },
 };

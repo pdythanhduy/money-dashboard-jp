@@ -49,7 +49,10 @@ export function MonthlyTrendChart() {
         </Text>
       </View>
       <View style={{ marginTop: spacing.sm }}>
-        {stats.trendData.length < 2 ? (
+        {/* needsTwoPoints copy is preserved but the chart now self-renders
+            its empty-state when no months have data; we only short-circuit
+            when the user has truly zero calc history. */}
+        {stats.totalCount === 0 ? (
           <View style={{ height: 80, alignItems: 'center', justifyContent: 'center' }}>
             <Text
               style={[
@@ -61,7 +64,7 @@ export function MonthlyTrendChart() {
             </Text>
           </View>
         ) : (
-          <TrendChart data={stats.trendData} width={chartWidth} height={chartHeight} />
+          <TrendChart data={stats.monthlyTrend} width={chartWidth} height={chartHeight} />
         )}
       </View>
     </View>

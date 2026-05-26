@@ -49,11 +49,23 @@ const TestRenderer = require('react-test-renderer') as {
 };
 
 import { TrendChart } from '@/features/history/components/TrendChart';
-import type { TrendPoint } from '@/features/history/history-stats';
+import type { MonthlyTrendPoint } from '@/features/history/history-stats';
 import { ThemeProvider } from '@/theme';
 
-function point(date: number, takeHome: number, gross: number): TrendPoint {
-  return { date, takeHome, gross };
+/**
+ * Build a MonthlyTrendPoint from a tiny shorthand. `slot` is the slot
+ * index that maps to a fake year-month; we use 2026-01..2026-06 for
+ * compatibility with the 6-month window the chart expects.
+ */
+function point(slot: number, takeHome: number, gross: number): MonthlyTrendPoint {
+  const month = slot;
+  return {
+    yearMonth: `2026-${String(month).padStart(2, '0')}`,
+    year: 2026,
+    month,
+    takeHome,
+    gross,
+  };
 }
 
 describe('TrendChart — hooks-order regression', () => {
@@ -121,7 +133,7 @@ describe('TrendChart — hooks-order regression', () => {
       );
     });
     expect(JSON.stringify(r.toJSON())).toContain(
-      'Cần ít nhất 2 lần tính để xem biểu đồ trend',
+      'Cần ít nhất 1 lần tính để xem biểu đồ 6 tháng',
     );
     TestRenderer.act(() => r.unmount());
   });
