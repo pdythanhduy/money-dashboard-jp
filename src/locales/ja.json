@@ -291,6 +291,11 @@
       "blueReturnDeduction": "青色申告控除",
       "blueReturnExplain": "要件を満たす場合、青色申告の控除額を選択します。"
     },
+    "livePreview": {
+      "label": "手取り(目安)",
+      "perMonth": "月",
+      "incomplete": "年収・年齢・都道府県を入力すると目安が表示されます"
+    },
     "detailed": {
       "title": "詳細入力・追加控除",
       "subtitle": "月給と賞与を分けて入力、iDeCo・生命保険料・配偶者収入も反映。賞与のある方は実際の手取りに近づきます。",

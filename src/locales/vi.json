@@ -291,6 +291,11 @@
       "blueReturnDeduction": "青色申告控除",
       "blueReturnExplain": "Chọn mức khấu trừ khai thuế xanh nếu bạn đủ điều kiện."
     },
+    "livePreview": {
+      "label": "Ước tính take-home",
+      "perMonth": "tháng",
+      "incomplete": "Nhập thu nhập, tuổi, tỉnh để xem ước tính ngay"
+    },
     "detailed": {
       "title": "Tính chi tiết & Khấu trừ thêm",
       "subtitle": "Tách 月給 + 賞与, iDeCo, 生命保険料, thu nhập vợ/chồng — chính xác hơn cho hầu hết người làm công.",
