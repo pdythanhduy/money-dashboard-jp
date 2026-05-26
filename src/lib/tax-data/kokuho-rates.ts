@@ -30,7 +30,14 @@ import type { FreelanceMunicipality, KokuhoRateSet } from '@/types/tax';
  */
 export const KOKUHO_BASIC_DEDUCTION = 430_000;
 
-export const KOKUHO_RATES: Readonly<Record<FreelanceMunicipality, KokuhoRateSet>> = {
+/**
+ * 国保 rate sets — only municipalities that have hardcoded 4-component
+ * data. `'other'` is intentionally excluded: that path bypasses this
+ * table entirely (user supplies `otherKokuhoAnnual` directly).
+ */
+export type RatedMunicipality = Exclude<FreelanceMunicipality, 'other'>;
+
+export const KOKUHO_RATES: Readonly<Record<RatedMunicipality, KokuhoRateSet>> = {
   'osaka-shi': {
     medical: {
       incomeRate:        0.0950,

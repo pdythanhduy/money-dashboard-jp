@@ -30,11 +30,17 @@ export type Prefecture =
   | 'fukuoka' | 'saga' | 'nagasaki' | 'kumamoto' | 'oita' | 'miyazaki' | 'kagoshima' | 'okinawa';
 
 /**
- * Municipalities supported for 国民健康保険 (freelance only). Each city sets
- * its own rates, so this list is intentionally narrow. Salaried workers use
- * `Prefecture` instead (協会けんぽ is prefecture-level).
+ * Municipalities with hardcoded 4-component 国民健康保険 rate data. There
+ * are ~1,700 municipalities in Japan and each sets its own 医療/支援/介護/
+ * 子育て rates, so we only ship data for the two with the largest
+ * Vietnamese populations. Users outside these two pick `'other'` and
+ * enter the annual 国保 total from their 通知書 directly — covers 100%
+ * of Japan without the maintenance burden.
+ *
+ * Salaried workers use `Prefecture` instead (協会けんぽ is prefecture-
+ * level), so this picker is freelance-only.
  */
-export type Municipality = 'osaka-shi' | 'tokyo-23ku';
+export type Municipality = 'osaka-shi' | 'tokyo-23ku' | 'other';
 
 // ---------------------------------------------------------------------------
 // Income classification
@@ -176,6 +182,14 @@ export interface SalaryInput {
    * Applied to both 所得税 and 住民税. Source: NTA 1120.
    */
   medicalDeductible?: number;
+
+  /**
+   * Required when `municipality === 'other'` (freelance only). Total
+   * annual 国民健康保険 premium (yen) the user pays — copy from the
+   * municipality's 通知書 / postal notice. Skips the 4-component
+   * calculation entirely; we trust the official number the user has.
+   */
+  otherKokuhoAnnual?: number;
 }
 
 export interface Dependent {

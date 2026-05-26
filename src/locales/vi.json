@@ -201,6 +201,10 @@
         "jp": "市区町村",
         "placeholder": "Chọn khu vực"
       },
+      "otherKokuhoAnnual": {
+        "label": "Tổng 国保 / năm",
+        "helper": "Copy con số tổng năm từ giấy 国保通知書 đã nhận"
+      },
       "pensionType": {
         "label": "Loại bảo hiểm",
         "helper": "Chọn loại lương hưu để tính khoản bảo hiểm.",
@@ -278,6 +282,10 @@
       "osaka-shi": {
         "label": "Osaka-shi / 大阪市",
         "description": "国民健康保険 cho Osaka-shi"
+      },
+      "other": {
+        "label": "Khác / その他",
+        "description": "Tự nhập tổng 国保/năm từ giấy 通知書"
       },
       "tokyo-23ku": {
         "label": "Tokyo 23-ku / 東京23区",
@@ -947,6 +955,12 @@
   "furusato": {
     "title": "ふるさと納税",
     "subtitle": "Quỹ địa phương · chỉ trả ¥2,000 self-burden",
+    "manual": {
+      "toggle": "Tự nhập số liệu",
+      "toggleHint": "Bật để bỏ qua Calculator, nhập 課税所得 và thuế suất biên trực tiếp",
+      "taxableIncomeLabel": "課税所得 (住民税) / năm",
+      "marginalRateLabel": "Thuế suất biên (所得税)"
+    },
     "calculator": {
       "title": "Giới hạn donation tối ưu",
       "subtitle": "Tính dựa trên 課税所得 + thuế suất biên",
