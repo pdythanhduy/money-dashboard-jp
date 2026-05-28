@@ -10,6 +10,7 @@ import { Alert, Linking, ScrollView, Share, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AboutModal } from '@/features/settings/components/AboutModal';
+import { BugReportModal } from '@/features/settings/components/BugReportModal';
 import { ClearDataConfirmModal } from '@/features/settings/components/ClearDataConfirmModal';
 import { LanguagePicker } from '@/features/settings/components/LanguagePicker';
 import { MunicipalityPicker } from '@/features/settings/components/MunicipalityPicker';
@@ -34,7 +35,15 @@ import { useOnboardingStore } from '@/store/onboardingStore';
 import { useSettingsStore } from '@/store/settingsStore';
 import { useTheme } from '@/theme';
 
-type ModalKey = 'language' | 'theme' | 'prefecture' | 'municipality' | 'payday' | 'about' | 'clear';
+type ModalKey =
+  | 'language'
+  | 'theme'
+  | 'prefecture'
+  | 'municipality'
+  | 'payday'
+  | 'about'
+  | 'clear'
+  | 'bugReport';
 
 export function SettingsScreen() {
   const { t } = useTranslation();
@@ -328,6 +337,13 @@ export function SettingsScreen() {
             onPress={() => openExternal(`mailto:${t('settings.legal.contactEmail')}`)}
             showBorder
           />
+          <SettingsItem
+            kind="navigate"
+            icon="bug-outline"
+            label={t('settings.items.bugReport')}
+            onPress={() => setOpenModal('bugReport')}
+            showBorder
+          />
         </SettingsSection>
 
         <Text
@@ -376,6 +392,7 @@ export function SettingsScreen() {
         onClose={close}
       />
       <AboutModal visible={openModal === 'about'} onClose={close} />
+      <BugReportModal visible={openModal === 'bugReport'} onClose={close} />
       <ClearDataConfirmModal
         visible={openModal === 'clear'}
         onClose={close}

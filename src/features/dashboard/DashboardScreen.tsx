@@ -14,6 +14,7 @@ import { MonthlyTrendChart } from '@/features/dashboard/components/MonthlyTrendC
 import { TakeHomeProgressCard } from '@/features/dashboard/components/TakeHomeProgressCard';
 import { TripBudgetCard } from '@/features/dashboard/components/TripBudgetCard';
 import { UpcomingEventsCard } from '@/features/dashboard/components/UpcomingEventsCard';
+import { WhatsNewCard } from '@/features/dashboard/components/WhatsNewCard';
 import { useDashboardData } from '@/features/dashboard/hooks/useDashboardData';
 import { iconNameFor } from '@/features/goals/components/IconPicker';
 import { QuickAddExpenseModal } from '@/features/kakeibo/components/QuickAddExpenseModal';
@@ -206,6 +207,7 @@ export function DashboardScreen() {
           daysUntilPayday={data.daysUntilPayday}
           isPayday={data.isPayday}
         />
+        <WhatsNewCard />
         <GuidedSetupCard
           onSalary={goToCalculator}
           onFixedCosts={goToKakeibo}

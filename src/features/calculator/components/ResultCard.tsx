@@ -83,6 +83,24 @@ export function ResultCard({ result }: ResultCardProps) {
           <LegendItem color={colors.warning} label={t('calculator.result.legend.tax')} value={taxTotal} />
           <LegendItem color={colors.danger} label={t('calculator.result.legend.insurance')} value={insuranceTotal} />
         </View>
+
+        {/* Soft confidence disclaimer — set the expectation that the
+            number is an estimate, not a payslip-accurate figure. Footnote
+            size + textSecondary so it reads as informational, not alarming. */}
+        <Text
+          style={[
+            typography.caption,
+            {
+              color: colors.textSecondary,
+              textAlign: 'center',
+              alignSelf: 'stretch',
+              marginTop: spacing.xs,
+              lineHeight: 16,
+            },
+          ]}
+        >
+          {t('calculator.result.disclaimer')}
+        </Text>
       </View>
     </View>
   );
