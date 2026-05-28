@@ -143,6 +143,17 @@
       "placeholder": "Coming soon"
     }
   },
+  "releaseNotes": {
+    "title": "Có gì mới — {{version}}",
+    "dismiss": "Đóng",
+    "v030": {
+      "items": {
+        "bonus": "Tính bonus (賞与) chính xác hơn theo công thức 健保 / 厚年 FY2026",
+        "calendar": "Tab Lịch mới — ngày lương, hạn thuế, sự kiện trên 1 màn hình",
+        "deductions": "Thêm khấu trừ iDeCo, 生命保険料, 配偶者特別控除, 地震保険, y tế"
+      }
+    }
+  },
   "common": {
     "save": "Lưu",
     "cancel": "Hủy",
@@ -438,6 +449,7 @@
       "takeHomeMonthly": "Take-home tháng",
       "takeHomeAnnual": "{{amount}} / năm",
       "takeHomeJapanese": "月収手取り / 年収手取り",
+      "disclaimer": "Đây là kết quả ước tính dựa trên dữ liệu FY2026. Số tiền thực tế có thể khác tùy công ty, khu vực và hồ sơ cá nhân.",
       "legend": {
         "takeHome": "Take-home",
         "tax": "Thuế",
@@ -659,7 +671,14 @@
       "version": "Phiên bản",
       "build": "Build",
       "contact": "Liên hệ feedback",
+      "bugReport": "Báo lỗi (thông tin chẩn đoán)",
       "madeFor": "❤️ Made for Vietnamese in Japan"
+    },
+    "bugReport": {
+      "title": "Báo lỗi",
+      "description": "Tạo sẵn thông tin chẩn đoán để bạn paste vào email/Github.",
+      "copyHint": "Nhấn giữ vào ô bên dưới → Chọn tất cả → Sao chép.",
+      "textareaA11y": "Nội dung báo lỗi (chỉ đọc)"
     },
     "footers": {
       "notifications": "Nhắc hạn giấy tờ qua thông báo cục bộ. Không có push từ server.",

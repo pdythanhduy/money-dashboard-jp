@@ -118,6 +118,22 @@ describe('calculator component smoke tests', () => {
     renderer?.unmount();
   });
 
+  it('ResultCard includes the FY2026 confidence disclaimer', () => {
+    // Bypass the unmount-only helper because we need .toJSON() here.
+    let raw: { toJSON: () => unknown; unmount: () => void } | undefined;
+    TestRenderer.act(() => {
+      raw = TestRenderer.create(
+        <ThemeProvider>
+          <ResultCard result={result} />
+        </ThemeProvider>,
+      ) as unknown as { toJSON: () => unknown; unmount: () => void };
+    });
+    const tree = JSON.stringify(raw!.toJSON());
+    // Soft confidence label — verifies the new 0.3.x kaizen string is wired.
+    expect(tree).toContain('Đây là kết quả ước tính dựa trên dữ liệu FY2026');
+    TestRenderer.act(() => raw!.unmount());
+  });
+
   it('renders BreakdownList', () => {
     const renderer = renderWithTheme(<BreakdownList result={result} input={input} />);
     expect(renderer).toBeDefined();

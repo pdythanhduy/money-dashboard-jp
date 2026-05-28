@@ -26,6 +26,13 @@ export interface AppSettings {
   defaultMunicipality: FreelanceMunicipality | null;
   notificationsEnabled: boolean;
   faceIdEnabled: boolean;
+  /**
+   * The APP_BUILD value the user has already acknowledged the "What's
+   * new" card for. Empty string = never seen. When `APP_BUILD` !==
+   * this value, Dashboard shows the release-notes card; tapping
+   * dismiss writes the current APP_BUILD here.
+   */
+  lastSeenReleaseNotesBuild: string;
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -36,6 +43,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   defaultMunicipality: null,
   notificationsEnabled: false,
   faceIdEnabled: false,
+  lastSeenReleaseNotesBuild: '',
 };
 
 interface SettingsStore {

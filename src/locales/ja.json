@@ -143,6 +143,17 @@
       "placeholder": "近日公開"
     }
   },
+  "releaseNotes": {
+    "title": "新機能 — {{version}}",
+    "dismiss": "閉じる",
+    "v030": {
+      "items": {
+        "bonus": "賞与の計算が令和8年度の健保・厚年に対応し、より正確に",
+        "calendar": "カレンダータブ新設 — 給料日・税金期限・予定を1画面で確認",
+        "deductions": "iDeCo・生命保険料・配偶者特別控除・地震保険・医療費控除に対応"
+      }
+    }
+  },
   "common": {
     "save": "保存",
     "cancel": "キャンセル",
@@ -438,6 +449,7 @@
       "takeHomeMonthly": "月の手取り",
       "takeHomeAnnual": "年額 {{amount}}",
       "takeHomeJapanese": "月収手取り / 年収手取り",
+      "disclaimer": "これは2026年度の前提に基づく概算です。会社・地域・個人条件により実際の金額と異なる場合があります。",
       "legend": {
         "takeHome": "手取り",
         "tax": "税金",
@@ -659,7 +671,14 @@
       "version": "バージョン",
       "build": "ビルド",
       "contact": "フィードバック",
+      "bugReport": "バグ報告(診断情報)",
       "madeFor": "❤️ Made for Vietnamese in Japan"
+    },
+    "bugReport": {
+      "title": "バグ報告",
+      "description": "メールやGithubに貼り付けやすい診断情報を生成します。",
+      "copyHint": "下のボックスを長押し → 全選択 → コピーしてください。",
+      "textareaA11y": "バグ報告内容(読み取り専用)"
     },
     "footers": {
       "notifications": "書類期限をローカル通知でお知らせ。リモートプッシュ通知はありません。",
