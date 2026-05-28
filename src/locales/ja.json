@@ -662,7 +662,10 @@
       "payday": "給料日",
       "notifications": "通知を有効にする",
       "faceId": "Face ID / Touch ID",
-      "exportData": "履歴データを書き出す",
+      "exportData": "バックアップを書き出す (JSON)",
+      "exportDataSub": "すべてのデータをJSONファイルとして保存し、他の端末へ移行できます",
+      "importData": "バックアップから復元",
+      "importDataSub": "書き出したJSONを貼り付けて復元します",
       "clearData": "すべてのデータを削除",
       "resetOnboarding": "オンボーディングをリセット (dev)",
       "privacy": "プライバシーポリシー",
@@ -682,7 +685,53 @@
     },
     "footers": {
       "notifications": "書類期限をローカル通知でお知らせ。リモートプッシュ通知はありません。",
-      "security": "アプリを再表示するときにFace ID / Touch IDを要求します"
+      "security": "アプリを再表示するときにFace ID / Touch IDを要求します",
+      "backup": "書き出し・復元はすべて端末内で完結します。クラウド同期はありません。"
+    },
+    "backup": {
+      "import": {
+        "title": "バックアップから復元",
+        "description": "バックアップのJSON全文を貼り付けて「プレビュー」を押してください。",
+        "placeholder": "ここにJSONを貼り付け",
+        "textareaA11y": "バックアップのJSON",
+        "previewCta": "プレビュー",
+        "restoring": "復元中...",
+        "successToast": "データを復元しました",
+        "contents": "上書きされる内容",
+        "notPresent": "なし",
+        "itemCount": "{{count}} 件",
+        "willOverwrite": "上書きされます",
+        "warning": "この操作は端末内の現在のデータを置き換えます。元に戻せません。",
+        "confirmArm": "復元 (上書き) を確認するにはタップ",
+        "confirmFinal": "もう一度タップして復元",
+        "meta": {
+          "exportedAt": "書き出し日時",
+          "appVersion": "アプリのバージョン",
+          "schemaVersion": "スキーマ"
+        }
+      },
+      "errors": {
+        "invalidJson": "JSONが正しくありません。内容を確認してください。",
+        "invalidShape": "Money Dashboard JPのバックアップではないようです。",
+        "incompatibleVersion": "バックアップは新しい形式です。先にアプリを更新してください。"
+      },
+      "stores": {
+        "settings": "設定",
+        "onboarding": "オンボーディング",
+        "calculator": "給料計算",
+        "history": "計算履歴",
+        "kakeibo": "家計簿",
+        "goals": "貯金目標",
+        "documents": "書類",
+        "documentDeadlines": "書類期限",
+        "tripBudgets": "旅費予算",
+        "taxChecklist": "税務チェックリスト",
+        "medical": "医療費",
+        "furusato": "ふるさと納税",
+        "remittance": "海外送金",
+        "kakutei": "確定申告",
+        "multiJob": "副業"
+      }
     },
     "values": {
       "languageSystem": "システムに従う",

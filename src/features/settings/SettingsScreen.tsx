@@ -10,6 +10,7 @@ import { Alert, Linking, ScrollView, Share, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AboutModal } from '@/features/settings/components/AboutModal';
+import { BackupImportModal } from '@/features/settings/components/BackupImportModal';
 import { BugReportModal } from '@/features/settings/components/BugReportModal';
 import { ClearDataConfirmModal } from '@/features/settings/components/ClearDataConfirmModal';
 import { LanguagePicker } from '@/features/settings/components/LanguagePicker';
@@ -19,8 +20,9 @@ import { PrefecturePicker } from '@/features/settings/components/PrefecturePicke
 import { SettingsItem } from '@/features/settings/components/SettingsItem';
 import { SettingsSection } from '@/features/settings/components/SettingsSection';
 import { ThemePicker } from '@/features/settings/components/ThemePicker';
-import { buildExportPayload, wipeAllAppData } from '@/features/settings/data-actions';
+import { wipeAllAppData } from '@/features/settings/data-actions';
 import { APP_BUILD, APP_VERSION } from '@/lib/app-info';
+import { exportBackup } from '@/lib/backup';
 import {
   authenticateWithBiometrics,
   isBiometricAvailable,
@@ -43,7 +45,8 @@ type ModalKey =
   | 'payday'
   | 'about'
   | 'clear'
-  | 'bugReport';
+  | 'bugReport'
+  | 'backupImport';
 
 export function SettingsScreen() {
   const { t } = useTranslation();
@@ -103,12 +106,15 @@ export function SettingsScreen() {
   const paydayDisplay = t('settings.values.dayOfMonth', { day: settings.payday });
 
   const handleExport = useCallback(async () => {
-    if (entries.length === 0) {
-      Alert.alert(t('settings.export.noData'));
-      return;
-    }
     try {
-      const payload = buildExportPayload(settings, entries);
+      const payload = await exportBackup();
+      // Empty-state guard: nothing to back up if no store keys are present
+      // AND history is empty. This skips the noisy share-sheet for a fresh
+      // install (would otherwise share a 4-line metadata-only payload).
+      if (Object.keys(payload.stores).length === 0 && entries.length === 0) {
+        Alert.alert(t('settings.export.noData'));
+        return;
+      }
       const json = JSON.stringify(payload, null, 2);
       await Share.share({
         title: t('settings.export.shareTitle'),
@@ -117,7 +123,11 @@ export function SettingsScreen() {
     } catch {
       Alert.alert(t('settings.export.error'));
     }
-  }, [entries, settings, t]);
+  }, [entries.length, t]);
+
+  const handleRestoredFromBackup = useCallback(() => {
+    Alert.alert(t('settings.backup.import.successToast'));
+  }, [t]);
 
   const handleClearConfirm = useCallback(async () => {
     await wipeAllAppData();
@@ -251,12 +261,24 @@ export function SettingsScreen() {
           />
         </SettingsSection>
 
-        <SettingsSection title={t('settings.sections.data')}>
+        <SettingsSection
+          title={t('settings.sections.data')}
+          footer={t('settings.footers.backup')}
+        >
           <SettingsItem
             kind="navigate"
             icon="download-outline"
             label={t('settings.items.exportData')}
+            sublabel={t('settings.items.exportDataSub')}
             onPress={handleExport}
+          />
+          <SettingsItem
+            kind="navigate"
+            icon="cloud-upload-outline"
+            label={t('settings.items.importData')}
+            sublabel={t('settings.items.importDataSub')}
+            onPress={() => setOpenModal('backupImport')}
+            showBorder
           />
           <SettingsItem
             kind="navigate"
@@ -393,6 +415,11 @@ export function SettingsScreen() {
       />
       <AboutModal visible={openModal === 'about'} onClose={close} />
       <BugReportModal visible={openModal === 'bugReport'} onClose={close} />
+      <BackupImportModal
+        visible={openModal === 'backupImport'}
+        onClose={close}
+        onRestored={handleRestoredFromBackup}
+      />
       <ClearDataConfirmModal
         visible={openModal === 'clear'}
         onClose={close}
