@@ -33,6 +33,12 @@ export interface AppSettings {
    * dismiss writes the current APP_BUILD here.
    */
   lastSeenReleaseNotesBuild: string;
+  /**
+   * IDs of dashboard sections the user has collapsed. Persisted so the
+   * fold state survives navigation + cold-start. New collapsible sections
+   * default to expanded — i.e. omission from this array means "open".
+   */
+  collapsedDashboardSections: string[];
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -44,6 +50,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   notificationsEnabled: false,
   faceIdEnabled: false,
   lastSeenReleaseNotesBuild: '',
+  collapsedDashboardSections: [],
 };
 
 interface SettingsStore {

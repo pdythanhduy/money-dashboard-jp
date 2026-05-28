@@ -339,7 +339,7 @@ export function DashboardScreen() {
             trip planning, remittance to family, 確定申告 checklist.
             ふるさと納税 used to surface here but was demoted to the
             More tab (most users don't engage with it month-to-month). */}
-        <DashboardSection title={t('dashboard.sections.tracking')}>
+        <DashboardSection title={t('dashboard.sections.tracking')} id="tracking" collapsible>
         {featuredGoal ? (
           <Pressable
             accessibilityRole="button"
@@ -479,7 +479,7 @@ export function DashboardScreen() {
             6-month chart parked at the very end as a summary glance.
             Per user feedback the chart belongs as the closing summary,
             not as a salary-section hero (it competes with TakeHome). */}
-        <DashboardSection title={t('dashboard.sections.trend')}>
+        <DashboardSection title={t('dashboard.sections.trend')} id="trend" collapsible>
           <MonthlyTrendChart />
         </DashboardSection>
 

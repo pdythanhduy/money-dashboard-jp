@@ -662,7 +662,10 @@
       "payday": "Ngày lương hàng tháng",
       "notifications": "Bật thông báo",
       "faceId": "Face ID / Touch ID",
-      "exportData": "Xuất dữ liệu lịch sử",
+      "exportData": "Xuất bản sao lưu (JSON)",
+      "exportDataSub": "Lưu mọi dữ liệu vào file JSON để chuyển sang máy khác",
+      "importData": "Khôi phục từ bản sao lưu",
+      "importDataSub": "Dán nội dung JSON đã sao lưu để khôi phục",
       "clearData": "Xóa toàn bộ dữ liệu",
       "resetOnboarding": "Reset onboarding (dev)",
       "privacy": "Chính sách bảo mật",
@@ -682,7 +685,53 @@
     },
     "footers": {
       "notifications": "Nhắc hạn giấy tờ qua thông báo cục bộ. Không có push từ server.",
-      "security": "Yêu cầu Face ID / Touch ID khi mở lại app"
+      "security": "Yêu cầu Face ID / Touch ID khi mở lại app",
+      "backup": "Xuất / khôi phục dữ liệu hoàn toàn cục bộ. Không có cloud sync."
+    },
+    "backup": {
+      "import": {
+        "title": "Khôi phục từ bản sao lưu",
+        "description": "Dán toàn bộ nội dung JSON của bản sao lưu vào ô bên dưới rồi nhấn Xem trước.",
+        "placeholder": "Dán JSON sao lưu tại đây",
+        "textareaA11y": "Nội dung JSON sao lưu",
+        "previewCta": "Xem trước",
+        "restoring": "Đang khôi phục...",
+        "successToast": "Đã khôi phục dữ liệu thành công",
+        "contents": "Nội dung sẽ ghi đè",
+        "notPresent": "Không có",
+        "itemCount": "{{count}} bản ghi",
+        "willOverwrite": "Sẽ ghi đè",
+        "warning": "Hành động này sẽ thay thế dữ liệu hiện tại trên thiết bị. Không thể hoàn tác.",
+        "confirmArm": "Nhấn để xác nhận khôi phục (ghi đè)",
+        "confirmFinal": "Nhấn lần nữa để khôi phục",
+        "meta": {
+          "exportedAt": "Thời gian xuất",
+          "appVersion": "Phiên bản app",
+          "schemaVersion": "Schema"
+        }
+      },
+      "errors": {
+        "invalidJson": "JSON không hợp lệ. Vui lòng kiểm tra lại nội dung.",
+        "invalidShape": "Đây không phải bản sao lưu của Money Dashboard JP.",
+        "incompatibleVersion": "Bản sao lưu thuộc phiên bản mới hơn app. Hãy cập nhật app trước."
+      },
+      "stores": {
+        "settings": "Cài đặt",
+        "onboarding": "Onboarding",
+        "calculator": "Tính lương",
+        "history": "Lịch sử tính lương",
+        "kakeibo": "Sổ chi tiêu",
+        "goals": "Mục tiêu tài chính",
+        "documents": "Giấy tờ",
+        "documentDeadlines": "Hạn giấy tờ",
+        "tripBudgets": "Ngân sách chuyến đi",
+        "taxChecklist": "Danh sách thuế",
+        "medical": "Y tế",
+        "furusato": "Furusato nouzei",
+        "remittance": "Gửi tiền về nước",
+        "kakutei": "Tờ khai thuế",
+        "multiJob": "Đa việc làm"
+      }
     },
     "values": {
       "languageSystem": "Theo hệ thống",
