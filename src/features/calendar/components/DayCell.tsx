@@ -29,7 +29,7 @@ export function DayCell({
   events,
   onPress,
 }: DayCellProps) {
-  const { colors, typography } = useTheme();
+  const { colors, typography, radius } = useTheme();
   const holiday = lookupHoliday(date);
 
   // Color hierarchy: today (filled brand) > holiday > Sunday > Saturday > weekday.
@@ -49,14 +49,18 @@ export function DayCell({
       accessibilityRole="button"
       accessibilityLabel={`${date}${holiday ? ` ${holiday.nameJa}` : ''}${hasEvents ? ` (${events.length} events)` : ''}`}
       onPress={onPress}
-      style={{
+      style={({ pressed }) => ({
         flex: 1,
         aspectRatio: 1,
         padding: 4,
-        borderRadius: 8,
-        backgroundColor: isToday ? colors.brand : 'transparent',
-        opacity: inCurrentMonth ? 1 : 0.35,
-      }}
+        borderRadius: radius.sm,
+        backgroundColor: isToday
+          ? colors.brand
+          : pressed
+            ? colors.brandSubtle
+            : 'transparent',
+        opacity: inCurrentMonth ? (pressed && !isToday ? 0.85 : 1) : 0.35,
+      })}
     >
       <Text
         style={[

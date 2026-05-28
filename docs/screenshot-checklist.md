@@ -31,8 +31,8 @@ Captions in this file match [`store-copy.md`](store-copy.md) → "Screenshot cap
 
 **What to capture:** the ResultCard showing monthly take-home + breakdown list (scrolled to top so the hero number + ¥ amount + first few breakdown lines are visible).
 
-**Caption vi:** "Tính lương thực nhận ở Nhật"
-**Caption ja:** "日本での手取り月収を計算"
+**Caption vi:** "Tính lương thực nhận ở Nhật, đúng theo cải cách thuế mới"
+**Caption ja:** "日本での手取り月収を、新しい税制でしっかり計算"
 
 ### Scene 2 — Dashboard financial health
 
@@ -45,8 +45,10 @@ Captions in this file match [`store-copy.md`](store-copy.md) → "Screenshot cap
 
 **What to capture:** Dashboard scrolled so DailySpendingCard (FinancialHealthCard) is the hero — status pill + today's spend + remaining + chip strip (`Budget 3/3 OK · Nhiều nhất: Ăn uống · Cố định 19%`).
 
-**Caption vi:** "Biết mỗi ngày còn được tiêu bao nhiêu"
-**Caption ja:** "今日いくら使えるかが一目で分かる"
+**Caption vi:** "Tài chính cuộc sống — lương, chi tiêu, giấy tờ trong một nơi"
+**Caption ja:** "給与・支出・書類を一つに。日々の家計サポート"
+
+> Caption refresh in v1.1 of `store-copy.md` repositions Scene 2 as the "all-in-one Dashboard" hero rather than the daily-spending shot. The daily-spending caption moved to Scene 3 below (no recapture needed — the Dashboard already shows DailySpendingCard immediately below TakeHomeProgressCard).
 
 ### Scene 3 — Kakeibo budget comparison
 
@@ -56,8 +58,8 @@ Captions in this file match [`store-copy.md`](store-copy.md) → "Screenshot cap
 
 **What to capture:** Kakeibo Overview scrolled so the BudgetComparisonSection is visible — Food row in warning state (orange bar) with `¥38,700 / ¥40,000` + caption "Còn lại ¥1,300", plus a safe Transport row + Entertainment row.
 
-**Caption vi:** "Theo dõi chi tiêu và ngân sách tháng"
-**Caption ja:** "月予算と支出を比較"
+**Caption vi:** "Theo dõi ngân sách tháng, không lo \"vỡ kế hoạch\""
+**Caption ja:** "月予算と支出を比較、使いすぎを防ぐ"
 
 ### Scene 4 — Document deadline reminders
 
@@ -70,8 +72,10 @@ Captions in this file match [`store-copy.md`](store-copy.md) → "Screenshot cap
 
 **What to capture:** Documents tab showing the list with the 2 entries + days-left badges (e.g., "Còn 45 ngày" in orange for residence card, "Còn 180 ngày" in green for passport). Alternatively capture Dashboard with the upcoming-reminders card surfacing the residence card.
 
-**Caption vi:** "Nhắc hạn thẻ cư trú, visa, hộ chiếu"
-**Caption ja:** "在留カード・ビザの期限管理"
+**Caption vi:** "Biết mỗi ngày còn được tiêu bao nhiêu"
+**Caption ja:** "今日いくら使えるかが一目で分かる"
+
+> v1.1 caption reorder: this Scene 4 slot now narrates the "daily spending" beat (capture the DailySpendingCard hero on Dashboard). The residence-card / visa-deadline messaging migrated into Scene 5 (Calendar — see below), where the upcoming-deadline cell is visible alongside paydays and holidays.
 
 ### Scene 5 — Trip / business budget planner
 
@@ -87,8 +91,10 @@ Captions in this file match [`store-copy.md`](store-copy.md) → "Screenshot cap
 
 **What to capture:** Trip detail screen with the planned-vs-actual stacked bars, total summary card on top, and the 2 logged expenses below.
 
-**Caption vi:** "Lập kế hoạch chi phí du lịch / công tác"
-**Caption ja:** "旅行・出張の予算プランニング"
+**Caption vi:** "Lịch lương, ngày lễ Nhật và hạn giấy tờ — luôn nhớ"
+**Caption ja:** "給料日・祝日・在留カード期限を一覧"
+
+> v1.1: Scene 5 swapped from Trip Budget → Calendar. The Calendar shot is a stronger breadth signal for the "Life & Finance Companion" positioning than the trip-budget detail screen (which surfaces a niche use-case). Trip Budget remains available via the optional 6th capture noted in [`demo-screenshot-flow.md`](demo-screenshot-flow.md).
 
 ---
 

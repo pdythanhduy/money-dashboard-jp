@@ -117,8 +117,8 @@ export function CalendarScreen() {
       <View
         style={{
           paddingHorizontal: spacing.md,
-          paddingTop: spacing.sm,
-          paddingBottom: spacing.sm,
+          paddingTop: spacing.sm + 2,
+          paddingBottom: spacing.sm + 2,
           borderBottomWidth: 1,
           borderBottomColor: colors.border,
           backgroundColor: colors.background,
@@ -201,7 +201,17 @@ export function CalendarScreen() {
           gap: spacing.md,
         }}
       >
-        <Text style={[typography.caption, { color: colors.textSecondary, textAlign: 'center' }]}>
+        <Text
+          style={[
+            typography.caption,
+            {
+              color: colors.textSecondary,
+              textAlign: 'center',
+              lineHeight: 18,
+              marginTop: 2,
+            },
+          ]}
+        >
           {t('calendar.tapDateHint')}
         </Text>
 

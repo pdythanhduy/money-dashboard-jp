@@ -72,7 +72,8 @@ export function DashboardSection({ title, children, id, collapsible }: Dashboard
               {
                 color: colors.textSecondary,
                 textTransform: 'uppercase',
-                letterSpacing: 0.6,
+                letterSpacing: 0.9,
+                fontWeight: '600',
                 flex: 1,
               },
             ]}
@@ -92,7 +93,8 @@ export function DashboardSection({ title, children, id, collapsible }: Dashboard
             {
               color: colors.textSecondary,
               textTransform: 'uppercase',
-              letterSpacing: 0.6,
+              letterSpacing: 0.9,
+              fontWeight: '600',
               paddingHorizontal: spacing.lg,
               marginBottom: -spacing.xs,
               // ↑ negative margin so the first child card's existing
