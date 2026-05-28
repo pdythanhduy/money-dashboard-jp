@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Alert, Modal, Pressable, ScrollView, Text, View } from 'react-native';
+import { Alert, Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
@@ -193,8 +193,11 @@ function EventRow({ event }: { event: CalendarEvent }) {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingVertical: spacing.sm,
-        borderBottomWidth: 1,
+        paddingVertical: spacing.sm + 2,
+        // Hairline divider feels more premium than a full 1px line on
+        // dense list rows — keeps the visual rhythm of separate events
+        // without shouting "table row".
+        borderBottomWidth: StyleSheet.hairlineWidth,
         borderBottomColor: colors.border,
         gap: spacing.md,
       }}

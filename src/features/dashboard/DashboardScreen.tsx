@@ -223,14 +223,14 @@ export function DashboardScreen() {
             style={({ pressed }) => ({
               marginHorizontal: spacing.lg,
               marginTop: spacing.md,
-              padding: spacing.sm,
+              paddingVertical: spacing.sm + 2,
               paddingHorizontal: spacing.md,
               borderRadius: radius.md,
               flexDirection: 'row',
               alignItems: 'center',
               gap: spacing.sm,
               backgroundColor: colors.surfaceElevated,
-              borderLeftWidth: 4,
+              borderLeftWidth: 3,
               borderLeftColor: topWall.severity === 'crossed' ? colors.danger : colors.warning,
               opacity: pressed ? 0.85 : 1,
             })}
@@ -276,11 +276,12 @@ export function DashboardScreen() {
             onPress={goToCalculator}
             style={({ pressed }) => ({
               marginHorizontal: spacing.lg,
-              marginTop: spacing.sm,
+              marginTop: spacing.sm + 2,
+              paddingVertical: spacing.xs,
               opacity: pressed ? 0.6 : 1,
             })}
           >
-            <Text style={[typography.caption, { color: colors.textSecondary }]}>
+            <Text style={[typography.caption, { color: colors.textSecondary, lineHeight: 18 }]}>
               {t('dashboard.statsLine.summary', {
                 tax: formatCurrency(data.proportionalTax),
                 insurance: formatCurrency(data.proportionalInsurance),

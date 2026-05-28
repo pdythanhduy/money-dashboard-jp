@@ -71,9 +71,9 @@ export function MonthGrid({ year, month, eventsByDate, today, onDayPress }: Mont
           </View>
         ))}
       </View>
-      <View style={{ gap: 2 }}>
+      <View style={{ gap: 3 }}>
         {[0, 1, 2, 3, 4, 5].map((row) => (
-          <View key={row} style={{ flexDirection: 'row', gap: 2 }}>
+          <View key={row} style={{ flexDirection: 'row', gap: 3 }}>
             {cells.slice(row * 7, row * 7 + 7).map((cell) => (
               <DayCell
                 key={cell.date}
