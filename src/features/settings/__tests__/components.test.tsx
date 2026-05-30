@@ -178,7 +178,7 @@ describe('AboutModal', () => {
   it('shows version + build when visible', () => {
     const r = renderTree(<AboutModal visible onClose={jest.fn()} />);
     const tree = JSON.stringify(r.toJSON());
-    expect(tree).toContain('0.3.0');
+    expect(tree).toContain('0.3.1');
     expect(tree).toContain('Mã nguồn mở');
     TestRenderer.act(() => r.unmount());
   });

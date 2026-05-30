@@ -1,8 +1,8 @@
 # Privacy Policy / Chính sách bảo mật / プライバシーポリシー
 
-**Effective date / Ngày hiệu lực / 施行日:** 2026-05-28
+**Effective date / Ngày hiệu lực / 施行日:** 2026-05-30
 **App / Ứng dụng / アプリ:** Kakei (家計) — Money Dashboard JP
-**Version / Phiên bản / バージョン:** 0.3.0
+**Version / Phiên bản / バージョン:** 0.3.1
 
 ---
 
