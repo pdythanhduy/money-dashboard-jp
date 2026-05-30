@@ -101,7 +101,7 @@ describe('buildExportPayload', () => {
     const payload = buildExportPayload(DEFAULT_SETTINGS, entries, fixed);
 
     expect(payload.exportedAt).toBe('2026-05-18T10:30:00.000Z');
-    expect(payload.appVersion).toBe('0.3.0');
+    expect(payload.appVersion).toBe('0.3.1');
     expect(payload.historyCount).toBe(1);
     expect(payload.history).toBe(entries);
     expect(payload.settings).toBe(DEFAULT_SETTINGS);
